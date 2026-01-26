@@ -1,0 +1,10 @@
+{
+  "codeConnect": {
+    "include": [
+      "**/*.figma.{tsx,jsx}",
+      "**/*.{tsx,jsx}"
+    ],
+    "label": "React",
+    "interactiveSetupFigmaFileUrl": "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=1-202&m=dev"
+  }
+}
