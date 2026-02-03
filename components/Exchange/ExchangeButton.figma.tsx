@@ -1,6 +1,5 @@
-import React from "react";
-import ExchangeButton from "./ExchangeButton";
 import figma from "@figma/code-connect";
+import ExchangeButton from "./ExchangeButton";
 
 figma.connect(
   ExchangeButton,
@@ -9,11 +8,6 @@ figma.connect(
     props: {
       label: figma.string("label"),
     },
-    example: (props) => (
-      <ExchangeButton
-        label={props.label}
-        onPress={() => {}}
-      />
-    ),
+    example: (props) => <ExchangeButton label={props.label} />,
   }
 );

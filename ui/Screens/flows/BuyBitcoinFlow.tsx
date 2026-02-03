@@ -46,10 +46,11 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
 
   // Payment method state
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedCardBrand, setSelectedCardBrand] = useState<string | undefined>();
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
   const [modalStep, setModalStep] = useState<ModalStep>("initial");
   const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
+  const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
   const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
   const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
 
@@ -114,10 +115,11 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
   const handleConfirmPaymentSelection = () => {
     if (modalStep === "bankAccount" && tempSelectedBankId) {
       setSelectedPaymentMethod("bankAccount");
+      setSelectedBrand(tempSelectedBankBrand);
       setIsPaymentModalVisible(false);
     } else if (modalStep === "debitCard" && tempSelectedCardId) {
       setSelectedPaymentMethod("cardAccount");
-      setSelectedCardBrand(tempSelectedCardBrand);
+      setSelectedBrand(tempSelectedCardBrand);
       setIsPaymentModalVisible(false);
     }
   };
@@ -134,7 +136,10 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
         return (
           <ChooseBankAccountSlot
             selectedAccountId={tempSelectedBankId}
-            onSelectAccount={(account) => setTempSelectedBankId(account.id)}
+            onSelectAccount={(account) => {
+              setTempSelectedBankId(account.id);
+              setTempSelectedBankBrand(account.brand);
+            }}
             onAddBankAccount={handleClosePaymentModal}
           />
         );
@@ -220,7 +225,7 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
               feeAmount={`+$${formatWithCommas(feeAmount)}`}
               actionLabel="Confirm purchase"
               paymentMethodVariant={selectedPaymentMethod}
-              paymentMethodBrand={selectedCardBrand}
+              paymentMethodBrand={selectedBrand}
               onPaymentMethodPress={handleOpenPaymentModal}
               onConfirmPress={handleConfirm}
             />

@@ -1,6 +1,5 @@
-import React from "react";
-import ButtonSelector from "./ButtonSelector";
 import figma from "@figma/code-connect";
+import ButtonSelector from "./ButtonSelector";
 
 figma.connect(
   ButtonSelector,
@@ -11,11 +10,7 @@ figma.connect(
       isSelected: figma.boolean("isSelected"),
     },
     example: (props) => (
-      <ButtonSelector
-        label={props.label}
-        isSelected={props.isSelected}
-        onPress={() => {}}
-      />
+      <ButtonSelector label={props.label} isSelected={props.isSelected} />
     ),
   }
 );

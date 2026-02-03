@@ -8,11 +8,13 @@ import { BankIcon } from "../../../../../components/Icons/BankIcon";
 import InfoCircleIcon from "../../../../../components/Icons/InfoCircleIcon";
 import { ChevronRightIcon } from "../../../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
+import PlusCircleIcon from "../../../../../components/Icons/PlusCircleIcon";
 
 export interface BankAccount {
   id: string;
   name: string;
   lastFour: string;
+  brand?: string;
 }
 
 export interface ChooseBankAccountSlotProps {
@@ -25,8 +27,8 @@ export interface ChooseBankAccountSlotProps {
 
 export default function ChooseBankAccountSlot({
   bankAccounts = [
-    { id: "1", name: "Wells Fargo", lastFour: "0823" },
-    { id: "2", name: "Chase", lastFour: "1234" },
+    { id: "1", name: "Chase", lastFour: "0823", brand: "chase" },
+    { id: "2", name: "Amex", lastFour: "1234", brand: "amex" },
   ],
   selectedAccountId,
   onSelectAccount,
@@ -45,7 +47,13 @@ export default function ChooseBankAccountSlot({
             key={account.id}
             title={account.name}
             secondaryText={`•••• ${account.lastFour}`}
-            icon={<BankIcon width={20} height={20} color={colorMaps.face.primary} />}
+            icon={
+              account.brand ? (
+                <IconContainer brand={account.brand} size="lg" />
+              ) : (
+                <BankIcon width={20} height={20} color={colorMaps.face.primary} />
+              )
+            }
             trailingVariant="selectable"
             selected={account.id === selectedAccountId}
             onPress={() => onSelectAccount?.(account)}
@@ -59,7 +67,7 @@ export default function ChooseBankAccountSlot({
             <IconContainer
               variant="default-stroke"
               size="lg"
-              icon={<InfoCircleIcon width={20} height={20} color={colorMaps.face.primary} />}
+              icon={<PlusCircleIcon width={20} height={20} color={colorMaps.face.primary} />}
             />
           }
           trailingSlot={

@@ -5,6 +5,7 @@ import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListIte
 import { BankIcon } from "../../../../../components/Icons/BankIcon";
 import CreditCardRefreshIcon from "../../../../../components/Icons/CreditCardRefreshIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
+import CreditCardIcon from "../../../../../components/Icons/CreditCardIcon";
 
 export interface AddPaymentSlotProps {
   onBankAccountPress?: () => void;
@@ -36,7 +37,7 @@ export default function AddPaymentSlot({
           title="Debit card"
           secondaryText="Link your debit card"
           tertiaryText="2.9% deposit fee ($0.30 min)"
-          icon={<CreditCardRefreshIcon width={20} height={20} color={colorMaps.face.primary} />}
+          icon={<CreditCardIcon width={20} height={20} color={colorMaps.face.primary} />}
           onPress={onDebitCardPress}
         />
       </View>

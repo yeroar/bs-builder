@@ -1,6 +1,5 @@
-import React from "react";
-import PillSelector from "./PillSelector";
 import figma from "@figma/code-connect";
+import PillSelector from "./PillSelector";
 
 figma.connect(
   PillSelector,
@@ -24,7 +23,6 @@ figma.connect(
         isActive={props.isActive}
         variant="onBrand"
         size={props.size}
-        onPress={() => {}}
       />
     ),
   }

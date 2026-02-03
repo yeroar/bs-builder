@@ -15,4 +15,4 @@ export { default as TransactionSuccessSlot } from "../Templates/Success/Transact
 export { default as ChooseBankAccountSlot } from "./BTC/patterns/Payment Methods/ChooseBankAccountSlot";
 export { default as ChooseDebitCardSlot } from "./BTC/patterns/Payment Methods/ChooseDebitCardSlot";
 export { default as ChoosePaymentMethodFoldSlot } from "./BTC/patterns/Payment Methods/ChoosePaymentMethodFoldSlot";
-export { default as ChoosePaymentMethodSlot } from "./BTC/patterns/Payment Methods/ChoosePaymentMethodSlot";
+export { default as ChoosePaymentCardSlot } from "./BTC/patterns/Payment Methods/ChoosePaymentCardSlot";

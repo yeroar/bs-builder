@@ -2,8 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../../../components/Primitives/FoldText";
 import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListItem/PaymentMethod/ListItemPaymentMethod";
-import { BankIcon } from "../../../../../components/Icons/BankIcon";
-import CreditCardIcon from "../../../../../components/Icons/CreditCardIcon";
+import { IconContainer } from "../../../../../components/Primitives/IconContainer";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export type FoldPaymentOption = "cashBalance" | "creditCard";
@@ -35,8 +34,7 @@ export default function ChoosePaymentMethodFoldSlot({
         <ListItemPaymentMethod
           title="Cash balance"
           secondaryText={cashBalance}
-          tertiaryText={cashBalanceSats}
-          icon={<BankIcon width={20} height={20} color={colorMaps.face.primary} />}
+          icon={<IconContainer brand="cash" size="lg" />}
           trailingVariant="selectable"
           selected={selectedOption === "cashBalance"}
           onPress={() => onSelectOption?.("cashBalance")}
@@ -45,8 +43,7 @@ export default function ChoosePaymentMethodFoldSlot({
         <ListItemPaymentMethod
           title="Credit Card"
           secondaryText={`•••• ${creditCardLastFour}`}
-          tertiaryText="Deposit fee waved"
-          icon={<CreditCardIcon width={20} height={20} color={colorMaps.face.primary} />}
+          icon={<IconContainer brand="credit" size="lg" />}
           trailingVariant="selectable"
           selected={selectedOption === "creditCard"}
           onPress={() => onSelectOption?.("creditCard")}

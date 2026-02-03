@@ -1,6 +1,5 @@
-import React from "react";
-import PmSelector from "./PmSelector";
 import figma from "@figma/code-connect";
+import PmSelector from "./PmSelector";
 
 figma.connect(
   PmSelector,
@@ -15,6 +14,6 @@ figma.connect(
         bitcoinAccount: "bitcoinAccount",
       }),
     },
-    example: ({ variant }) => <PmSelector variant={variant} onPress={() => {}} />,
+    example: ({ variant }) => <PmSelector variant={variant} />,
   }
 );

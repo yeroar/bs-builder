@@ -17,6 +17,9 @@ const BRAND_LOGOS: Record<string, any> = {
   amex: require("../../../assets/cards/amEx.png"),
   chase: require("../../../assets/cards/chase.png"),
   wellsfargo: require("../../../assets/cards/wellsFargo.png"),
+  // Payment methods
+  cash: require("../../../assets/cards/CashAccount.png"),
+  credit: require("../../../assets/cards/CreditCard.png"),
 };
 
 export type IconContainerVariant =

@@ -1,20 +1,10 @@
-import React from "react";
-import ChooseBankAccountSlot from "./ChooseBankAccountSlot";
 import figma from "@figma/code-connect";
+import ChooseBankAccountSlot from "./ChooseBankAccountSlot";
 
 figma.connect(
   ChooseBankAccountSlot,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=77-20810",
   {
-    example: () => (
-      <ChooseBankAccountSlot
-        bankAccounts={[
-          { id: "1", name: "Wells Fargo", lastFour: "0823" },
-          { id: "2", name: "Chase", lastFour: "1234" },
-        ]}
-        onSelectAccount={() => { }}
-        onAddBankAccount={() => { }}
-      />
-    ),
+    example: () => <ChooseBankAccountSlot />,
   }
 );

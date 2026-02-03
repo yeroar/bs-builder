@@ -1,6 +1,5 @@
-import React from "react"
-import Footnote from "./Footnote"
-import figma from "@figma/code-connect"
+import figma from "@figma/code-connect";
+import Footnote from "./Footnote";
 
 figma.connect(
   Footnote,
@@ -22,13 +21,12 @@ figma.connect(
       }),
     },
     example: (props) => (
-      <Footnote 
-        type={props.type} 
-        message={props.message} 
-        leadingSlot={props.leadingSlot} 
-        trailingSlot={props.trailingSlot} 
-        onPress={() => {}}
+      <Footnote
+        type={props.type}
+        message={props.message}
+        leadingSlot={props.leadingSlot}
+        trailingSlot={props.trailingSlot}
       />
     ),
   }
-)
+);

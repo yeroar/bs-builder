@@ -10,20 +10,20 @@ import InfoCircleIcon from "../../../../../components/Icons/InfoCircleIcon";
 import { ChevronRightIcon } from "../../../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
-export type PaymentMethodOption = "debitCard" | "cashBalance" | "bankAccount";
+export type PaymentCardOption = "debitCard" | "cashBalance" | "bankAccount";
 
-export interface ChoosePaymentMethodSlotProps {
+export interface ChoosePaymentCardSlotProps {
   cashBalance?: string;
   bankName?: string;
   bankLastFour?: string;
   cardLastFour?: string;
-  selectedOption?: PaymentMethodOption;
-  onSelectOption?: (option: PaymentMethodOption) => void;
+  selectedOption?: PaymentCardOption;
+  onSelectOption?: (option: PaymentCardOption) => void;
   onAddBankAccount?: () => void;
   testID?: string;
 }
 
-export default function ChoosePaymentMethodSlot({
+export default function ChoosePaymentCardSlot({
   cashBalance = "$n.nn",
   bankName = "Wells Fargo",
   bankLastFour = "0823",
@@ -32,7 +32,7 @@ export default function ChoosePaymentMethodSlot({
   onSelectOption,
   onAddBankAccount,
   testID,
-}: ChoosePaymentMethodSlotProps) {
+}: ChoosePaymentCardSlotProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

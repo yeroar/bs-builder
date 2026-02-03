@@ -1,6 +1,5 @@
-import React from "react";
-import SearchPill from "./SearchPill";
 import figma from "@figma/code-connect";
+import SearchPill from "./SearchPill";
 
 figma.connect(
   SearchPill,
@@ -16,9 +15,6 @@ figma.connect(
         label={props.label}
         hasAvatar={props.hasAvatar}
         hasChip={props.hasChip}
-        brand="Chewy"
-        chipLabel="Up to n%"
-        onPress={() => {}}
       />
     ),
   }

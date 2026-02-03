@@ -4,7 +4,6 @@ import { FoldText } from "../Primitives/FoldText";
 import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { PlusCircleIcon } from "../Icons/PlusCircleIcon";
 import { BankIcon } from "../Icons/BankIcon";
-import CreditCardIcon from "../Icons/CreditCardIcon";
 import { IconContainer } from "../Primitives/IconContainer";
 import { colorMaps, spacing, radius } from "../tokens";
 
@@ -13,7 +12,7 @@ export type PmSelectorVariant = "null" | "bankAccount" | "cardAccount" | "foldAc
 export interface PmSelectorProps {
   variant?: PmSelectorVariant;
   label?: string;
-  /** Card brand for cardAccount variant (visa, mastercard, amex, etc.) */
+  /** Brand for bankAccount or cardAccount variant (chase, amex, visa, etc.) */
   brand?: string;
   onPress?: () => void;
   style?: ViewStyle;
@@ -33,12 +32,16 @@ export default function PmSelector({
   const getIcon = () => {
     switch (variant) {
       case "bankAccount":
-        return <BankIcon width={16} height={16} color={colorMaps.face.primary} />;
-      case "cardAccount":
         if (brand) {
           return <IconContainer brand={brand} size="xs" style={styles.brandIcon} />;
         }
-        return <CreditCardIcon width={16} height={16} color={colorMaps.face.primary} />;
+        return <BankIcon width={16} height={16} color={colorMaps.face.primary} />;
+      case "cardAccount":
+        return <IconContainer brand={brand || "credit"} size="xs" style={styles.brandIcon} />;
+      case "foldAccount":
+        return <IconContainer brand="cash" size="xs" style={styles.brandIcon} />;
+      case "bitcoinAccount":
+        return <IconContainer brand="bitcoin" size="xs" style={styles.brandIcon} />;
       default:
         return null;
     }

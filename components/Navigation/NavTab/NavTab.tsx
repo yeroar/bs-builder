@@ -10,10 +10,10 @@ import { spacing } from '../../tokens/spacing';
 
 export type NavTabVariant = 'left' | 'center' | 'right';
 
-interface NavTabProps {
+export interface NavTabProps {
   variant: NavTabVariant;
   isActive: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   icon?: React.ReactNode;
   style?: any;
 }

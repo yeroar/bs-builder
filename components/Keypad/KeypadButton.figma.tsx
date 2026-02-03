@@ -1,6 +1,5 @@
-import React from "react";
-import KeypadButton from "./KeypadButton";
 import figma from "@figma/code-connect";
+import KeypadButton from "./KeypadButton";
 
 figma.connect(
   KeypadButton,
@@ -12,8 +11,6 @@ figma.connect(
         Icon: "icon",
       }),
     },
-    example: ({ type }) => (
-      <KeypadButton type={type} value="1" onPress={() => {}} />
-    ),
+    example: ({ type }) => <KeypadButton type={type} value="1" />,
   }
 );

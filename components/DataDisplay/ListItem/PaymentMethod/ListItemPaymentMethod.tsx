@@ -12,7 +12,7 @@ export interface ListItemPaymentMethodProps {
   title: string;
   secondaryText: string;
   tertiaryText?: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   onPress?: () => void;
   disabled?: boolean;
   showDivider?: boolean;

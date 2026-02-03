@@ -1,6 +1,5 @@
-import React from "react";
-import MarcomSecondaryTile from "./MarcomSecondaryTile";
 import figma from "@figma/code-connect";
+import MarcomSecondaryTile from "./MarcomSecondaryTile";
 
 figma.connect(
   MarcomSecondaryTile,
@@ -14,11 +13,7 @@ figma.connect(
       }),
     },
     example: (props) => (
-      <MarcomSecondaryTile
-        header={props.header}
-        bodyText={props.bodyText}
-        onPress={() => {}}
-      />
+      <MarcomSecondaryTile header={props.header} bodyText={props.bodyText} />
     ),
   }
 );

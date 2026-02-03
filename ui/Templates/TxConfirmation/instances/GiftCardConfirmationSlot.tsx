@@ -121,10 +121,9 @@ export default function GiftCardConfirmationSlot({
 const styles = StyleSheet.create({
   currencySection: {
     alignItems: "center",
-    paddingHorizontal: spacing["400"],
+    paddingHorizontal: spacing["500"],
   },
   detailsSection: {
-    paddingHorizontal: spacing["500"],
     paddingTop: spacing["400"],
     paddingBottom: spacing["500"],
     gap: spacing["600"],

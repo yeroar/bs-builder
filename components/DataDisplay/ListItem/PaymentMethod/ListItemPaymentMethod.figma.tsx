@@ -1,8 +1,5 @@
-import React from "react";
-import ListItemPaymentMethod from "./ListItemPaymentMethod";
-import { BankIcon } from "../../../Icons/BankIcon";
-import { colorMaps } from "../../../tokens";
 import figma from "@figma/code-connect";
+import ListItemPaymentMethod from "./ListItemPaymentMethod";
 
 figma.connect(
   ListItemPaymentMethod,
@@ -13,19 +10,15 @@ figma.connect(
       secondaryText: figma.string("secondaryText"),
       tertiaryText: figma.string("tertiaryText"),
       showDivider: figma.boolean("showDiv"),
-      disabled: figma.enum("state", {
-        disabled: true,
-      }),
+      disabled: figma.enum("state", { disabled: true }),
     },
     example: (props) => (
       <ListItemPaymentMethod
         title={props.title}
         secondaryText={props.secondaryText}
         tertiaryText={props.tertiaryText}
-        icon={<BankIcon width={20} height={20} color={colorMaps.face.primary} />}
         showDivider={props.showDivider}
         disabled={props.disabled}
-        onPress={() => {}}
       />
     ),
   }

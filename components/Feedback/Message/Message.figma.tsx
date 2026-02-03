@@ -1,6 +1,5 @@
-import React from "react";
-import Message from "./Message";
 import figma from "@figma/code-connect";
+import Message from "./Message";
 
 figma.connect(
   Message,
@@ -22,7 +21,6 @@ figma.connect(
         message={props.message}
         variant={props.variant}
         hasButton={props.hasButton}
-        onActionPress={() => {}}
       />
     ),
   }

@@ -1,4 +1,3 @@
-import React from "react";
 import figma from "@figma/code-connect";
 import QuickBuyInput from "./QuickBuyInput";
 
@@ -17,12 +16,6 @@ figma.connect(
         "8": 4,
       }),
     },
-    example: ({ columns }) => (
-      <QuickBuyInput
-        amounts={[10, 20, 250, 500]}
-        columns={columns}
-        onAmountSelect={(amount) => console.log(amount)}
-      />
-    ),
+    example: ({ columns }) => <QuickBuyInput columns={columns} />,
   }
 );
