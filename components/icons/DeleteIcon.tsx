@@ -1,9 +1,10 @@
 import Svg, { Path, type SvgProps } from "react-native-svg";
+import { colorMaps } from "../tokens";
 
 interface IProps extends SvgProps {}
 
 export const DeleteIcon = (props: IProps) => {
-  const { color = "#383323", ...rest } = props;
+  const { color = colorMaps.face.primary, ...rest } = props;
   return (
     <Svg width="20" height="20" fill="none" viewBox="0 0 20 20" {...rest}>
       <Path

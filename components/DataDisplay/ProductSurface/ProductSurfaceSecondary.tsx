@@ -4,21 +4,25 @@ import { FoldText } from "../../Primitives/FoldText";
 import { ChevronRightIcon } from "../../Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../tokens";
 
-export interface ProductSurfaceRewardsProps {
+export interface ProductSurfaceSecondaryProps {
+  label?: string;
   amount?: string;
-  children?: ReactNode;
-  action?: ReactNode | boolean;
-  onRewardsPress?: () => void;
+  dataViz?: ReactNode;
+  actionBar?: ReactNode;
+  hasTitleIcon?: boolean;
+  onPress?: () => void;
   style?: ViewStyle;
 }
 
-export default function ProductSurfaceRewards({
+export default function ProductSurfaceSecondary({
+  label = "Rewards",
   amount = "$0.00",
-  children,
-  action,
-  onRewardsPress,
+  dataViz,
+  actionBar,
+  hasTitleIcon = false,
+  onPress,
   style,
-}: ProductSurfaceRewardsProps) {
+}: ProductSurfaceSecondaryProps) {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.performance}>
@@ -26,17 +30,19 @@ export default function ProductSurfaceRewards({
           {/* Header */}
           <Pressable
             style={styles.header}
-            onPress={onRewardsPress}
-            disabled={!onRewardsPress}
+            onPress={onPress}
+            disabled={!onPress}
           >
             <FoldText type="header-md" style={styles.titleText}>
-              Rewards
+              {label}
             </FoldText>
-            <ChevronRightIcon
-              width={24}
-              height={24}
-              color={colorMaps.face.primary}
-            />
+            {hasTitleIcon && (
+              <ChevronRightIcon
+                width={24}
+                height={24}
+                color={colorMaps.face.primary}
+              />
+            )}
           </Pressable>
 
           {/* Amount */}
@@ -45,14 +51,14 @@ export default function ProductSurfaceRewards({
           </FoldText>
         </View>
 
-        {/* Progress Visualization / Data Viz */}
-        {children}
+        {/* Data Viz / Progress Visualization */}
+        {dataViz}
       </View>
 
-      {/* Action */}
-      {action && typeof action !== 'boolean' && (
-        <View style={styles.buttonContainer}>
-          {action}
+      {/* Action Bar */}
+      {actionBar && (
+        <View style={styles.actionBarContainer}>
+          {actionBar}
         </View>
       )}
     </View>
@@ -65,6 +71,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing["500"],
     paddingVertical: spacing["800"],
     width: "100%",
+    gap: spacing["500"],
   },
   performance: {
     gap: spacing["300"],
@@ -83,8 +90,7 @@ const styles = StyleSheet.create({
   amountText: {
     color: colorMaps.face.primary,
   },
-  buttonContainer: {
-    marginTop: spacing["500"],
+  actionBarContainer: {
     width: "100%",
   },
 });

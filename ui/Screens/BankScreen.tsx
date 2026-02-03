@@ -18,6 +18,7 @@ import ActivationSuccessSlot from "../Slots/ActivationSuccessSlot";
 import ModalFooter from "../../components/modals/ModalFooter";
 import BankHomeSlot from "../Slots/BankHomeSlot";
 import BtcSlot from "../Slots/BTC/BtcSlot";
+import CashSlot from "../Slots/Cash/CashSlot";
 import BtcBuyModalSlot, { BuyAmount } from "../Slots/BTC/BtcBuyModalSlot";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
 import { BuyBitcoinFlow, SellBitcoinFlow, SendBitcoinFlow, AutoStackFlow } from "./flows";
@@ -39,6 +40,9 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
   // BTC screen state
   const [showBtcSlot, setShowBtcSlot] = useState(false);
+
+  // Cash screen state
+  const [showCashSlot, setShowCashSlot] = useState(false);
 
   // Buy amount selection modal state
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
@@ -77,6 +81,10 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   // BTC screen handlers
   const handleOpenBtcScreen = () => setShowBtcSlot(true);
   const handleCloseBtcScreen = () => setShowBtcSlot(false);
+
+  // Cash screen handlers
+  const handleOpenCashScreen = () => setShowCashSlot(true);
+  const handleCloseCashScreen = () => setShowCashSlot(false);
 
   // Buy modal handlers
   const handleOpenBuyModal = () => {
@@ -117,6 +125,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
           <BankHomeSlot
             onActivateCard={handleOpenActivateModal}
             onBitcoinPress={handleOpenBtcScreen}
+            onCashPress={handleOpenCashScreen}
             onBuyPress={handleOpenBuyModal}
             onSellPress={handleOpenSellFlow}
           />
@@ -185,6 +194,16 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onDirectToBitcoinPress={() => console.log("Direct to bitcoin pressed")}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
             onRewardsPress={() => console.log("Rewards pressed")}
+          />
+        </FullscreenTemplate>
+      )}
+
+      {/* Cash Screen */}
+      {showCashSlot && (
+        <FullscreenTemplate onLeftPress={handleCloseCashScreen} scrollable>
+          <CashSlot
+            onAddCashPress={() => console.log("Add cash pressed")}
+            onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
           />
         </FullscreenTemplate>
       )}

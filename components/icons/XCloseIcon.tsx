@@ -1,8 +1,9 @@
 import React from "react";
 import Svg, { Path, type SvgProps } from "react-native-svg";
+import { colorMaps } from "../tokens";
 
 export const XCloseIcon = (props: SvgProps) => {
-  const { color = "#383323", ...rest } = props;
+  const { color = colorMaps.face.primary, ...rest } = props;
   return (
     <Svg width="24" height="24" fill="none" viewBox="0 0 24 24" {...rest}>
       <Path

@@ -7,14 +7,12 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=117-11764",
   {
     props: {
-      currencyInput: figma.children("CurrencyInput"),
-      receiptDetails: figma.children("ReceiptDetails"),
+      children: figma.children("*"),
     },
-    example: ({ currencyInput, receiptDetails }) => (
-      <TxConfirmation
-        currencyInput={currencyInput}
-        receiptDetails={receiptDetails}
-      />
+    example: ({ children }) => (x
+      <TxConfirmation>
+        { children }
+      </TxConfirmation >
     ),
   }
 );

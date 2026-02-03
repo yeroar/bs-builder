@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
 import ProductSurfacePrimary from "../../DataDisplay/ProductSurface/ProductSurfacePrimary";
-import ProductSurfaceRewards from "../../DataDisplay/ProductSurface/ProductSurfaceRewards";
+import ProductSurfaceSecondary from "../../DataDisplay/ProductSurface/ProductSurfaceSecondary";
 import MarcomSecondaryTile from "../../DataDisplay/Marcom/MarcomSecondaryTile";
 import MarcomProductTile from "../../DataDisplay/Marcom/MarcomProductTile";
 import ProgressBar from "../../dataViz/ProgressBar";
@@ -50,17 +50,17 @@ export default function DataDisplayCategory() {
         </View>
       </ComponentCard>
 
-      {/* ProductSurfaceRewards */}
+      {/* ProductSurfaceSecondary */}
       <ComponentCard
-        title="ProductSurfaceRewards"
-        description="Rewards display with progress indicator"
+        title="ProductSurfaceSecondary"
+        description="Secondary product surface with label and progress indicator"
       >
         <View style={styles.productPreview}>
-          <ProductSurfaceRewards
+          <ProductSurfaceSecondary
+            label="Rewards"
             amount="1,250 sats"
-          >
-            <ProgressBar progress={65} />
-          </ProductSurfaceRewards>
+            dataViz={<ProgressBar progress={65} />}
+          />
         </View>
       </ComponentCard>
 

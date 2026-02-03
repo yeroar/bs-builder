@@ -1,8 +1,9 @@
 import React from "react";
 import Svg, { Path, G, ClipPath, Defs, type SvgProps } from "react-native-svg";
+import { colorMaps } from "../tokens";
 
 export const InfoCircleIcon = (props: SvgProps) => {
-  const { color = "#7A6E53", ...rest } = props;
+  const { color = colorMaps.face.tertiary, ...rest } = props;
   return (
     <Svg width="12" height="12" fill="none" viewBox="0 0 12 12" {...rest}>
       <G clipPath="url(#a)">

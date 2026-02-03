@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import ProductSurfacePrimary from "../../../components/DataDisplay/ProductSurface/ProductSurfacePrimary";
-import ProductSurfaceRewards from "../../../components/DataDisplay/ProductSurface/ProductSurfaceRewards";
+import ProductSurfaceSecondary from "../../../components/DataDisplay/ProductSurface/ProductSurfaceSecondary";
 import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { IconContainer } from "../../../components/Primitives/IconContainer";
@@ -117,9 +117,12 @@ export default function BtcSlot({
       <Divider />
 
       {/* Rewards Section */}
-      <ProductSurfaceRewards amount={rewardsAmount} onRewardsPress={onRewardsPress}>
-        <ProgressVisualization progress={50} leftText={rewardsSats} />
-      </ProductSurfaceRewards>
+      <ProductSurfaceSecondary
+        label="Rewards"
+        amount={rewardsAmount}
+        onPress={onRewardsPress}
+        dataViz={<ProgressVisualization progress={50} leftText={rewardsSats} />}
+      />
 
       <Divider />
 

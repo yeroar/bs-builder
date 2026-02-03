@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing["300"],
-    width: 331,
+    flex: 1,
     minHeight: 96,
   },
   containerVertical: {
     flexDirection: "column",
     alignItems: "flex-start",
     gap: spacing["1200"], // 48px gap from Figma
-    width: 162,
+    flex: 1,
     minHeight: 184,
   },
   iconWrapper: {

@@ -1,10 +1,11 @@
 import React from "react";
 import Svg, { Path, type SvgProps } from "react-native-svg";
+import { colorMaps } from "../tokens";
 
 interface IProps extends SvgProps {}
 
 export const SearchMdIcon = (props: IProps) => {
-  const { color = "#7A6E53", ...rest } = props;
+  const { color = colorMaps.face.tertiary, ...rest } = props;
   return (
     <Svg width="16" height="16" fill="none" viewBox="0 0 16 16" {...rest}>
       <Path

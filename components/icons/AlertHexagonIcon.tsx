@@ -1,8 +1,9 @@
 import React from "react";
 import Svg, { Path, type SvgProps } from "react-native-svg";
+import { colorMaps } from "../tokens";
 
 export const AlertHexagonIcon = (props: SvgProps) => {
-  const { color = "#D22619", ...rest } = props;
+  const { color = colorMaps.face.negativeBold, ...rest } = props;
   return (
     <Svg width="16" height="16" fill="none" viewBox="0 0 16 16" {...rest}>
       <Path
