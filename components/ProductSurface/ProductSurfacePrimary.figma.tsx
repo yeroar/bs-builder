@@ -13,17 +13,26 @@ figma.connect(
       }),
       label: figma.string("label"),
       amount: figma.string("amount"),
-      progressViz: figma.children("progressViz"),
+      hasLabelIcon: figma.boolean("hasLabelIcon"),
+      swapCurrency: figma.boolean("swapCurrency"),
+      progressViz: figma.boolean("hasDataViz", {
+        true: figma.children("progressViz"),
+        false: undefined,
+      }),
       primaryButton: figma.boolean("hasPrimaryButton", {
-        true: figma.instance("primaryButton"),
+        true: figma.children("button01"),
         false: undefined,
       }),
       secondaryButton: figma.boolean("hasSecondaryButton", {
-        true: figma.instance("secondaryButton"),
+        true: figma.children("button02"),
         false: undefined,
       }),
       tertiaryButton: figma.boolean("hasTertiaryButton", {
-        true: figma.instance("tertiaryButton"),
+        true: figma.children("button03"),
+        false: undefined,
+      }),
+      messageSlot: figma.boolean("hasMarcomTile", {
+        true: figma.children("marcomProduct tile"),
         false: undefined,
       }),
     },
@@ -32,10 +41,13 @@ figma.connect(
         variant={props.variant}
         label={props.label}
         amount={props.amount}
+        hasLabelIcon={props.hasLabelIcon}
+        swapCurrency={props.swapCurrency}
         progressViz={props.progressViz}
         primaryButton={props.primaryButton}
         secondaryButton={props.secondaryButton}
         tertiaryButton={props.tertiaryButton}
+        messageSlot={props.messageSlot}
       />
     ),
   }

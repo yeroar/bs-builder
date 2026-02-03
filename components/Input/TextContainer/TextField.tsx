@@ -7,18 +7,22 @@ import { colorMaps, spacing } from "../../tokens";
 
 export interface TextFieldProps extends TextContainerProps {
   label?: string | React.ReactNode;
+  isOptional?: boolean;
   footer?: string | React.ReactNode;
   footerType?: FootnoteType;
   containerStyle?: ViewStyle;
+  secureTextEntry?: boolean;
 }
 
 export default function TextField({
   label,
+  isOptional = false,
   footer,
   footerType = "info",
   containerStyle,
   error,
   state,
+  secureTextEntry,
   ...textContainerProps
 }: TextFieldProps) {
   const isError = error || state === "error";
@@ -28,15 +32,22 @@ export default function TextField({
     <View style={[styles.container, containerStyle]}>
       {label && (
         typeof label === "string" ? (
-          <FoldText type="body-md-bold" style={styles.label}>
-            {label}
-          </FoldText>
+          <View style={styles.labelRow}>
+            <FoldText type="body-md-bold" style={styles.label}>
+              {label}
+            </FoldText>
+            {isOptional && (
+              <FoldText type="body-md" style={styles.optionalText}>
+                (optional)
+              </FoldText>
+            )}
+          </View>
         ) : (
           label
         )
       )}
 
-      <TextContainer error={error} state={state} {...textContainerProps} />
+      <TextContainer error={error} state={state} secureTextEntry={secureTextEntry} {...textContainerProps} />
 
       {footer && (
         typeof footer === "string" ? (
@@ -57,7 +68,15 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: spacing["200"],
   },
+  labelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing["100"],
+  },
   label: {
-    color: colorMaps.face.primary,
+    color: colorMaps.face.secondary,
+  },
+  optionalText: {
+    color: colorMaps.face.disabled,
   },
 });

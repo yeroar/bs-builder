@@ -6,6 +6,7 @@ import {
   Pressable,
   ViewStyle,
   TextStyle,
+  KeyboardTypeOptions,
 } from "react-native";
 import { FoldText } from "../../Primitives/FoldText";
 import {
@@ -33,6 +34,8 @@ export interface TextContainerProps {
   inputStyle?: TextStyle;
   error?: boolean;
   autoFocus?: boolean;
+  keyboardType?: KeyboardTypeOptions;
+  secureTextEntry?: boolean;
   testID?: string;
 }
 
@@ -52,6 +55,8 @@ export default function TextContainer({
   inputStyle,
   error = false,
   autoFocus = false,
+  keyboardType,
+  secureTextEntry = false,
   testID,
 }: TextContainerProps) {
   const [focused, setFocused] = useState(false);
@@ -62,12 +67,12 @@ export default function TextContainer({
   const currentState = controlledState || (error
     ? "error"
     : focused
-    ? value.length > 0
-      ? "typing"
-      : "focused"
-    : value.length > 0
-    ? "filled"
-    : "empty"
+      ? value.length > 0
+        ? "typing"
+        : "focused"
+      : value.length > 0
+        ? "filled"
+        : "empty"
   );
 
   // Sync controlled value
@@ -116,10 +121,18 @@ export default function TextContainer({
   );
 
   return (
-    <View style={[styles.container, containerStyle, style]} testID={testID}>
+    <View
+      style={[
+        styles.container,
+        containerStyle,
+        multiline && styles.containerMultiline,
+        style,
+      ]}
+      testID={testID}
+    >
       {/* Leading slot */}
       {leadingSlot && (
-        <View style={styles.slotWrapper}>
+        <View style={[styles.slotWrapper, multiline && styles.slotWrapperMultiline]}>
           {leadingSlot}
         </View>
       )}
@@ -129,7 +142,7 @@ export default function TextContainer({
         {editable ? (
           <RNTextInput
             ref={inputRef}
-            style={inputTextStyle}
+            style={[inputTextStyle, multiline && styles.inputMultiline]}
             value={value}
             placeholder={placeholder}
             placeholderTextColor={colorMaps.face.disabled}
@@ -138,7 +151,10 @@ export default function TextContainer({
             onBlur={handleBlur}
             multiline={multiline}
             autoFocus={autoFocus}
+            keyboardType={keyboardType}
+            secureTextEntry={secureTextEntry}
             editable={editable}
+            textAlignVertical={multiline ? "top" : "center"}
           />
         ) : (
           <Pressable onPress={handlePress}>
@@ -167,7 +183,7 @@ export default function TextContainer({
 
 function getContainerStyle(state: TextContainerState): ViewStyle {
   const isHighContrast = ["focused", "typing", "error"].includes(state);
-  
+
   return {
     backgroundColor: isHighContrast ? colorMaps.special.offWhite : colorMaps.object.tertiary.default,
     borderColor: colorMaps.border.tertiary,
@@ -206,12 +222,20 @@ const styles = StyleSheet.create({
     paddingVertical: spacing["300"],
     borderWidth: 1,
     borderRadius: radius.lg,
-    height: 56,
+    minHeight: 56,
     position: "relative",
+  },
+  containerMultiline: {
+    alignItems: "flex-start",
+    minHeight: 120,
+    paddingVertical: spacing["400"],
   },
   slotWrapper: {
     justifyContent: "center",
     alignItems: "center",
+  },
+  slotWrapperMultiline: {
+    alignSelf: "flex-start",
   },
   inputContainer: {
     flex: 1,
@@ -224,16 +248,20 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     includeFontPadding: false,
   },
+  inputMultiline: {
+    textAlignVertical: "top",
+    minHeight: 80,
+  },
   text: {
     ...typographyStyles["body-md"],
   },
   highlight: {
     position: "absolute",
-    top: -3,
-    left: -3,
-    right: -3,
-    bottom: -3,
-    borderWidth: 1.5,
+    top: -4,
+    left: -4,
+    right: -4,
+    bottom: -4,
+    borderWidth: 2,
     borderRadius: radius.lg + 2,
     pointerEvents: "none",
   },

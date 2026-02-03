@@ -8,7 +8,7 @@ figma.connect(
   {
     props: {
       amount: figma.string("amount"),
-      showSendButton: figma.enum("progress", {
+      action: figma.enum("progress", {
         "100": figma.children("leadingElement"),
         "0": false,
       }),
@@ -17,7 +17,7 @@ figma.connect(
     example: (props) => (
       <ProductSurfaceRewards
         amount={props.amount}
-        showSendButton={props.showSendButton}
+        action={props.action}
       >
         {props.children}
       </ProductSurfaceRewards>

@@ -9,9 +9,9 @@ figma.connect(
     props: {
       label: figma.string("label"),
       type: figma.enum("type", {
-        Primary: "primary",
-        Accent: "accent",
-        Success: "success",
+        primary: "primary",
+        accent: "accent",
+        success: "success",
       }),
       bold: figma.boolean("bold"),
       leadingSlot: figma.boolean("leadingIcon", {
@@ -30,7 +30,7 @@ figma.connect(
         bold={bold}
         leadingSlot={leadingSlot}
         trailingSlot={trailingSlot}
-        onPress={() => {}}
+        onPress={() => { }}
       />
     ),
   }

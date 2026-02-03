@@ -37,10 +37,9 @@ import BankIcon from './icons/BankIcon';
 import XCircleIcon from './icons/XCircleIcon';
 import Message from './Message';
 import ListItem from './ListItem';
-import { Button } from './Button';
+import { Button } from './Buttons/Button';
 import { FoldText } from './Primitives/FoldText';
 import { IconContainer } from './IconContainer';
-import LogoContainer from './LogoContainer/LogoContainer';
 
 interface IconItemProps {
   Icon: React.FC<any>;
@@ -157,19 +156,24 @@ const IconLibrary = () => {
         <View style={styles.specColumn}>
           <View style={styles.demoBox}>
             <Text style={styles.demoLabel}>PRIMARY HEADER (FULL)</Text>
-            <PrimaryHeader
-              header="Ready to fold?"
-              body="Sign up now and start earning sats back on your everyday purchases."
-              validationChildren={
-                <ValidationGroup>
-                  <Validation label="Valid email address" type="success" />
-                  <Validation label="Strong password" type="success" />
-                  <Validation label="Must be at least 18 years old" type="success" />
-                </ValidationGroup>
+            <TransactionHeader
+              title="n,nnn sats"
+              subheader="{transactionType}"
+              footnote="Day Mon DD YYYY, HH:MM AM"
+              leadingSlot={
+                <Chip
+                  label="Push to cardip"
+                  leadingSlot={<CheckCircleIcon />}
+                  onPress={() => { }}
+                />
               }
-              disclaimer="By signing up, you agree to our Terms of Service and Privacy Policy."
-              leadingSlot={<Button label="Get Started" hierarchy="primary" size="lg" onPress={() => { }} />}
-              trailingSlot={<Button label="Learn More" hierarchy="tertiary" size="lg" onPress={() => { }} />}
+              trailingSlot={
+                <Chip
+                  label="Withdrawal pending settlement"
+                  leadingSlot={<ClockIcon />}
+                  onPress={() => { }}
+                />
+              }
             />
           </View>
 
@@ -354,19 +358,19 @@ const IconLibrary = () => {
           </View>
         </View>
 
-        <SectionHeader title="Logo Assets" description="Brand logos with fallback support." />
+        <SectionHeader title="Brand Icons" description="Brand logos with fallback support." />
         <View style={styles.demoGrid}>
           <View style={styles.demoItem}>
             <Text style={styles.demoLabel}>Walmart (LG)</Text>
-            <LogoContainer brand="Walmart" size="lg" />
+            <IconContainer brand="walmart" size="lg" />
           </View>
           <View style={styles.demoItem}>
             <Text style={styles.demoLabel}>Chewy (MD)</Text>
-            <LogoContainer brand="Chewy" size="md" />
+            <IconContainer brand="chewy" size="md" />
           </View>
           <View style={styles.demoItem}>
             <Text style={styles.demoLabel}>Fallback (SM)</Text>
-            <LogoContainer brand="Unknown" size="sm" />
+            <IconContainer brand="unknown" size="sm" />
           </View>
         </View>
 
@@ -379,7 +383,7 @@ const IconLibrary = () => {
               title="Walmart"
               secondaryText="Up to 5% sats back"
               tertiaryText="Online and in-store"
-              leadingSlot={<LogoContainer brand="Walmart" size="lg" />}
+              leadingSlot={<IconContainer brand="walmart" size="lg" />}
               onPress={() => { }}
             />
           </View>
@@ -390,7 +394,7 @@ const IconLibrary = () => {
               title="Chase Checking"
               secondaryText="...4455"
               tertiaryText="No fees"
-              leadingSlot={<LogoContainer brand="Chewy" size="lg" />}
+              leadingSlot={<IconContainer brand="chewy" size="lg" />}
               onPress={() => { }}
             />
           </View>

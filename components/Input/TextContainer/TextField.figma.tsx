@@ -4,7 +4,7 @@ import figma from "@figma/code-connect"
 
 figma.connect(
   TextField,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=13-290",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=111-10945&t=lTYgf58yy7OIKM6M-4",
   {
     props: {
       label: figma.boolean("hasLabel", {

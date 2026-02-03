@@ -18,7 +18,7 @@ export interface ChipProps {
 export default function Chip({
   label,
   type = "primary",
-  bold = true,
+  bold = false,
   leadingSlot,
   trailingSlot,
   onPress,

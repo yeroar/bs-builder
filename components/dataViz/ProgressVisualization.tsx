@@ -31,7 +31,7 @@ export default function ProgressVisualization({
         {/* Left label */}
         <View style={styles.leftLabel}>
           {leftText && (
-            <FoldText type="body-sm" style={styles.labelText}>
+            <FoldText type="body-md" style={styles.labelText}>
               {leftText}
             </FoldText>
           )}

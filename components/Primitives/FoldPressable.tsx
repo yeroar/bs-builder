@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
-import { TouchableOpacity, StyleProp, ViewStyle, View } from "react-native";
+import { Pressable, StyleProp, ViewStyle, PressableStateCallbackType } from "react-native";
 
 type FoldPressableProps = {
-  children?: ReactNode;
+  children?: ReactNode | ((state: { pressed: boolean }) => ReactNode);
   onPress?: () => void;
-  style?: StyleProp<ViewStyle>;
-  activeOpacity?: number;
+  style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
+  disabled?: boolean;
   hitSlop?: { top: number; bottom: number; left: number; right: number };
 };
 
@@ -13,18 +13,18 @@ const FoldPressable: React.FC<FoldPressableProps> = ({
   children,
   onPress,
   style,
-  activeOpacity = 0.7,
+  disabled,
   hitSlop,
 }) => {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       style={style}
-      activeOpacity={activeOpacity}
+      disabled={disabled}
       hitSlop={hitSlop}
     >
-      {children}
-    </TouchableOpacity>
+      {typeof children === "function" ? children : children}
+    </Pressable>
   );
 };
 

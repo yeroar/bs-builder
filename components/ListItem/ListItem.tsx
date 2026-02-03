@@ -9,13 +9,13 @@ import { FoldText } from "../Primitives/FoldText";
 import { ChevronRightIcon } from "../icons/ChevronRightIcon";
 import { colorMaps, spacing, radius } from "../tokens";
 
-export type TextColorVariant = "primary" | "secondary" | "tertiary" | "accent";
-
 export interface ListItemProps {
   title: string;
-  variant?: "giftCard" | "paymentmethod";
+  variant?: "giftCard" | "paymentMethod" | "feature" | "transaction" | "receipt" | "notifications";
   secondaryText?: string;
   tertiaryText?: string;
+  rightTitle?: string;
+  rightSecondaryText?: string;
   leadingSlot?: React.ReactNode;
   trailingSlot?: React.ReactNode;
   chip?: React.ReactNode;
@@ -28,9 +28,11 @@ export interface ListItemProps {
 
 export default function ListItem({
   title,
-  variant = "giftCard",
+  variant = "feature",
   secondaryText,
   tertiaryText,
+  rightTitle,
+  rightSecondaryText,
   leadingSlot,
   trailingSlot,
   chip,
@@ -40,16 +42,21 @@ export default function ListItem({
   style,
   testID,
 }: ListItemProps) {
-  const isPayment = variant === "paymentmethod";
+  const isPayment = variant === "paymentMethod";
   const isGiftCard = variant === "giftCard";
+  const isFeature = variant === "feature";
+  const isTransaction = variant === "transaction" || variant === "receipt";
+  const isNotification = variant === "notifications";
 
-  const getTextColor = (variantStyle: "primary" | "secondary" | "tertiary" | "accent") => {
+  const getTextColor = (variantStyle: "primary" | "secondary" | "tertiary" | "accent" | "blue" | "positive") => {
     if (disabled) return colorMaps.face.disabled;
     switch (variantStyle) {
       case "primary": return colorMaps.face.primary;
       case "secondary": return colorMaps.face.secondary;
       case "tertiary": return colorMaps.face.tertiary;
       case "accent": return colorMaps.face.accentBold;
+      case "blue": return colorMaps.face.accentBold;
+      case "positive": return colorMaps.face.positiveBold;
       default: return colorMaps.face.primary;
     }
   };
@@ -58,31 +65,27 @@ export default function ListItem({
     <Pressable
       onPress={onPress}
       disabled={disabled || !onPress}
-      style={({ pressed }) => [styles.container, style]}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && !disabled && styles.pressedContainer,
+        style
+      ]}
       testID={testID}
     >
       {({ pressed }) => (
         <>
-          {/* Pressed overlay */}
-          {pressed && !disabled && <View style={styles.pressedOverlay} />}
-
           {/* Leading slot */}
-          {leadingSlot}
+          {(leadingSlot || isTransaction || isNotification) && (
+            <View style={styles.leadingContainer}>
+              {leadingSlot}
+            </View>
+          )}
 
-          {/* Content */}
+          {/* Content area */}
           <View style={styles.content}>
+            {/* Left Column */}
             <View style={styles.leftColumn}>
-              {/* Secondary text (on top for payment variant) */}
-              {isPayment && secondaryText && (
-                <FoldText
-                  type="body-md"
-                  style={{ color: getTextColor("secondary") }}
-                >
-                  {secondaryText}
-                </FoldText>
-              )}
-
-              {/* Title row with optional chip */}
+              {/* Main row with title and chip */}
               <View style={styles.titleRow}>
                 <FoldText
                   type="body-md-bold"
@@ -93,36 +96,61 @@ export default function ListItem({
                 {chip}
               </View>
 
-              {/* Secondary text (below for giftCard variant) */}
-              {isGiftCard && secondaryText && (
+              {/* Secondary text below title */}
+              {secondaryText && (
                 <FoldText
-                  type="body-md-bold"
-                  style={{ color: getTextColor("accent") }}
+                  type={isGiftCard ? "body-md-bold" : "body-md"}
+                  style={{
+                    color: getTextColor(isGiftCard ? "blue" : (isNotification ? "tertiary" : "secondary"))
+                  }}
                 >
                   {secondaryText}
                 </FoldText>
               )}
 
-              {/* Tertiary text */}
-              {tertiaryText && (
-                <FoldText
-                  type={isGiftCard ? "body-md-bold" : "body-md"}
-                  style={{ color: getTextColor(isGiftCard ? "tertiary" : "accent") }}
-                >
+              {/* Tertiary text (below secondary, e.g. Gift Card) */}
+              {isGiftCard && tertiaryText && (
+                <FoldText type="body-md" style={{ color: getTextColor("secondary") }}>
+                  {tertiaryText}
+                </FoldText>
+              )}
+
+              {/* Tertiary text for Payment Method (accentBold/blue color) */}
+              {isPayment && tertiaryText && (
+                <FoldText type="body-md-bold" style={{ color: getTextColor("accent") }}>
                   {tertiaryText}
                 </FoldText>
               )}
             </View>
 
-            {/* Trailing slot */}
-            {trailingSlot !== undefined ? (
-              trailingSlot
+            {/* Right Column (Transaction/Receipt variants or generic trailing slot) */}
+            {isTransaction ? (
+              <View style={styles.rightColumn}>
+                {rightTitle && (
+                  <View style={styles.rightTitleRow}>
+                    <FoldText type="body-md-bold" style={{ color: getTextColor("primary") }}>
+                      {rightTitle}
+                    </FoldText>
+                  </View>
+                )}
+                {rightSecondaryText && (
+                  <FoldText type="body-md" style={{ color: getTextColor("secondary") }}>
+                    {rightSecondaryText}
+                  </FoldText>
+                )}
+              </View>
             ) : (
-              <ChevronRightIcon
-                width={30}
-                height={30}
-                color={colorMaps.face.primary}
-              />
+              <View style={styles.trailingContainer}>
+                {trailingSlot !== undefined ? (
+                  trailingSlot
+                ) : (isFeature || isNotification) ? (
+                  <ChevronRightIcon
+                    width={24}
+                    height={24}
+                    color={colorMaps.face.primary}
+                  />
+                ) : null}
+              </View>
             )}
           </View>
 
@@ -140,17 +168,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: spacing["400"],
     gap: spacing["300"],
-    backgroundColor: colorMaps.object.tertiary.default,
+    backgroundColor: "transparent",
     position: "relative",
   },
-  pressedOverlay: {
-    position: "absolute",
-    top: 4,
-    left: -12,
-    right: -12,
-    bottom: 4,
+  pressedContainer: {
     backgroundColor: colorMaps.object.tertiary.pressed,
     borderRadius: radius.lg,
+  },
+  leadingContainer: {
+    minWidth: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
   content: {
     flex: 1,
@@ -168,12 +196,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing["150"],
   },
+  rightColumn: {
+    alignItems: "flex-end",
+    flexDirection: "column",
+    gap: spacing["50"],
+  },
+  rightTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing["100"],
+  },
+  trailingContainer: {
+    minWidth: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   divider: {
     position: "absolute",
     bottom: 0,
-    left: 0,
-    right: 0,
+    left: spacing["400"],
+    right: spacing["400"],
     height: 1,
-    backgroundColor: colorMaps.border.secondary,
+    backgroundColor: colorMaps.border.tertiary,
   },
 });

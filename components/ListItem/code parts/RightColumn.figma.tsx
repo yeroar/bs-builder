@@ -7,13 +7,15 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=28-18335",
   {
     props: {
-      primaryText: figma.boolean("hasPrimatyText", {
-        true: figma.string("primatyText"),
+      primaryText: figma.string("primatyText"), // Note: typo in Figma prop name
+      hasSecondaryText: figma.boolean("hasSecondaryText"),
+      secondaryText: figma.boolean("hasSecondaryText", {
+        true: figma.string("secondaryText"),
         false: undefined,
       }),
-      secondaryText: figma.string("secondaryText"),
+      hasChip: figma.boolean("hasChip"),
       chip: figma.boolean("hasChip", {
-        true: figma.instance("chip"),
+        true: figma.children("chip"),
         false: undefined,
       }),
     },

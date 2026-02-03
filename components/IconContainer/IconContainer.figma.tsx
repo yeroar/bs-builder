@@ -1,32 +1,19 @@
 import React from "react";
-import IconContainer from "./IconContainer";
 import figma from "@figma/code-connect";
+import IconContainer from "./IconContainer";
 
+// IconContainerBrand mapping
 figma.connect(
   IconContainer,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=20-9703",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=20-13118",
   {
     props: {
-      variant: figma.enum("variant", {
-        "default-fill": "default-fill",
-        "default-stroke": "default-stroke",
-        active: "active",
-        error: "error",
-        success: "success",
+      brand: figma.enum("brand", {
+        chewy: "chewy",
+        foldCash: "foldCash",
+        uber: "uber",
       }),
-      size: figma.enum("size", {
-        lrg: "lg",
-        med: "md",
-        sml: "sm",
-      }),
-      icon: figma.instance("icon"),
     },
-    example: (props) => (
-      <IconContainer
-        variant={props.variant}
-        size={props.size}
-        icon={props.icon}
-      />
-    ),
+    example: ({ brand }) => <IconContainer brand={brand} size="lg" />,
   }
 );

@@ -8,13 +8,16 @@ figma.connect(
   {
     props: {
       header: figma.string("header"),
-      hasBodyText: figma.boolean("hasBodyText"),
-      bodyText: figma.string("bodyText"),
+      bodyText: figma.boolean("hasBodyText", {
+        true: figma.string("bodyText"),
+        false: undefined,
+      }),
     },
     example: (props) => (
       <MarcomSecondaryTile
         header={props.header}
-        bodyText={props.hasBodyText ? props.bodyText : undefined}
+        bodyText={props.bodyText}
+        onPress={() => {}}
       />
     ),
   }

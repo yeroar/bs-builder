@@ -2,7 +2,6 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
 import { spacing, colorMaps } from "../tokens";
-import { Button } from "../Button";
 
 export interface PrimaryHeaderProps {
   header: string;
@@ -10,6 +9,7 @@ export interface PrimaryHeaderProps {
   disclaimer?: string;
   hasBodyText?: boolean;
   hasDisclaimer?: boolean;
+  iconSlot?: React.ReactNode;
   leadingSlot?: React.ReactNode;
   trailingSlot?: React.ReactNode;
   validationChildren?: React.ReactNode;
@@ -21,12 +21,14 @@ export default function PrimaryHeader({
   disclaimer,
   hasBodyText = true,
   hasDisclaimer = true,
+  iconSlot,
   leadingSlot,
   trailingSlot,
   validationChildren,
 }: PrimaryHeaderProps) {
   return (
     <View style={styles.container}>
+      {iconSlot}
       <View style={styles.copy}>
         <FoldText type="header-xl" style={styles.header}>
           {header}

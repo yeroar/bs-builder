@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import { colorMaps } from './tokens/colorMaps';
+import { colorMaps, spacing } from './tokens';
 import NavTab from './NavTab/NavTab';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -9,11 +9,12 @@ const TAB_WIDTH = SCREEN_WIDTH / 3;
 interface NavTabBarProps {
   activeTab?: 'left' | 'center' | 'right' | 'notifications';
   onTabPress?: (tab: 'left' | 'center' | 'right' | 'notifications') => void;
+  variant?: 'default' | 'brand';
 }
 
-const NavTabBar = ({ activeTab: controlledActiveTab, onTabPress }: NavTabBarProps) => {
+const NavTabBar = ({ activeTab: controlledActiveTab, onTabPress, variant = 'default' }: NavTabBarProps) => {
   const [internalActiveTab, setInternalActiveTab] = useState<'left' | 'center' | 'right' | 'notifications'>('left');
-  
+
   const activeTab = controlledActiveTab || internalActiveTab;
   const setActiveTab = (tab: 'left' | 'center' | 'right' | 'notifications') => {
     if (onTabPress) {
@@ -23,24 +24,26 @@ const NavTabBar = ({ activeTab: controlledActiveTab, onTabPress }: NavTabBarProp
     }
   };
 
+  const isBrand = variant === 'brand';
+
   return (
-    <View style={styles.tabBar}>
-      <NavTab 
-        variant="left" 
-        isActive={activeTab === 'left'} 
-        onPress={() => setActiveTab('left')} 
+    <View style={[styles.tabBar, isBrand && styles.tabBarBrand]}>
+      <NavTab
+        variant="left"
+        isActive={activeTab === 'left'}
+        onPress={() => setActiveTab('left')}
         style={styles.tabLeft}
       />
-      <NavTab 
-        variant="center" 
-        isActive={activeTab === 'center'} 
-        onPress={() => setActiveTab('center')} 
+      <NavTab
+        variant="center"
+        isActive={activeTab === 'center'}
+        onPress={() => setActiveTab('center')}
         style={styles.tabCenter}
       />
-      <NavTab 
-        variant="right" 
-        isActive={activeTab === 'right'} 
-        onPress={() => setActiveTab('right')} 
+      <NavTab
+        variant="right"
+        isActive={activeTab === 'right'}
+        onPress={() => setActiveTab('right')}
         style={styles.tabRight}
       />
     </View>
@@ -60,6 +63,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  tabBarBrand: {
+    backgroundColor: colorMaps.object.primary.bold.default, // Yellow #FD3
+    borderTopWidth: 0,
+  },
   tabLeft: {
     width: TAB_WIDTH,
     alignItems: 'flex-end',
@@ -68,7 +75,7 @@ const styles = StyleSheet.create({
   tabCenter: {
     width: TAB_WIDTH,
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing["200"],
   },
   tabRight: {
     width: TAB_WIDTH,

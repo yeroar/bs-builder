@@ -13,25 +13,40 @@ import FoldPressable from './components/Primitives/FoldPressable';
 import BankScreen from './components/Screens/BankScreen';
 import ExchangeScreen from './components/Screens/ExchangeScreen';
 import TagScreen from './components/Screens/TagScreen';
-import KeyboardTestScreen from './components/Screens/KeyboardTestScreen';
+import HistoryScreen from './components/Screens/HistoryScreen';
+import TransactionDetailScreen from './components/Screens/TransactionDetailScreen';
+import { ComponentLibraryScreen } from './components/ComponentLibrary';
+import { TransactionData } from './components/Transactions/TransactionList';
+import SearchGCEmptySlot from './components/Slots/GiftCard/SearchGCEmptySlot';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'history'>('left');
-  const [previousTab, setPreviousTab] = useState<'left' | 'center' | 'right' | 'notifications'>('left');
+  const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'history' | 'componentLibrary' | 'transactionDetail'>('center');
+  const [previousTab, setPreviousTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'componentLibrary'>('center');
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionData | null>(null);
+  const [showSearchGiftCards, setShowSearchGiftCards] = useState(false);
 
   const goToHistory = () => {
     setPreviousTab(activeTab as any);
     setActiveTab('history');
   };
 
+  const goToTransactionDetail = (transaction: TransactionData) => {
+    setSelectedTransaction(transaction);
+    setActiveTab('transactionDetail');
+  };
+
+  const goToSearchGiftCards = () => {
+    setShowSearchGiftCards(true);
+  };
+
   const renderScreen = () => {
     switch (activeTab) {
       case 'left':
-        return <BankScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} />;
+        return <BankScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} />;
       case 'center':
-        return <ExchangeScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} />;
+        return <ExchangeScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} />;
       case 'right':
-        return <TagScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} />;
+        return <TagScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} onSearchGiftCards={goToSearchGiftCards} />;
       case 'notifications':
         return (
           <FullscreenTemplate
@@ -49,9 +64,23 @@ export default function App() {
           </FullscreenTemplate>
         );
       case 'history':
-        return <KeyboardTestScreen onBack={() => setActiveTab(previousTab)} />;
+        return (
+          <HistoryScreen
+            onBack={() => setActiveTab(previousTab)}
+            onTransactionPress={goToTransactionDetail}
+          />
+        );
+      case 'transactionDetail':
+        return selectedTransaction ? (
+          <TransactionDetailScreen
+            transaction={selectedTransaction}
+            onBack={() => setActiveTab('history')}
+          />
+        ) : null;
+      case 'componentLibrary':
+        return <ComponentLibraryScreen onBack={() => setActiveTab(previousTab)} />;
       default:
-        return <BankScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} />;
+        return <BankScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} />;
     }
   };
 
@@ -59,7 +88,14 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <View style={{ flex: 1 }}>
-          <IconLibrary />
+          {renderScreen()}
+          {showSearchGiftCards && (
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
+              <SearchGCEmptySlot
+                onSearchBack={() => setShowSearchGiftCards(false)}
+              />
+            </View>
+          )}
           <StatusBar style="auto" />
         </View>
       </NavigationContainer>

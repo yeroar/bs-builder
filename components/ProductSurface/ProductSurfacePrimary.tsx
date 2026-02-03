@@ -9,12 +9,15 @@ export interface ProductSurfacePrimaryProps {
   variant?: "expanded" | "condensed";
   label?: string;
   amount?: string;
+  hasLabelIcon?: boolean;
+  swapCurrency?: boolean;
   progressViz?: React.ReactNode;
   primaryButton?: React.ReactNode;
   secondaryButton?: React.ReactNode;
   tertiaryButton?: React.ReactNode;
   onLabelPress?: () => void;
   onAmountPress?: () => void;
+  messageSlot?: React.ReactNode;
   style?: ViewStyle;
 }
 
@@ -22,12 +25,15 @@ export default function ProductSurfacePrimary({
   variant = "expanded",
   label = "Label",
   amount = "$0.00",
+  hasLabelIcon = false,
+  swapCurrency = false,
   progressViz,
   primaryButton,
   secondaryButton,
   tertiaryButton,
   onLabelPress,
   onAmountPress,
+  messageSlot,
   style,
 }: ProductSurfacePrimaryProps) {
   const isCondensed = variant === "condensed";
@@ -48,11 +54,13 @@ export default function ProductSurfacePrimary({
             <FoldText type="header-md" style={styles.labelText}>
               {label}
             </FoldText>
-            <ChevronRightIcon
-              width={24}
-              height={24}
-              color={colorMaps.face.primary}
-            />
+            {hasLabelIcon && (
+              <ChevronRightIcon
+                width={20}
+                height={20}
+                color={colorMaps.face.primary}
+              />
+            )}
           </Pressable>
 
           {/* Amount with swap icon */}
@@ -64,11 +72,13 @@ export default function ProductSurfacePrimary({
             <FoldText type="header-md" style={styles.amountText}>
               {amount}
             </FoldText>
-            <SwapIcon
-              width={16}
-              height={16}
-              color={colorMaps.face.primary}
-            />
+            {swapCurrency && (
+              <SwapIcon
+                width={20}
+                height={20}
+                color={colorMaps.face.primary}
+              />
+            )}
           </Pressable>
         </View>
 
@@ -79,11 +89,35 @@ export default function ProductSurfacePrimary({
       {/* Action buttons */}
       {hasButtons && (
         <View style={styles.buttonsRow}>
-          {primaryButton}
-          {secondaryButton}
-          {tertiaryButton}
+          {primaryButton && (
+            <View style={styles.buttonWrapper}>
+              {React.cloneElement(primaryButton as React.ReactElement, {
+                style: { width: "100%", paddingHorizontal: 0 },
+                numberOfLines: 1,
+              })}
+            </View>
+          )}
+          {secondaryButton && (
+            <View style={styles.buttonWrapper}>
+              {React.cloneElement(secondaryButton as React.ReactElement, {
+                style: { width: "100%", paddingHorizontal: 0 },
+                numberOfLines: 1,
+              })}
+            </View>
+          )}
+          {tertiaryButton && (
+            <View style={styles.buttonWrapper}>
+              {React.cloneElement(tertiaryButton as React.ReactElement, {
+                style: { width: "100%", paddingHorizontal: 0 },
+                numberOfLines: 1,
+              })}
+            </View>
+          )}
         </View>
       )}
+
+      {/* Marcom / Message slot */}
+      {messageSlot}
     </View>
   );
 }
@@ -130,5 +164,9 @@ const styles = StyleSheet.create({
   buttonsRow: {
     flexDirection: "row",
     gap: spacing["300"],
+  },
+  buttonWrapper: {
+    flex: 1,
+    minWidth: 0,
   },
 });

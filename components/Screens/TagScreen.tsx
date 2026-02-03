@@ -1,35 +1,40 @@
 import React from "react";
-import { View, Text } from "react-native";
 import RootTemplate from "../Templates/RootTemplate";
-
 import { BellIcon } from "../icons/BellIcon";
 import { ClockIcon } from "../icons/ClockIcon";
 import FoldPressable from "../Primitives/FoldPressable";
+import { colorMaps } from "../tokens";
+import TagHomeSlot from "../Slots/TagHomeSlot";
 
 interface TagScreenProps {
-  onTabPress: (tab: "left" | "center" | "right" | "notifications" | "history") => void;
+  onTabPress: (tab: "left" | "center" | "right" | "notifications" | "history" | "componentLibrary") => void;
   onHistoryPress: () => void;
+  onMenuPress: () => void;
+  onSearchGiftCards?: () => void;
 }
 
-export default function TagScreen({ onTabPress, onHistoryPress }: TagScreenProps) {
+export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onSearchGiftCards }: TagScreenProps) {
   return (
     <RootTemplate
+      variant="root"
       activeTab="right"
       onTabPress={onTabPress}
+      onLeftPress={onMenuPress}
+      scrollable={true}
       rightComponents={[
-        <FoldPressable key="bell" onPress={() => onTabPress("notifications")}>
-          <BellIcon />
-        </FoldPressable>,
         <FoldPressable key="clock" onPress={onHistoryPress}>
-          <ClockIcon />
-        </FoldPressable>
+          <ClockIcon width={24} height={24} color={colorMaps.face.primary} />
+        </FoldPressable>,
+        <FoldPressable key="bell" onPress={() => onTabPress("componentLibrary")}>
+          <BellIcon width={24} height={24} color={colorMaps.face.primary} />
+        </FoldPressable>,
       ]}
     >
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 24 }}>
-        <Text style={{ fontSize: 18, textAlign: "center", color: "#383323" }}>
-          Shop Screen
-        </Text>
-      </View>
+      <TagHomeSlot
+        onRedeemPress={() => console.log("Redeem Bitcoin Gift Card")}
+        onSearchGiftCards={onSearchGiftCards}
+        onGiftCardPress={(id) => console.log("Gift card pressed:", id)}
+      />
     </RootTemplate>
   );
 }

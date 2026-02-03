@@ -7,9 +7,14 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=29-19703",
   {
     props: {
-      leftText: figma.string("leftText"),
-      hasRightText: figma.boolean("hasRightText"),
-      rightText: figma.string("rightText"),
+      leftText: figma.boolean("hasLeftText", {
+        true: figma.string("leftText"),
+        false: undefined,
+      }),
+      rightText: figma.boolean("hasRightText", {
+        true: figma.string("rightText"),
+        false: undefined,
+      }),
       leadingSlot: figma.boolean("hasLeftTextIcon", {
         true: figma.instance("leftTextIcon"),
         false: undefined,
@@ -23,7 +28,7 @@ figma.connect(
     example: (props) => (
       <ProgressVisualization
         leftText={props.leftText}
-        rightText={props.hasRightText ? props.rightText : undefined}
+        rightText={props.rightText}
         leadingSlot={props.leadingSlot}
         trailingSlot={props.trailingSlot}
       >

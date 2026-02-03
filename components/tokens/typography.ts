@@ -30,7 +30,7 @@ export const typographyStyles: any = {
   "header-md": { fontFamily: "Geist", fontWeight: "400", fontSize: 24, lineHeight: 28 },
   "header-sm": { fontFamily: "Geist", fontWeight: "400", fontSize: 20, lineHeight: 24 },
   "header-xs": { fontFamily: "Geist", fontWeight: "400", fontSize: 18, lineHeight: 20 },
-  "header-xxs": { fontFamily: "Geist", fontWeight: "400", fontSize: 16, lineHeight: 18 },
+  "header-xxs": { fontFamily: "Geist", fontWeight: "500", fontSize: 16, lineHeight: 18 },
   "body-lg": { fontFamily: "Geist", fontWeight: "400", fontSize: 16, lineHeight: 24 },
   "body-lg-bold": { fontFamily: "Geist", fontWeight: "500", fontSize: 16, lineHeight: 24 },
   "body-md": { fontFamily: "Geist", fontWeight: "400", fontSize: 14, lineHeight: 20 },

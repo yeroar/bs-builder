@@ -7,8 +7,6 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=20-12203",
   {
     props: {},
-    example: () => <ArrowNarrowRightIcon  />,
-      
-    
+    example: () => <ArrowNarrowRightIcon />,
   }
 )

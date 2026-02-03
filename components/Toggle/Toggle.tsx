@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     height: KNOB_SIZE,
     borderRadius: radius.rounded,
     backgroundColor: colorMaps.special.offWhite,
-    shadowColor: "#000",
+    shadowColor: colorMaps.face.primary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
     shadowRadius: 8,

@@ -30,7 +30,7 @@ const TOKENS = {
 interface FoldPageViewHeaderProps {
   title?: string;
   subTitle?: string;
-  leftIcon?: string | "back" | "menu" | "x";
+  leftIcon?: string | "back" | "menu" | "x" | "chevron-left";
   rightIcon?: string | "x";
   onLeftPress?: () => void;
   onRightPress?: () => void;
@@ -45,6 +45,7 @@ interface FoldPageViewHeaderProps {
   rightComponents?: React.ReactNode[];
   marginBottom?: number;
   step?: React.ReactNode;
+  showHeader?: boolean;
 }
 
 const HEADER_HEIGHT = 48;
@@ -67,16 +68,21 @@ export default function FoldPageViewHeader({
   rightComponents = [],
   marginBottom = 24,
   step,
+  showHeader = true,
 }: FoldPageViewHeaderProps) {
   const insets = useSafeAreaInsets();
   const headerTextColor = titleColor || TOKENS.colors.textPrimary;
 
+  if (!showHeader) {
+    return null;
+  }
+
   const displayRightComponents =
-    variant === "root" ? rightComponents.slice(0, 3) : [];
+    variant === "root" ? (rightComponents || []).slice(0, 3) : [];
 
   const renderLeftIcon = () => {
     if (leftIcon === "menu") return <MenuIcon />;
-    if (leftIcon === "back") return <ChevronLeftIcon />;
+    if (leftIcon === "back" || leftIcon === "chevron-left") return <ChevronLeftIcon />;
     return <XCloseIcon />;
   };
 
@@ -109,7 +115,7 @@ export default function FoldPageViewHeader({
                 leadingSlot={
                   leftIcon === "menu" || (variant === "root" && !leftIcon) ? (
                     <MenuIcon />
-                  ) : leftIcon === "back" || (variant === "fullscreen" && !leftIcon) ? (
+                  ) : leftIcon === "back" || leftIcon === "chevron-left" || (variant === "fullscreen" && !leftIcon) ? (
                     <ChevronLeftIcon />
                   ) : (
                     <XCloseIcon />
@@ -159,9 +165,9 @@ export default function FoldPageViewHeader({
 
         {/* Right side - different layout based on variant */}
         <View style={styles.rightSide}>
-          {variant === "root" && displayRightComponents.length > 0 ? (
+          {rightComponents.length > 0 ? (
             <View style={styles.multipleIconsContainer}>
-              {displayRightComponents.map((component, index) => (
+              {rightComponents.map((component, index) => (
                 <View key={index} style={styles.iconWrapper}>
                   {component}
                 </View>
@@ -217,7 +223,7 @@ const styles = StyleSheet.create({
   multipleIconsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
+    gap: spacing["400"],
   },
   iconWrapper: {
     justifyContent: "center",

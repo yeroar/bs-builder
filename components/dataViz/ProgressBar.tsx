@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: colorMaps.object.primary.bold.default,
     borderRadius: radius.rounded,
-    minWidth: 6, // Minimum visible size at 0%
+    minWidth: 6,
   },
 });

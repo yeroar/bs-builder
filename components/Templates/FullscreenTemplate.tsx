@@ -1,13 +1,23 @@
-import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { colorMaps } from "../tokens/colorMaps";
+import React, { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
+import { View, StyleSheet, ScrollView, Animated, Dimensions } from "react-native";
+import { colorMaps, spacing } from "../tokens";
 import FoldPageViewHeader from "../TopNav/FoldPageViewHeader";
+
+export type NavVariant = "start" | "step";
+
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
+
+export interface FullscreenTemplateRef {
+  close: () => void;
+}
 
 interface FullscreenTemplateProps {
   children?: React.ReactNode;
   title?: string;
   subTitle?: string;
-  leftIcon?: string | "back" | "menu" | "x";
+  navVariant?: NavVariant;
+  leftIcon?: string | "back" | "menu" | "x" | "chevron-left";
   onLeftPress?: () => void;
   rightIcon?: string | "x";
   onRightPress?: () => void;
@@ -16,15 +26,20 @@ interface FullscreenTemplateProps {
   rightComponents?: React.ReactNode[];
   onTabPress?: (tab: "left" | "center" | "right" | "notifications") => void;
   scrollable?: boolean;
-  variant?: "fullscreen" | "progressive";
+  variant?: "fullscreen" | "progressive" | "yellow";
   step?: React.ReactNode;
+  /** Disable entrance slide animation for "start" variant */
+  disableEntranceAnimation?: boolean;
+  /** Disable slide animation for "start" variant (both entrance and exit) */
+  disableAnimation?: boolean;
 }
 
-export default function FullscreenTemplate({
+const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateProps>(({
   children,
   title,
   subTitle,
-  leftIcon = "x",
+  navVariant = "start",
+  leftIcon,
   onLeftPress,
   rightIcon,
   onRightPress,
@@ -34,30 +49,90 @@ export default function FullscreenTemplate({
   scrollable = true,
   variant = "fullscreen",
   step,
-}: FullscreenTemplateProps) {
+  disableEntranceAnimation = false,
+  disableAnimation = false,
+}, ref) => {
   const ContentWrapper = scrollable ? ScrollView : View;
+  const isYellow = variant === "yellow";
+  const headerVariant = isYellow ? "fullscreen" : variant;
 
-  return (
-    <View style={styles.container}>
+  // Determine left icon based on navVariant or explicit leftIcon
+  const resolvedLeftIcon = leftIcon ?? (navVariant === "step" ? "chevron-left" : "x");
+
+  // Animation setup based on navVariant
+  const isStartVariant = navVariant === "start";
+  const isStepVariant = navVariant === "step";
+
+  // Determine if we should animate
+  const shouldAnimateEntrance = !disableAnimation && !disableEntranceAnimation;
+  const shouldAnimateExit = !disableAnimation;
+
+  // Use different initial values based on variant
+  const getInitialValue = () => {
+    if (!shouldAnimateEntrance) return 0;
+    if (isStartVariant) return screenHeight; // slide from bottom
+    if (isStepVariant) return screenWidth; // slide from right
+    return 0;
+  };
+
+  const slideAnim = useRef(new Animated.Value(getInitialValue())).current;
+  const isAnimatingOut = useRef(false);
+
+  useEffect(() => {
+    if (shouldAnimateEntrance) {
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        tension: 65,
+        friction: 11,
+      }).start();
+    }
+  }, []);
+
+  const triggerClose = () => {
+    if (shouldAnimateExit && onLeftPress && !isAnimatingOut.current) {
+      isAnimatingOut.current = true;
+      const exitValue = isStartVariant ? screenHeight : screenWidth;
+      Animated.timing(slideAnim, {
+        toValue: exitValue,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        onLeftPress();
+      });
+    } else if (onLeftPress) {
+      onLeftPress();
+    }
+  };
+
+  // Expose close method via ref
+  useImperativeHandle(ref, () => ({
+    close: triggerClose,
+  }));
+
+  const handleLeftPress = triggerClose;
+
+  const content = (
+    <View style={[styles.container, isYellow && styles.containerYellow]}>
       {/* Header */}
       <FoldPageViewHeader
         title={title}
         subTitle={subTitle}
-        leftIcon={leftIcon}
-        onLeftPress={onLeftPress}
+        leftIcon={resolvedLeftIcon}
+        onLeftPress={handleLeftPress}
         rightIcon={rightIcon}
         onRightPress={onRightPress}
         leftComponent={leftComponent}
         rightComponent={rightComponent}
         rightComponents={rightComponents}
-        variant={variant}
+        variant={headerVariant}
         marginBottom={0}
         step={step}
       />
 
       {/* Content Slot */}
-      <ContentWrapper 
-        style={styles.content} 
+      <ContentWrapper
+        style={styles.content}
         contentContainerStyle={scrollable ? styles.scrollContent : undefined}
         showsVerticalScrollIndicator={false}
       >
@@ -65,17 +140,57 @@ export default function FullscreenTemplate({
       </ContentWrapper>
     </View>
   );
-}
+
+  // Determine transform based on variant
+  const getTransform = () => {
+    if (isStartVariant) {
+      return [{ translateY: slideAnim }];
+    }
+    if (isStepVariant) {
+      return [{ translateX: slideAnim }];
+    }
+    return [];
+  };
+
+  if (shouldAnimateEntrance || shouldAnimateExit) {
+    return (
+      <Animated.View
+        style={[
+          styles.animatedContainer,
+          { transform: getTransform() },
+        ]}
+      >
+        {content}
+      </Animated.View>
+    );
+  }
+
+  return content;
+});
+
+export default FullscreenTemplate;
 
 const styles = StyleSheet.create({
+  animatedContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
+    backgroundColor: colorMaps.layer.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colorMaps.layer.background,
+  },
+  containerYellow: {
+    backgroundColor: colorMaps.object.primary.bold.default,
   },
   content: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 24, // Extra padding at the bottom for scrollable content
+    paddingBottom: spacing["600"], // Extra padding at the bottom for scrollable content
   },
 });

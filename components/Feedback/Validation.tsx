@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
 import { CheckCircleIcon } from "../icons/CheckCircleIcon";
@@ -10,36 +10,51 @@ export type ValidationType = "success" | "danger";
 export interface ValidationProps {
   label: string;
   type?: ValidationType;
+  leadingIcon?: ReactNode;
   style?: ViewStyle;
 }
 
 export default function Validation({
   label = "Validation",
   type = "success",
+  leadingIcon,
   style,
 }: ValidationProps) {
   const isDanger = type === "danger";
   const isSuccess = type === "success";
 
+  // Use custom leadingIcon if provided, otherwise use default based on type
+  const renderLeadingIcon = () => {
+    if (leadingIcon) {
+      return leadingIcon;
+    }
+    if (isSuccess) {
+      return (
+        <CheckCircleIcon
+          width={16}
+          height={16}
+          color={colorMaps.face.primary}
+        />
+      );
+    }
+    if (isDanger) {
+      return (
+        <XCircleIcon
+          width={16}
+          height={16}
+          color={colorMaps.face.negativeBold}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={[styles.container, style]}>
-      {isSuccess && (
-        <CheckCircleIcon 
-          width={16} 
-          height={16} 
-          color={colorMaps.face.primary} 
-        />
-      )}
+      {renderLeadingIcon()}
       <FoldText type="body-sm" style={styles.label}>
         {label}
       </FoldText>
-      {isDanger && (
-        <XCircleIcon 
-          width={16} 
-          height={16} 
-          color={colorMaps.face.negativeBold} 
-        />
-      )}
     </View>
   );
 }
@@ -52,7 +67,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   label: {
-    flex: 1,
     color: colorMaps.face.secondary,
   },
 });
