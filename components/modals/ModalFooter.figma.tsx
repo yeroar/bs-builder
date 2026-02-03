@@ -12,9 +12,9 @@ figma.connect(
         true: figma.string("disclaimer"),
         false: undefined,
       }),
-      variant: figma.enum("type", {
+      type: figma.enum("type", {
         default: "default",
-        dulaButton: "dulaButton",
+        dualButton: "dualButton",
       }),
       primaryButton: figma.children("button01"),
       secondaryButton: figma.children("button02"),
@@ -22,7 +22,7 @@ figma.connect(
     },
     example: (props) => (
       <ModalFooter
-        variant={props.variant}
+        type={props.type}
         disclaimer={props.disclaimer}
         primaryButton={props.primaryButton}
         secondaryButton={props.secondaryButton}

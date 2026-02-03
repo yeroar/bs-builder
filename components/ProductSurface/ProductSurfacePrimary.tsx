@@ -9,6 +9,7 @@ export interface ProductSurfacePrimaryProps {
   variant?: "expanded" | "condensed";
   label?: string;
   amount?: string;
+  secondaryAmount?: string;
   hasLabelIcon?: boolean;
   swapCurrency?: boolean;
   progressViz?: React.ReactNode;
@@ -91,7 +92,7 @@ export default function ProductSurfacePrimary({
         <View style={styles.buttonsRow}>
           {primaryButton && (
             <View style={styles.buttonWrapper}>
-              {React.cloneElement(primaryButton as React.ReactElement, {
+              {React.cloneElement(primaryButton as React.ReactElement<any>, {
                 style: { width: "100%", paddingHorizontal: 0 },
                 numberOfLines: 1,
               })}
@@ -99,7 +100,7 @@ export default function ProductSurfacePrimary({
           )}
           {secondaryButton && (
             <View style={styles.buttonWrapper}>
-              {React.cloneElement(secondaryButton as React.ReactElement, {
+              {React.cloneElement(secondaryButton as React.ReactElement<any>, {
                 style: { width: "100%", paddingHorizontal: 0 },
                 numberOfLines: 1,
               })}
@@ -107,7 +108,7 @@ export default function ProductSurfacePrimary({
           )}
           {tertiaryButton && (
             <View style={styles.buttonWrapper}>
-              {React.cloneElement(tertiaryButton as React.ReactElement, {
+              {React.cloneElement(tertiaryButton as React.ReactElement<any>, {
                 style: { width: "100%", paddingHorizontal: 0 },
                 numberOfLines: 1,
               })}

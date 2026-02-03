@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import FullscreenTemplate from "../Templates/FullscreenTemplate";
+import FullscreenTemplate from "../../ui/Templates/FullscreenTemplate";
 import PillSelector from "../PillSelector/PillSelector";
 import { FoldText } from "../Primitives/FoldText";
 import Toast, { ToastType } from "../Feedback/Toast/Toast";

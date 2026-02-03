@@ -4,7 +4,7 @@ import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
 import Button from "../Buttons/Button/Button";
 import { FoldText } from "../Primitives/FoldText";
-import GCCategoriesSlot, { GCCategory } from "../Slots/GiftCard/GCCategoriesSlot";
+import GCCategoriesSlot, { GCCategory } from "../../ui/Slots/GiftCard/GCCategoriesSlot";
 import { spacing, colorMaps } from "../tokens";
 
 export interface GCCategoriesModalProps {

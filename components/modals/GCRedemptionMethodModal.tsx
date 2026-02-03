@@ -6,7 +6,7 @@ import Button from "../Buttons/Button/Button";
 import { FoldText } from "../Primitives/FoldText";
 import GCRedemptionMethodSlot, {
   RedemptionMethod,
-} from "../Slots/GiftCard/GCRedemptionMethodSlot";
+} from "../../ui/Slots/GiftCard/GCRedemptionMethodSlot";
 import { spacing, colorMaps } from "../tokens";
 
 export interface GCRedemptionMethodModalProps {

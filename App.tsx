@@ -4,20 +4,20 @@ import { View, Text } from 'react-native';
 import IconLibrary from './components/IconLibrary';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
-import RootTemplate from './components/Templates/RootTemplate';
-import FullscreenTemplate from './components/Templates/FullscreenTemplate';
+import RootTemplate from './ui/Templates/RootTemplate';
+import FullscreenTemplate from './ui/Templates/FullscreenTemplate';
 import { BellIcon } from './components/icons/BellIcon';
 import { ClockIcon } from './components/icons/ClockIcon';
 import FoldPressable from './components/Primitives/FoldPressable';
 
-import BankScreen from './components/Screens/BankScreen';
-import ExchangeScreen from './components/Screens/ExchangeScreen';
-import TagScreen from './components/Screens/TagScreen';
-import HistoryScreen from './components/Screens/HistoryScreen';
-import TransactionDetailScreen from './components/Screens/TransactionDetailScreen';
+import BankScreen from './ui/Screens/BankScreen';
+import ExchangeScreen from './ui/Screens/ExchangeScreen';
+import TagScreen from './ui/Screens/TagScreen';
+import HistoryScreen from './ui/Screens/HistoryScreen';
+import TransactionDetailScreen from './ui/Screens/TransactionDetailScreen';
 import { ComponentLibraryScreen } from './components/ComponentLibrary';
 import { TransactionData } from './components/Transactions/TransactionList';
-import SearchGCEmptySlot from './components/Slots/GiftCard/SearchGCEmptySlot';
+import SearchGCEmptySlot from './ui/Slots/GiftCard/SearchGCEmptySlot';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'history' | 'componentLibrary' | 'transactionDetail'>('center');

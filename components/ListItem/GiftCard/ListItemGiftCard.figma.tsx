@@ -12,8 +12,8 @@ figma.connect(
       title: figma.string("title"),
       secondaryText: figma.string("secondaryText"),
       tertiaryText: figma.string("tertiaryText"),
-      leadingSlot: figma.instance("leadingSlot"),
-      trailingSlot: figma.instance("trailingSlot"),
+      leadingSlot: figma.instance("leadingSlot") as unknown as React.ReactNode,
+      trailingSlot: figma.instance("trailingSlot") as unknown as React.ReactNode,
     },
     example: ({ title, secondaryText, tertiaryText, leadingSlot, trailingSlot }) => (
       <ListItemGiftCard

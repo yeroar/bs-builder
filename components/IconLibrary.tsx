@@ -16,10 +16,10 @@ import BellIcon from './icons/BellIcon';
 import ClockIcon from './icons/ClockIcon';
 import XCloseIcon from './icons/XCloseIcon';
 import FoldPageViewHeader from './TopNav/FoldPageViewHeader';
-import PrimaryHeader from './headers/PrimaryHeader';
-import SecondaryHeader from './headers/SecondaryHeader';
-import SearchHeader from './headers/SearchHeader';
-import TransactionHeader from './headers/TransactionHeader';
+import PrimaryHeader from './Headers/PrimaryHeader';
+import SecondaryHeader from './Headers/SecondaryHeader';
+import SearchHeader from './Headers/SearchHeader';
+import TransactionHeader from './Headers/TransactionHeader';
 import ProgressIndicator from './Feedback/ProgressIndicator';
 import Validation from './Feedback/Validation';
 import ValidationGroup from './Feedback/ValidationGroup';
@@ -35,7 +35,7 @@ import ArrowNarrowLeftIcon from './icons/ArrowNarrowLeftIcon';
 import ArrowNarrowRightIcon from './icons/ArrowNarrowRightIcon';
 import BankIcon from './icons/BankIcon';
 import XCircleIcon from './icons/XCircleIcon';
-import Message from './Message';
+import Message from './Feedback/Message';
 import ListItem from './ListItem';
 import { Button } from './Buttons/Button';
 import { FoldText } from './Primitives/FoldText';
@@ -390,7 +390,7 @@ const IconLibrary = () => {
           <View style={styles.demoBox}>
             <Text style={styles.demoLabel}>VARIANT: PAYMENTMETHOD (SECONDARY ON TOP)</Text>
             <ListItem
-              variant="paymentmethod"
+              variant="paymentMethod"
               title="Chase Checking"
               secondaryText="...4455"
               tertiaryText="No fees"

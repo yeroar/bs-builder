@@ -37,7 +37,7 @@ export default function TileSelector({
 
   const getBorderColor = () => {
     if (isActive) return colorMaps.object.primary.bold.default;
-    if (isFocused) return colorMaps.border.active; // Assuming there is an active border token
+    if (isFocused) return colorMaps.border.focused;
     return colorMaps.border.tertiary;
   };
 
