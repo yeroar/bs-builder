@@ -6,8 +6,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import RootTemplate from './ui/Templates/RootTemplate';
 import FullscreenTemplate from './ui/Templates/FullscreenTemplate';
-import { BellIcon } from './components/icons/BellIcon';
-import { ClockIcon } from './components/icons/ClockIcon';
+import { BellIcon } from './components/Icons/BellIcon';
+import { ClockIcon } from './components/Icons/ClockIcon';
 import FoldPressable from './components/Primitives/FoldPressable';
 
 import BankScreen from './ui/Screens/BankScreen';

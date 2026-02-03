@@ -7,27 +7,27 @@ import FoldPressable from "../../Primitives/FoldPressable";
 import { colorMaps, spacing } from "../../tokens";
 
 // Icons
-import { BellIcon } from "../../icons/BellIcon";
-import { ClockIcon } from "../../icons/ClockIcon";
-import { ChevronLeftIcon } from "../../icons/ChevronLeftIcon";
-import { ChevronRightIcon } from "../../icons/ChevronRightIcon";
-import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
-import { MenuIcon } from "../../icons/MenuIcon";
-import InfoCircleIcon from "../../icons/InfoCircleIcon";
-import { AlertCircleIcon } from "../../icons/AlertCircleIcon";
-import { CheckCircleIcon } from "../../icons/CheckCircleIcon";
-import { XCircleIcon } from "../../icons/XCircleIcon";
-import { XCloseIcon } from "../../icons/XCloseIcon";
-import { SwapIcon } from "../../icons/SwapIcon";
-import { BankIcon } from "../../icons/BankIcon";
-import { ArrowNarrowLeftIcon } from "../../icons/ArrowNarrowLeftIcon";
-import { ArrowNarrowRightIcon } from "../../icons/ArrowNarrowRightIcon";
-import NavBankSolidIcon from "../../icons/NavBankSolidIcon";
-import NavExchangeSolidIcon from "../../icons/NavExchangeSolidIcon";
-import NavTagSolidIcon from "../../icons/NavTagSolidIcon";
-import NavBTCSolidIcon from "../../icons/NavBTCSolidIcon";
-import SpinIcon from "../../icons/SpinIcon";
-import DirectToBitcoinIcon from "../../icons/DirectToBitcoinIcon";
+import { BellIcon } from "../../Icons/BellIcon";
+import { ClockIcon } from "../../Icons/ClockIcon";
+import { ChevronLeftIcon } from "../../Icons/ChevronLeftIcon";
+import { ChevronRightIcon } from "../../Icons/ChevronRightIcon";
+import { ChevronDownIcon } from "../../Icons/ChevronDownIcon";
+import { MenuIcon } from "../../Icons/MenuIcon";
+import InfoCircleIcon from "../../Icons/InfoCircleIcon";
+import { AlertCircleIcon } from "../../Icons/AlertCircleIcon";
+import { CheckCircleIcon } from "../../Icons/CheckCircleIcon";
+import { XCircleIcon } from "../../Icons/XCircleIcon";
+import { XCloseIcon } from "../../Icons/XCloseIcon";
+import { SwapIcon } from "../../Icons/SwapIcon";
+import { BankIcon } from "../../Icons/BankIcon";
+import { ArrowNarrowLeftIcon } from "../../Icons/ArrowNarrowLeftIcon";
+import { ArrowNarrowRightIcon } from "../../Icons/ArrowNarrowRightIcon";
+import NavBankSolidIcon from "../../Icons/NavBankSolidIcon";
+import NavExchangeSolidIcon from "../../Icons/NavExchangeSolidIcon";
+import NavTagSolidIcon from "../../Icons/NavTagSolidIcon";
+import NavBTCSolidIcon from "../../Icons/NavBTCSolidIcon";
+import SpinIcon from "../../Icons/SpinIcon";
+import DirectToBitcoinIcon from "../../Icons/DirectToBitcoinIcon";
 
 const ICON_LIST = [
   { name: "BellIcon", component: BellIcon },
@@ -120,7 +120,7 @@ export default function FoundationCategory() {
         description="Base pressable primitive with press feedback"
       >
         <FoldPressable
-          onPress={() => {}}
+          onPress={() => { }}
           style={styles.pressableDemo}
         >
           <FoldText type="body-md" style={{ color: colorMaps.face.primary }}>

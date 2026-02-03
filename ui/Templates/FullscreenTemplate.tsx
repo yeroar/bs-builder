@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { View, StyleSheet, ScrollView, Animated, Dimensions } from "react-native";
 import { colorMaps, spacing } from "../../components/tokens";
-import FoldPageViewHeader from "../../components/TopNav/FoldPageViewHeader";
+import FoldPageViewHeader from "../../components/Navigation/TopNav/FoldPageViewHeader";
 
 export type NavVariant = "start" | "step";
 export type EnterAnimation = "slide" | "fill" | "none";

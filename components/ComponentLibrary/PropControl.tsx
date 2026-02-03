@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import Toggle from "../Toggle/Toggle";
-import PillSelector from "../PillSelector/PillSelector";
-import TextContainer from "../Input/TextContainer/TextContainer";
+import Toggle from "../Selectors/Toggle/Toggle";
+import PillSelector from "../Selectors/PillSelector/PillSelector";
+import TextContainer from "../Inputs/TextContainer/TextContainer";
 import { colorMaps, spacing } from "../tokens";
 
 export type PropControlType = "toggle" | "select" | "text";

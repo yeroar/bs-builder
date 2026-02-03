@@ -1,10 +1,10 @@
 import React from "react";
 import TxConfirmation from "../TxConfirmation";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import ReceiptDetails from "../../../../components/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/ListItem/Receipt/ListItemReceipt";
+import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 
 export interface ConfirmSellSlotProps {
   amount: string;

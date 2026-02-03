@@ -2,17 +2,17 @@ import React from "react";
 import { Image, StyleSheet } from "react-native";
 import { colorMaps } from "../tokens";
 import { TransactionData } from "./TransactionList";
-import { IconContainer } from "../IconContainer";
+import { IconContainer } from "../Primitives/IconContainer";
 
 // Icon Imports
-import SpotBuysIcon from "../icons/SpotBuysIcon";
-import DirectToBitcoinIcon from "../icons/DirectToBitcoinIcon";
-import CoinsStackedIcon from "../icons/CoinsStackedIcon";
-import SwitchHorizontalIcon from "../icons/SwitchHorizontalIcon";
-import CreditCardIcon from "../icons/CreditCardIcon";
+import SpotBuysIcon from "../Icons/SpotBuysIcon";
+import DirectToBitcoinIcon from "../Icons/DirectToBitcoinIcon";
+import CoinsStackedIcon from "../Icons/CoinsStackedIcon";
+import SwitchHorizontalIcon from "../Icons/SwitchHorizontalIcon";
+import CreditCardIcon from "../Icons/CreditCardIcon";
 
 
-import NavBTCFilledIcon from "../icons/NavBTCFilledIcon";
+import NavBTCFilledIcon from "../Icons/NavBTCFilledIcon";
 
 // Image assets
 const cardRewardImage = require("../../assets/cardReward.png");

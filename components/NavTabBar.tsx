@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { colorMaps, spacing } from './tokens';
-import NavTab from './NavTab/NavTab';
+import NavTab from './Navigation/NavTab/NavTab';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const TAB_WIDTH = SCREEN_WIDTH / 3;

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import PrimaryHeader from "../../Headers/PrimaryHeader";
-import SecondaryHeader from "../../Headers/SecondaryHeader";
-import SearchHeader from "../../Headers/SearchHeader";
-import TransactionHeader from "../../Headers/TransactionHeader";
-import Validation from "../../Feedback/Validation";
-import ValidationGroup from "../../Feedback/ValidationGroup";
-import Button from "../../Buttons/Button/Button";
+import PrimaryHeader from "../../DataDisplay/Headers/PrimaryHeader";
+import SecondaryHeader from "../../DataDisplay/Headers/SecondaryHeader";
+import SearchHeader from "../../DataDisplay/Headers/SearchHeader";
+import TransactionHeader from "../../DataDisplay/Headers/TransactionHeader";
+import Validation from "../../Primitives/ValidationItems/Validation";
+import ValidationGroup from "../../Primitives/ValidationItems/ValidationGroup";
+import Button from "../../Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../../tokens";
 
 export default function HeadersCategory() {

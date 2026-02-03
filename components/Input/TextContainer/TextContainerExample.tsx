@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import TextContainer from './TextContainer';
+import TextContainer from '../../Inputs/TextContainer/TextContainer';
 import {
   colorMaps,
   spacing,
   radius,
   typographyStyles,
 } from "../../tokens";
-import Chip from "../../Chip/Chip";
-import { ChevronDownIcon } from "../../icons/ChevronDownIcon";
+import Chip from "../../Primitives/Chip/Chip";
+import { ChevronDownIcon } from "../../Icons/ChevronDownIcon";
 export default function TextContainerExample() {
   const [value1, setValue1] = useState('');
   const [value2, setValue2] = useState('Example text');

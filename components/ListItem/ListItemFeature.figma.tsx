@@ -1,8 +1,8 @@
 import React from "react";
-import ListItem from "./ListItem";
-import { IconContainer } from "../IconContainer";
-import InfoCircleIcon from "../icons/InfoCircleIcon";
-import ChevronRightIcon from "../icons/ChevronRightIcon";
+import ListItem from "../DataDisplay/ListItem/ListItem";
+import { IconContainer } from "../Primitives/IconContainer";
+import InfoCircleIcon from "../Icons/InfoCircleIcon";
+import ChevronRightIcon from "../Icons/ChevronRightIcon";
 import figma from "@figma/code-connect";
 
 figma.connect(

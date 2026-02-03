@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import Button, { ButtonHierarchy, ButtonSize } from "../../Buttons/Button/Button";
-import TextContainer from "../../Input/TextContainer/TextContainer";
-import Toggle from "../../Toggle/Toggle";
-import Chip, { ChipType } from "../../Chip/Chip";
-import SearchBar from "../../Input/SearchBar/SearchBar";
+import Button, { ButtonHierarchy, ButtonSize } from "../../Primitives/Buttons/Button/Button";
+import TextContainer from "../../Inputs/TextContainer/TextContainer";
+import Toggle from "../../Selectors/Toggle/Toggle";
+import Chip, { ChipType } from "../../Primitives/Chip/Chip";
+import SearchBar from "../../Inputs/SearchBar/SearchBar";
 import { colorMaps, spacing } from "../../tokens";
 
 export default function FormsCategory() {

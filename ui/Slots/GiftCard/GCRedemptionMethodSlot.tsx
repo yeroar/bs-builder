@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Checklist from "../../../components/Checklist/Checklist";
+import Checklist from "../../../components/Selectors/Checklist/Checklist";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export type RedemptionMethod = "in-store" | "online" | "both";

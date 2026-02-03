@@ -6,7 +6,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 }
 import MiniModal from "../../components/modals/MiniModal";
 import ModalFooter from "../../components/modals/ModalFooter";
-import Button from "../../components/Buttons/Button/Button";
+import Button from "../../components/Primitives/Buttons/Button/Button";
 import ActivateDebitCardSlot from "../Slots/ActivateDebitCardSlot";
 import ActivationSuccessSlot from "../Slots/ActivationSuccessSlot";
 

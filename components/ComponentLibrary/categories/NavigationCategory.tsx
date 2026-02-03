@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import FoldPageViewHeader from "../../TopNav/FoldPageViewHeader";
-import StackControl from "../../TopNav/StackControl";
+import FoldPageViewHeader from "../../Navigation/TopNav/FoldPageViewHeader";
+import StackControl from "../../Navigation/TopNav/StackControl";
 import NavTabBar from "../../NavTabBar";
-import { BellIcon } from "../../icons/BellIcon";
-import { ClockIcon } from "../../icons/ClockIcon";
+import { BellIcon } from "../../Icons/BellIcon";
+import { ClockIcon } from "../../Icons/ClockIcon";
 import { colorMaps, spacing } from "../../tokens";
 
 export default function NavigationCategory() {
@@ -58,7 +58,7 @@ export default function NavigationCategory() {
             title="Page Title"
             subTitle="Subtitle text"
             leftIcon={headerLeftIcon}
-            onLeftPress={() => {}}
+            onLeftPress={() => { }}
             variant={headerVariant}
             marginBottom={0}
           />

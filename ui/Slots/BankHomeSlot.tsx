@@ -1,28 +1,28 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import ProductSurfacePrimary from "../../components/ProductSurface/ProductSurfacePrimary";
-import MarcomProductTile from "../../components/Marcom/MarcomProductTile";
-import ListItem from "../../components/ListItem/ListItem";
-import Button from "../../components/Buttons/Button/Button";
-import { IconContainer } from "../../components/IconContainer";
+import ProductSurfacePrimary from "../../components/DataDisplay/ProductSurface/ProductSurfacePrimary";
+import MarcomProductTile from "../../components/DataDisplay/Marcom/MarcomProductTile";
+import ListItem from "../../components/DataDisplay/ListItem/ListItem";
+import Button from "../../components/Primitives/Buttons/Button/Button";
+import { IconContainer } from "../../components/Primitives/IconContainer";
 import { FoldText } from "../../components/Primitives/FoldText";
 import ProgressVisualization from "../../components/dataViz/ProgressVisualization";
-import Divider from "../../components/Divider/Divider";
+import Divider from "../../components/Primitives/Divider/Divider";
 import { colorMaps, spacing } from "../../components/tokens";
 
 // Icons
-import NavBTCSolidIcon from "../../components/icons/NavBTCSolidIcon";
-import SpinIcon from "../../components/icons/SpinIcon";
-import DirectToBitcoinIcon from "../../components/icons/DirectToBitcoinIcon";
-import { ChevronRightIcon } from "../../components/icons/ChevronRightIcon";
-import InfoCircleIcon from "../../components/icons/InfoCircleIcon";
-import Chip from "../../components/Chip/Chip";
-import ClockIcon from "../../components/icons/ClockIcon";
-import CheckCircleIcon from "../../components/icons/CheckCircleIcon";
-import { PrimaryHeader, SearchHeader, SecondaryHeader, TransactionHeader } from "../../components/Headers";
-import { Validation, ValidationGroup } from "../../components/Feedback";
-import { ListItemGiftCard, ListItemPaymentMethod } from "../../components/ListItem";
-import BankIcon from "../../components/icons/BankIcon";
+import NavBTCSolidIcon from "../../components/Icons/NavBTCSolidIcon";
+import SpinIcon from "../../components/Icons/SpinIcon";
+import DirectToBitcoinIcon from "../../components/Icons/DirectToBitcoinIcon";
+import { ChevronRightIcon } from "../../components/Icons/ChevronRightIcon";
+import InfoCircleIcon from "../../components/Icons/InfoCircleIcon";
+import Chip from "../../components/Primitives/Chip/Chip";
+import ClockIcon from "../../components/Icons/ClockIcon";
+import CheckCircleIcon from "../../components/Icons/CheckCircleIcon";
+import { PrimaryHeader, SearchHeader, SecondaryHeader, TransactionHeader } from "../../components/DataDisplay/Headers";
+import { Validation, ValidationGroup } from "../../components/Primitives/ValidationItems";
+import { ListItemGiftCard, ListItemPaymentMethod } from "../../components/DataDisplay/ListItem";
+import BankIcon from "../../components/Icons/BankIcon";
 
 export interface BankHomeSlotProps {
   onActivateCard?: () => void;

@@ -1,6 +1,6 @@
 import React from "react";
 import ModalFooter from "./ModalFooter";
-import Button from "../Buttons/Button/Button";
+import Button from "../Primitives/Buttons/Button/Button";
 import figma from "@figma/code-connect";
 
 figma.connect(

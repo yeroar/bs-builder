@@ -2,11 +2,11 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
 import { FoldText } from "../../components/Primitives/FoldText";
-import TextContainer from "../../components/Input/TextContainer/TextContainer";
+import TextContainer from "../../components/Inputs/TextContainer/TextContainer";
 import { spacing, colorMaps } from "../../components/tokens";
 import ProgressIndicator from "../../components/dataViz/ProgressIndicator";
-import { ChevronDownIcon } from "../../components/icons/ChevronDownIcon";
-import Chip from "../../components/Chip/Chip";
+import { ChevronDownIcon } from "../../components/Icons/ChevronDownIcon";
+import Chip from "../../components/Primitives/Chip/Chip";
 
 interface KeyboardTestScreenProps {
   onBack: () => void;

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FoldText } from "../../components/Primitives/FoldText";
-import MarcomHeroCard from "../../components/Marcom/MarcomHeroCard";
-import ListItem from "../../components/ListItem/ListItem";
-import ListItemGiftCard from "../../components/ListItem/GiftCard/ListItemGiftCard";
-import { IconContainer } from "../../components/IconContainer";
-import NavBTCSolidIcon from "../../components/icons/NavBTCSolidIcon";
-import { ChevronRightIcon } from "../../components/icons/ChevronRightIcon";
-import Divider from "../../components/Divider/Divider";
-import SearchBar from "../../components/Input/SearchBar/SearchBar";
-import DropDown from "../../components/DropDown/DropDown";
+import MarcomHeroCard from "../../components/DataDisplay/Marcom/MarcomHeroCard";
+import ListItem from "../../components/DataDisplay/ListItem/ListItem";
+import ListItemGiftCard from "../../components/DataDisplay/ListItem/GiftCard/ListItemGiftCard";
+import { IconContainer } from "../../components/Primitives/IconContainer";
+import NavBTCSolidIcon from "../../components/Icons/NavBTCSolidIcon";
+import { ChevronRightIcon } from "../../components/Icons/ChevronRightIcon";
+import Divider from "../../components/Primitives/Divider/Divider";
+import SearchBar from "../../components/Inputs/SearchBar/SearchBar";
+import DropDown from "../../components/Selectors/DropDown/DropDown";
 import { colorMaps, spacing } from "../../components/tokens";
 
 export interface TagHomeSlotProps {
@@ -136,8 +136,8 @@ export default function TagHomeSlot({
             onFocus={onSearchGiftCards}
           />
           <View style={styles.segmentedControls}>
-            <DropDown label="Redemption method" variant="default" onPress={() => {}} />
-            <DropDown label="Categories" variant="default" onPress={() => {}} />
+            <DropDown label="Redemption method" variant="default" onPress={() => { }} />
+            <DropDown label="Categories" variant="default" onPress={() => { }} />
           </View>
         </View>
 

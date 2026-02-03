@@ -3,10 +3,10 @@ import TxConfirmation from "../TxConfirmation";
 import { FoldText } from "../../../../components/Primitives/FoldText";
 import { CurrencyInput } from "../../../../components/CurrencyInput";
 import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
-import ReceiptDetails from "../../../../components/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/ListItem/Receipt/ListItemReceipt";
+import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { colorMaps } from "../../../../components/tokens";
 
 export interface ConfirmBuySlotProps {

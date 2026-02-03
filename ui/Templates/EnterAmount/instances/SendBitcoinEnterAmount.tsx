@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import EnterAmount from "../EnterAmount";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
 import { Keypad } from "../../../../components/Keypad";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { spacing } from "../../../../components/tokens";
 
 export interface SendBitcoinEnterAmountProps {

@@ -12,7 +12,7 @@ import {
   Keyboard,
 } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import { XCloseIcon } from "../icons/XCloseIcon";
+import { XCloseIcon } from "../Icons/XCloseIcon";
 import { colorMaps, spacing, radius } from "../tokens";
 import Keypad from "../Keypad/Keypad";
 

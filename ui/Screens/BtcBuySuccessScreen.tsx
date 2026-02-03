@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate, { FullscreenTemplateRef } from "../Templates/FullscreenTemplate";
 import { FoldText } from "../../components/Primitives/FoldText";
-import { IconContainer } from "../../components/IconContainer";
-import CheckCircleIcon from "../../components/icons/CheckCircleIcon";
+import { IconContainer } from "../../components/Primitives/IconContainer";
+import CheckCircleIcon from "../../components/Icons/CheckCircleIcon";
 import CurrencyInput from "../../components/CurrencyInput/CurrencyInput";
-import Button from "../../components/Buttons/Button/Button";
+import Button from "../../components/Primitives/Buttons/Button/Button";
 import ModalFooter from "../../components/modals/ModalFooter";
 import { colorMaps, spacing } from "../../components/tokens";
 

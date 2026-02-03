@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
-import ListItemReceipt from "../ListItem/Receipt/ListItemReceipt";
+import ListItemReceipt from "../DataDisplay/ListItem/Receipt/ListItemReceipt";
 import { colorMaps, spacing } from "../tokens";
 
 export type BtcTxType = "buy" | "sell" | "send" | "receive";

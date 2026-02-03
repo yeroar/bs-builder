@@ -56,7 +56,7 @@ export default function CurrencyInput({
         />
       )}
 
-      <FoldText type="header-xl" style={styles.amount}>
+      <FoldText type="header-xl" style={styles.amount} numberOfLines={1}>
         {value}
       </FoldText>
 

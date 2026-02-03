@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { colorPrimitives } from "../tokens/colorPrimitives";
 import { spacing } from "../tokens";
-import PillSelector from "../PillSelector/PillSelector";
+import PillSelector from "../Selectors/PillSelector/PillSelector";
 import { TimeRange } from "./PriceChart";
 
 export interface PillGroupProps {

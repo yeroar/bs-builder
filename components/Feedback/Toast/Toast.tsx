@@ -8,9 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import { FoldText } from "../../Primitives/FoldText";
-import { CheckCircleIcon } from "../../icons/CheckCircleIcon";
-import { AlertCircleIcon } from "../../icons/AlertCircleIcon";
-import { XCloseIcon } from "../../icons/XCloseIcon";
+import { CheckCircleIcon } from "../../Icons/CheckCircleIcon";
+import { AlertCircleIcon } from "../../Icons/AlertCircleIcon";
+import { XCloseIcon } from "../../Icons/XCloseIcon";
 import { colorMaps, spacing, radius } from "../../tokens";
 
 export type ToastType = "info" | "success" | "error";

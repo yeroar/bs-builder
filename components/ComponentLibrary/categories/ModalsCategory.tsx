@@ -4,7 +4,7 @@ import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
 import MiniModal from "../../modals/MiniModal";
 import ModalFooter from "../../modals/ModalFooter";
-import Button from "../../Buttons/Button/Button";
+import Button from "../../Primitives/Buttons/Button/Button";
 import { FoldText } from "../../Primitives/FoldText";
 import { colorMaps, spacing } from "../../tokens";
 

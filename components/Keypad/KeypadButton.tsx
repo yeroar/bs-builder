@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import { DeleteIcon } from "../icons/DeleteIcon";
+import { DeleteIcon } from "../Icons/DeleteIcon";
 import { colorMaps } from "../tokens";
 
 export type KeypadButtonType = "number" | "icon" | "decimal";

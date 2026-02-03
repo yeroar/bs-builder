@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, StyleSheet, View, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import { SkeuomorphicButtonBorder } from "../icons/SkeuomorphicButtonBorder";
+import { SkeuomorphicButtonBorder } from "../Icons/SkeuomorphicButtonBorder";
 import { colorPrimitives } from "../tokens/colorPrimitives";
 import { colorMaps, spacing, radius } from "../tokens";
 

@@ -1,9 +1,9 @@
 import React from "react";
-import ListItem from "../ListItem";
-import { IconContainer } from "../../IconContainer";
-import { ChevronRightIcon } from "../../icons/ChevronRightIcon";
-import { CircleIcon } from "../../icons/CircleIcon";
-import { CheckCircleIcon } from "../../icons/CheckCircleIcon";
+import ListItem from "../../DataDisplay/ListItem/ListItem";
+import { IconContainer } from "../../Primitives/IconContainer";
+import { ChevronRightIcon } from "../../Icons/ChevronRightIcon";
+import { CircleIcon } from "../../Icons/CircleIcon";
+import { CheckCircleIcon } from "../../Icons/CheckCircleIcon";
 import { colorMaps } from "../../tokens";
 
 export type TrailingVariant = "chevron" | "selectable";

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import ProductSurfacePrimary from "../../ProductSurface/ProductSurfacePrimary";
-import ProductSurfaceRewards from "../../ProductSurface/ProductSurfaceRewards";
-import MarcomSecondaryTile from "../../Marcom/MarcomSecondaryTile";
-import MarcomProductTile from "../../Marcom/MarcomProductTile";
+import ProductSurfacePrimary from "../../DataDisplay/ProductSurface/ProductSurfacePrimary";
+import ProductSurfaceRewards from "../../DataDisplay/ProductSurface/ProductSurfaceRewards";
+import MarcomSecondaryTile from "../../DataDisplay/Marcom/MarcomSecondaryTile";
+import MarcomProductTile from "../../DataDisplay/Marcom/MarcomProductTile";
 import ProgressBar from "../../dataViz/ProgressBar";
 import ProgressVisualization from "../../dataViz/ProgressVisualization";
-import Button from "../../Buttons/Button/Button";
-import InfoCircleIcon from "../../icons/InfoCircleIcon";
+import Button from "../../Primitives/Buttons/Button/Button";
+import InfoCircleIcon from "../../Icons/InfoCircleIcon";
 import { colorMaps, spacing } from "../../tokens";
 
 export default function DataDisplayCategory() {

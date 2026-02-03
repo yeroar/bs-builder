@@ -1,13 +1,13 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import TransactionSuccessSlot from "../TransactionSuccessSlot";
-import FoldPageViewHeader from "../../../../components/TopNav/FoldPageViewHeader";
+import FoldPageViewHeader from "../../../../components/Navigation/TopNav/FoldPageViewHeader";
 import CurrencyInput from "../../../../components/CurrencyInput/CurrencyInput";
-import IconContainer from "../../../../components/IconContainer/IconContainer";
+import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
 import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import FoldPressable from "../../../../components/Primitives/FoldPressable";
-import { StarIcon } from "../../../../components/icons/StarIcon";
+import { StarIcon } from "../../../../components/Icons/StarIcon";
 import { colorMaps, spacing } from "../../../../components/tokens";
 
 export interface GiftCardSuccessScreenProps {

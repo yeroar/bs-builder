@@ -1,7 +1,7 @@
 import React from "react"
-import ListItemGiftCard from "./ListItemGiftCard"
-import IconContainer from "../../IconContainer/IconContainer"
-import { ChevronRightIcon } from "../../icons/ChevronRightIcon"
+import ListItemGiftCard from "../../DataDisplay/ListItem/GiftCard/ListItemGiftCard"
+import IconContainer from "../../Primitives/IconContainer/IconContainer"
+import { ChevronRightIcon } from "../../Icons/ChevronRightIcon"
 import figma from "@figma/code-connect"
 
 figma.connect(

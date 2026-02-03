@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
-import Button from "../Buttons/Button/Button";
+import Button from "../Primitives/Buttons/Button/Button";
 import GCDetailSlot from "../../ui/Slots/GiftCard/GCDetailSlot";
 import { spacing } from "../tokens";
 

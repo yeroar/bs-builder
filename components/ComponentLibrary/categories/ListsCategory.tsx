@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import ListItem, { ListItemProps } from "../../ListItem/ListItem";
-import { IconContainer } from "../../IconContainer";
-import Chip from "../../Chip/Chip";
+import ListItem, { ListItemProps } from "../../DataDisplay/ListItem/ListItem";
+import { IconContainer } from "../../Primitives/IconContainer";
+import Chip from "../../Primitives/Chip/Chip";
 import { colorMaps, spacing } from "../../tokens";
 
 // Icons
-import NavBTCSolidIcon from "../../icons/NavBTCSolidIcon";
-import { BankIcon } from "../../icons/BankIcon";
-import SpinIcon from "../../icons/SpinIcon";
+import NavBTCSolidIcon from "../../Icons/NavBTCSolidIcon";
+import { BankIcon } from "../../Icons/BankIcon";
+import SpinIcon from "../../Icons/SpinIcon";
 
 export default function ListsCategory() {
   // ListItem state
@@ -116,7 +116,7 @@ export default function ListsCategory() {
             variant={listItemVariant}
             leadingSlot={renderLeadingSlot()}
             showDivider={showDivider}
-            onPress={() => {}}
+            onPress={() => { }}
             {...getListItemProps()}
           />
         </View>
@@ -139,7 +139,7 @@ export default function ListsCategory() {
               />
             }
             chip={<Chip label="Active" type="success" />}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
       </ComponentCard>
@@ -167,7 +167,7 @@ export default function ListsCategory() {
                 />
               }
               showDivider={index < 2}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           ))}
         </View>

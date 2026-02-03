@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
-import PillSelector from "../../../components/PillSelector/PillSelector";
-import TextField from "../../../components/Input/TextContainer/TextField";
+import PillSelector from "../../../components/Selectors/PillSelector/PillSelector";
+import TextField from "../../../components/Inputs/TextContainer/TextField";
 import ModalFooter from "../../../components/modals/ModalFooter";
-import Button from "../../../components/Buttons/Button/Button";
+import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export type DeliveryMethod = "text" | "email";

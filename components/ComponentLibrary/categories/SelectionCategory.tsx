@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import ButtonSelector from "../../Buttons/ButtonSelector/ButtonSelector";
-import PillSelector from "../../PillSelector/PillSelector";
+import ButtonSelector from "../../Primitives/Buttons/ButtonSelector/ButtonSelector";
+import PillSelector from "../../Selectors/PillSelector/PillSelector";
 import { colorMaps, spacing } from "../../tokens";
 
 export default function SelectionCategory() {

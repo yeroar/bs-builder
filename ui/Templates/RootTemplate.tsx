@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { colorMaps, spacing } from "../../components/tokens";
-import FoldPageViewHeader from "../../components/TopNav/FoldPageViewHeader";
+import FoldPageViewHeader from "../../components/Navigation/TopNav/FoldPageViewHeader";
 import NavTabBar from "../../components/NavTabBar";
 
 interface RootTemplateProps {

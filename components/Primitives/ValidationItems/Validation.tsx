@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../FoldText";
-import { CheckCircleIcon } from "../../icons/CheckCircleIcon";
-import { XCircleIcon } from "../../icons/XCircleIcon";
+import { CheckCircleIcon } from "../../Icons/CheckCircleIcon";
+import { XCircleIcon } from "../../Icons/XCircleIcon";
 import { colorMaps, spacing } from "../../tokens";
 
 export type ValidationType = "success" | "danger";

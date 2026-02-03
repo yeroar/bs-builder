@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import FullscreenTemplate from "../../ui/Templates/FullscreenTemplate";
-import PillSelector from "../PillSelector/PillSelector";
+import PillSelector from "../Selectors/PillSelector/PillSelector";
 import { FoldText } from "../Primitives/FoldText";
 import Toast, { ToastType } from "../Feedback/Toast/Toast";
 import { colorMaps, spacing } from "../tokens";

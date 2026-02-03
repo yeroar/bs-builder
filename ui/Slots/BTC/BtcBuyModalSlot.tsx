@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
-import QuickBuyInput from "../../../components/Input/QuickBuyInput/QuickBuyInput";
+import QuickBuyInput from "../../../components/Inputs/QuickBuyInput/QuickBuyInput";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export type BuyAmount = "$10" | "$20" | "$50" | "$100" | "$200" | "custom" | null;

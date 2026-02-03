@@ -1,11 +1,11 @@
 import React from "react";
 import { Pressable, View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import { ChevronDownIcon } from "../icons/ChevronDownIcon";
-import { PlusCircleIcon } from "../icons/PlusCircleIcon";
-import { BankIcon } from "../icons/BankIcon";
-import CreditCardIcon from "../icons/CreditCardIcon";
-import { IconContainer } from "../IconContainer";
+import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
+import { PlusCircleIcon } from "../Icons/PlusCircleIcon";
+import { BankIcon } from "../Icons/BankIcon";
+import CreditCardIcon from "../Icons/CreditCardIcon";
+import { IconContainer } from "../Primitives/IconContainer";
 import { colorMaps, spacing, radius } from "../tokens";
 
 export type PmSelectorVariant = "null" | "bankAccount" | "cardAccount" | "foldAccount" | "bitcoinAccount";
@@ -72,8 +72,8 @@ export default function PmSelector({
             ? styles.containerNullPressed
             : styles.containerNull
           : pressed
-          ? styles.containerAccountPressed
-          : styles.containerAccount,
+            ? styles.containerAccountPressed
+            : styles.containerAccount,
         style,
       ]}
       testID={testID}

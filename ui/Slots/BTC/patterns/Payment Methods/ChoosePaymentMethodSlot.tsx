@@ -1,13 +1,13 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../../../components/Primitives/FoldText";
-import ListItemPaymentMethod from "../../../../../components/ListItem/PaymentMethod/ListItemPaymentMethod";
-import ListItem from "../../../../../components/ListItem/ListItem";
-import { IconContainer } from "../../../../../components/IconContainer";
-import { BankIcon } from "../../../../../components/icons/BankIcon";
-import CreditCardIcon from "../../../../../components/icons/CreditCardIcon";
-import InfoCircleIcon from "../../../../../components/icons/InfoCircleIcon";
-import { ChevronRightIcon } from "../../../../../components/icons/ChevronRightIcon";
+import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListItem/PaymentMethod/ListItemPaymentMethod";
+import ListItem from "../../../../../components/DataDisplay/ListItem/ListItem";
+import { IconContainer } from "../../../../../components/Primitives/IconContainer";
+import { BankIcon } from "../../../../../components/Icons/BankIcon";
+import CreditCardIcon from "../../../../../components/Icons/CreditCardIcon";
+import InfoCircleIcon from "../../../../../components/Icons/InfoCircleIcon";
+import { ChevronRightIcon } from "../../../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export type PaymentMethodOption = "debitCard" | "cashBalance" | "bankAccount";

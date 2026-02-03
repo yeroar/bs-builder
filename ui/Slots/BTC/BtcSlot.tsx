@@ -1,22 +1,22 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import ProductSurfacePrimary from "../../../components/ProductSurface/ProductSurfacePrimary";
-import ProductSurfaceRewards from "../../../components/ProductSurface/ProductSurfaceRewards";
-import ListItem from "../../../components/ListItem/ListItem";
-import Button from "../../../components/Buttons/Button/Button";
-import { IconContainer } from "../../../components/IconContainer";
+import ProductSurfacePrimary from "../../../components/DataDisplay/ProductSurface/ProductSurfacePrimary";
+import ProductSurfaceRewards from "../../../components/DataDisplay/ProductSurface/ProductSurfaceRewards";
+import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
+import Button from "../../../components/Primitives/Buttons/Button/Button";
+import { IconContainer } from "../../../components/Primitives/IconContainer";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import ProgressVisualization from "../../../components/dataViz/ProgressVisualization";
-import Divider from "../../../components/Divider/Divider";
+import Divider from "../../../components/Primitives/Divider/Divider";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 // Icons
-import ClockIcon from "../../../components/icons/ClockIcon";
-import DirectToBitcoinIcon from "../../../components/icons/DirectToBitcoinIcon";
-import SpotBuysIcon from "../../../components/icons/SpotBuysIcon";
-import CoinsStackedIcon from "../../../components/icons/CoinsStackedIcon";
-import { ChevronRightIcon } from "../../../components/icons/ChevronRightIcon";
-import InfoCircleIcon from "../../../components/icons/InfoCircleIcon";
+import ClockIcon from "../../../components/Icons/ClockIcon";
+import DirectToBitcoinIcon from "../../../components/Icons/DirectToBitcoinIcon";
+import SpotBuysIcon from "../../../components/Icons/SpotBuysIcon";
+import CoinsStackedIcon from "../../../components/Icons/CoinsStackedIcon";
+import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
+import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
 
 export interface BtcSlotProps {
   bitcoinAmount?: string;

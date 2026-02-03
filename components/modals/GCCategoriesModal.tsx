@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
-import Button from "../Buttons/Button/Button";
+import Button from "../Primitives/Buttons/Button/Button";
 import { FoldText } from "../Primitives/FoldText";
 import GCCategoriesSlot, { GCCategory } from "../../ui/Slots/GiftCard/GCCategoriesSlot";
 import { spacing, colorMaps } from "../tokens";

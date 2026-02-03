@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import { ArrowNarrowUpIcon } from "../icons/ArrowNarrowUpIcon";
+import { ArrowNarrowUpIcon } from "../Icons/ArrowNarrowUpIcon";
 import { colorMaps, spacing } from "../tokens";
 
 export interface PriceChangeProps {

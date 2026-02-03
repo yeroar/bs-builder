@@ -4,7 +4,7 @@ import EnterAmount from "../EnterAmount";
 import useAmountInput from "../useAmountInput";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
 import { Keypad } from "../../../../components/Keypad";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import Toast from "../../../../components/Feedback/Toast/Toast";
 import { spacing } from "../../../../components/tokens";
 

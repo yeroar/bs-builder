@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import PrimaryHeader from "../../../components/Headers/PrimaryHeader";
-import IconContainer from "../../../components/IconContainer/IconContainer";
+import PrimaryHeader from "../../../components/DataDisplay/Headers/PrimaryHeader";
+import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
 import ValidationGroup from "../../../components/Primitives/ValidationItems/ValidationGroup";
 import Validation from "../../../components/Primitives/ValidationItems/Validation";
-import { RocketIcon } from "../../../components/icons/RocketIcon";
-import { GlobeIcon } from "../../../components/icons/GlobeIcon";
-import Divider from "../../../components/Divider/Divider";
-import QuickBuyInput from "../../../components/Input/QuickBuyInput/QuickBuyInput";
+import { RocketIcon } from "../../../components/Icons/RocketIcon";
+import { GlobeIcon } from "../../../components/Icons/GlobeIcon";
+import Divider from "../../../components/Primitives/Divider/Divider";
+import QuickBuyInput from "../../../components/Inputs/QuickBuyInput/QuickBuyInput";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface GCDetailSlotProps {

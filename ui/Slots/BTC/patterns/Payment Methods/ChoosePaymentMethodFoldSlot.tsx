@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../../../components/Primitives/FoldText";
-import ListItemPaymentMethod from "../../../../../components/ListItem/PaymentMethod/ListItemPaymentMethod";
-import { BankIcon } from "../../../../../components/icons/BankIcon";
-import CreditCardIcon from "../../../../../components/icons/CreditCardIcon";
+import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListItem/PaymentMethod/ListItemPaymentMethod";
+import { BankIcon } from "../../../../../components/Icons/BankIcon";
+import CreditCardIcon from "../../../../../components/Icons/CreditCardIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export type FoldPaymentOption = "cashBalance" | "creditCard";

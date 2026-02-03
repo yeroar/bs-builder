@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
-import ListItemTransaction from "../ListItem/Transaction/ListItemTransaction";
-import LeftColumn from "../ListItem/code parts/LeftColumn";
-import RightColumn from "../ListItem/code parts/RightColumn";
-import PillSelector from "../PillSelector/PillSelector";
+import ListItemTransaction from "../DataDisplay/ListItem/Transaction/ListItemTransaction";
+import LeftColumn from "../DataDisplay/ListItem/code parts/LeftColumn";
+import RightColumn from "../DataDisplay/ListItem/code parts/RightColumn";
+import PillSelector from "../Selectors/PillSelector/PillSelector";
 import { colorMaps, spacing } from "../tokens";
 import { ALL_MOCK_TRANSACTIONS } from "./mockTransactions";
 

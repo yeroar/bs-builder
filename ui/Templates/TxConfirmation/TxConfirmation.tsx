@@ -1,6 +1,6 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import Divider from "../../../components/Divider/Divider";
+import { View, ScrollView, StyleSheet } from "react-native";
+import Divider from "../../../components/Primitives/Divider/Divider";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface TxConfirmationProps {
@@ -8,10 +8,12 @@ export interface TxConfirmationProps {
   currencyInput?: React.ReactNode;
   /** ReceiptDetails slot */
   receiptDetails?: React.ReactNode;
-  /** Footer slot (ModalFooter) */
+  /** Footer slot (ModalFooter) - sticky at bottom */
   footer?: React.ReactNode;
   /** Children for custom layouts (used when currencyInput/receiptDetails not provided) */
   children?: React.ReactNode;
+  /** Whether content is scrollable (default: true) */
+  scrollable?: boolean;
 }
 
 export default function TxConfirmation({
@@ -19,23 +21,41 @@ export default function TxConfirmation({
   receiptDetails,
   footer,
   children,
+  scrollable = true,
 }: TxConfirmationProps) {
   // Use slots if provided, otherwise fall back to children
   const useSlots = currencyInput !== undefined || receiptDetails !== undefined;
 
+  const contentElement = useSlots ? (
+    <>
+      {currencyInput}
+      <Divider style={styles.divider} />
+      {receiptDetails}
+    </>
+  ) : (
+    children
+  );
+
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {useSlots ? (
-          <>
-            {currencyInput}
-            <Divider />
-            {receiptDetails}
-          </>
-        ) : (
-          children
-        )}
-      </View>
+      {scrollable ? (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.content}>
+            {contentElement}
+          </View>
+        </ScrollView>
+      ) : (
+        <>
+          <View style={styles.content}>
+            {contentElement}
+          </View>
+          <View style={styles.spacer} />
+        </>
+      )}
       {footer}
     </View>
   );
@@ -44,10 +64,20 @@ export default function TxConfirmation({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colorMaps.layer.background,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
-    flex: 1,
     paddingHorizontal: spacing["500"],
+  },
+  spacer: {
+    flex: 1,
+  },
+  divider: {
+    marginBottom: spacing["500"],
   },
 });

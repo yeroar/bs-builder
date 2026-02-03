@@ -1,10 +1,10 @@
 import React from "react";
 import TxConfirmation from "../TxConfirmation";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import ReceiptDetails from "../../../../components/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/ListItem/Receipt/ListItemReceipt";
+import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 
 export interface SendBitcoinConfirmationSlotProps {
   satsAmount?: number;
@@ -31,13 +31,9 @@ export default function SendBitcoinConfirmationSlot({
     return `${sats.toLocaleString()} sats`;
   };
 
-  const formatSatsWithUsd = (sats: number, usd: string): string => {
-    return `${sats.toLocaleString()} sats (${usd})`;
-  };
-
   const totalSats = satsAmount + feeSats;
   const totalUsdValue = parseFloat(usdEquivalent.replace(/[~$,]/g, '')) + parseFloat(feeUsd.replace(/[~$,]/g, ''));
-  const totalUsd = `~$${totalUsdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const totalUsd = `(~$${totalUsdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
 
   return (
     <TxConfirmation
@@ -57,15 +53,21 @@ export default function SendBitcoinConfirmationSlot({
           />
           <ListItemReceipt
             label="Sending"
-            value={formatSatsWithUsd(satsAmount, usdEquivalent)}
+            value={formatSats(satsAmount)}
+            hasDenominator
+            denominator={`(${usdEquivalent})`}
           />
           <ListItemReceipt
             label="Fees"
-            value={formatSatsWithUsd(feeSats, feeUsd)}
+            value={formatSats(feeSats)}
+            hasDenominator
+            denominator={`(${feeUsd})`}
           />
           <ListItemReceipt
             label="Total"
-            value={formatSatsWithUsd(totalSats, totalUsd)}
+            value={formatSats(totalSats)}
+            hasDenominator
+            denominator={totalUsd}
           />
           <ListItemReceipt
             label="Estimated time"

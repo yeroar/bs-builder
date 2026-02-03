@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import ComponentCard from "../ComponentCard";
 import PropControl from "../PropControl";
-import Validation, { ValidationType } from "../../Feedback/Validation";
-import ValidationGroup from "../../Feedback/ValidationGroup";
+import Validation, { ValidationType } from "../../Primitives/ValidationItems/Validation";
+import ValidationGroup from "../../Primitives/ValidationItems/ValidationGroup";
 import Toast, { ToastType } from "../../Feedback/Toast/Toast";
 import Message, { MessageVariant } from "../../Feedback/Message/Message";
-import ProgressIndicator from "../../Feedback/ProgressIndicator";
-import Button from "../../Buttons/Button/Button";
+import ProgressIndicator from "../../dataViz/ProgressIndicator";
+import Button from "../../Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../../tokens";
 
 interface FeedbackCategoryProps {

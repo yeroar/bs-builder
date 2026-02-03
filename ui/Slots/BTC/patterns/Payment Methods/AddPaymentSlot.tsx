@@ -1,9 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../../../components/Primitives/FoldText";
-import ListItemPaymentMethod from "../../../../../components/ListItem/PaymentMethod/ListItemPaymentMethod";
-import { BankIcon } from "../../../../../components/icons/BankIcon";
-import CreditCardRefreshIcon from "../../../../../components/icons/CreditCardRefreshIcon";
+import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListItem/PaymentMethod/ListItemPaymentMethod";
+import { BankIcon } from "../../../../../components/Icons/BankIcon";
+import CreditCardRefreshIcon from "../../../../../components/Icons/CreditCardRefreshIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export interface AddPaymentSlotProps {

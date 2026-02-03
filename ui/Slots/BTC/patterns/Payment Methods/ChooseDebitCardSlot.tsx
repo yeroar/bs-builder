@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../../../components/Primitives/FoldText";
-import ListItemPaymentMethod from "../../../../../components/ListItem/PaymentMethod/ListItemPaymentMethod";
-import ListItem from "../../../../../components/ListItem/ListItem";
-import { IconContainer } from "../../../../../components/IconContainer";
-import CreditCardIcon from "../../../../../components/icons/CreditCardIcon";
-import PlusCircleIcon from "../../../../../components/icons/PlusCircleIcon";
-import { ChevronRightIcon } from "../../../../../components/icons/ChevronRightIcon";
+import ListItemPaymentMethod from "../../../../../components/DataDisplay/ListItem/PaymentMethod/ListItemPaymentMethod";
+import ListItem from "../../../../../components/DataDisplay/ListItem/ListItem";
+import { IconContainer } from "../../../../../components/Primitives/IconContainer";
+import CreditCardIcon from "../../../../../components/Icons/CreditCardIcon";
+import PlusCircleIcon from "../../../../../components/Icons/PlusCircleIcon";
+import { ChevronRightIcon } from "../../../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export interface DebitCard {

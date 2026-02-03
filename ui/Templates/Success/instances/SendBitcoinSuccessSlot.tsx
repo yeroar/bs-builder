@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ModalFooter from "../../../../components/modals/ModalFooter";
 import { spacing } from "../../../../components/tokens";
 

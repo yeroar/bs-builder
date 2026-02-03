@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react";
 import TransactionSuccessSlot, { TransactionSuccessSlotRef, EnterAnimation } from "../TransactionSuccessSlot";
-import FoldPageViewHeader from "../../../../components/TopNav/FoldPageViewHeader";
+import FoldPageViewHeader from "../../../../components/Navigation/TopNav/FoldPageViewHeader";
 import CurrencyInput from "../../../../components/CurrencyInput/CurrencyInput";
-import Button from "../../../../components/Buttons/Button/Button";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ModalFooter from "../../../../components/modals/ModalFooter";
 import { FoldText } from "../../../../components/Primitives/FoldText";
 import { colorMaps } from "../../../../components/tokens";

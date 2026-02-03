@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../components/Primitives/FoldText";
-import { IconContainer } from "../../components/IconContainer";
-import CheckCircleIcon from "../../components/icons/CheckCircleIcon";
+import { IconContainer } from "../../components/Primitives/IconContainer";
+import CheckCircleIcon from "../../components/Icons/CheckCircleIcon";
 import { colorMaps, spacing } from "../../components/tokens";
 
 export interface ActivationSuccessSlotProps {

@@ -1,7 +1,7 @@
 import React from "react";
 import RootTemplate from "../Templates/RootTemplate";
-import { BellIcon } from "../../components/icons/BellIcon";
-import { ClockIcon } from "../../components/icons/ClockIcon";
+import { BellIcon } from "../../components/Icons/BellIcon";
+import { ClockIcon } from "../../components/Icons/ClockIcon";
 import FoldPressable from "../../components/Primitives/FoldPressable";
 import { colorMaps } from "../../components/tokens";
 import TagHomeSlot from "../Slots/TagHomeSlot";
