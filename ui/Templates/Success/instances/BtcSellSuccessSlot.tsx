@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import TransactionSuccessSlot, { TransactionSuccessSlotRef } from "../TransactionSuccessSlot";
+import TransactionSuccessSlot, { TransactionSuccessSlotRef, EnterAnimation } from "../TransactionSuccessSlot";
 import FoldPageViewHeader from "../../../../components/TopNav/FoldPageViewHeader";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
 import Button from "../../../../components/Buttons/Button/Button";
@@ -10,7 +10,8 @@ export interface BtcSellSuccessSlotProps {
   satsEquivalent?: string;
   onClose?: () => void;
   onActionPress?: () => void;
-  animated?: boolean;
+  /** Animation type for entering */
+  enterAnimation?: EnterAnimation;
   testID?: string;
 }
 
@@ -19,13 +20,13 @@ const BtcSellSuccessSlot = forwardRef<TransactionSuccessSlotRef, BtcSellSuccessS
   satsEquivalent = "~10,000 sats",
   onClose,
   onActionPress,
-  animated = true,
+  enterAnimation = "slide",
   testID,
 }, ref) => {
   return (
     <TransactionSuccessSlot
       ref={ref}
-      animated={animated}
+      enterAnimation={enterAnimation}
       header={
         <FoldPageViewHeader
           title="Bitcoin sold"
@@ -52,7 +53,6 @@ const BtcSellSuccessSlot = forwardRef<TransactionSuccessSlotRef, BtcSellSuccessS
     >
       <CurrencyInput
         value={amount}
-        variant="transparent"
         topContextSlot={<TopContext variant="btc" value={satsEquivalent} />}
         bottomContextSlot={
           <BottomContext variant="maxButton">

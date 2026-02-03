@@ -86,7 +86,6 @@ export default function GiftCardSuccessScreen({
     >
       <CurrencyInput
         value={amount}
-        variant="transparent"
         topContextVariant="giftcard"
         topContextLeadingIcon={brand ? <IconContainer brand={brand} size="xs" /> : undefined}
         topContextValue={brandLabel}

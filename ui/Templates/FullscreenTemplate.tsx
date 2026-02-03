@@ -4,6 +4,7 @@ import { colorMaps, spacing } from "../../components/tokens";
 import FoldPageViewHeader from "../../components/TopNav/FoldPageViewHeader";
 
 export type NavVariant = "start" | "step";
+export type EnterAnimation = "slide" | "fill" | "none";
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -28,6 +29,8 @@ interface FullscreenTemplateProps {
   scrollable?: boolean;
   variant?: "fullscreen" | "progressive" | "yellow";
   step?: React.ReactNode;
+  /** Animation type for entering the screen */
+  enterAnimation?: EnterAnimation;
   /** Disable entrance slide animation for "start" variant */
   disableEntranceAnimation?: boolean;
   /** Disable slide animation for "start" variant (both entrance and exit) */
@@ -49,6 +52,7 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
   scrollable = true,
   variant = "fullscreen",
   step,
+  enterAnimation,
   disableEntranceAnimation = false,
   disableAnimation = false,
 }, ref) => {
@@ -63,28 +67,42 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
   const isStartVariant = navVariant === "start";
   const isStepVariant = navVariant === "step";
 
-  // Determine if we should animate
-  const shouldAnimateEntrance = !disableAnimation && !disableEntranceAnimation;
-  const shouldAnimateExit = !disableAnimation;
+  // Resolve animation type
+  const resolvedEnterAnimation: EnterAnimation = enterAnimation ??
+    (disableAnimation || disableEntranceAnimation ? "none" : "slide");
 
-  // Use different initial values based on variant
-  const getInitialValue = () => {
-    if (!shouldAnimateEntrance) return 0;
+  const isFillAnimation = resolvedEnterAnimation === "fill";
+  const isSlideAnimation = resolvedEnterAnimation === "slide";
+  const shouldAnimate = resolvedEnterAnimation !== "none";
+
+  // Determine if we should animate exit
+  const shouldAnimateExit = !disableAnimation && isSlideAnimation;
+
+  // Use different initial values based on animation type
+  const getInitialSlideValue = () => {
+    if (!isSlideAnimation) return 0;
     if (isStartVariant) return screenHeight; // slide from bottom
     if (isStepVariant) return screenWidth; // slide from right
     return 0;
   };
 
-  const slideAnim = useRef(new Animated.Value(getInitialValue())).current;
+  const slideAnim = useRef(new Animated.Value(getInitialSlideValue())).current;
+  const fillAnim = useRef(new Animated.Value(isFillAnimation ? 0 : 1)).current;
   const isAnimatingOut = useRef(false);
 
   useEffect(() => {
-    if (shouldAnimateEntrance) {
+    if (isSlideAnimation) {
       Animated.spring(slideAnim, {
         toValue: 0,
         useNativeDriver: true,
         tension: 65,
         friction: 11,
+      }).start();
+    } else if (isFillAnimation) {
+      Animated.timing(fillAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: false, // height animation can't use native driver
       }).start();
     }
   }, []);
@@ -152,7 +170,39 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
     return [];
   };
 
-  if (shouldAnimateEntrance || shouldAnimateExit) {
+  // Fill animation - background fills, content appears after
+  if (isFillAnimation) {
+    const animatedHeight = fillAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, screenHeight],
+    });
+
+    const contentOpacity = fillAnim.interpolate({
+      inputRange: [0, 0.8, 1],
+      outputRange: [0, 0, 1],
+    });
+
+    return (
+      <View style={styles.animatedContainer}>
+        {/* Background fill from bottom */}
+        <Animated.View
+          style={[
+            styles.fillBackground,
+            isYellow && styles.containerYellow,
+            { height: animatedHeight },
+          ]}
+          pointerEvents="none"
+        />
+        {/* Content appears after fill */}
+        <Animated.View style={[styles.fillContent, { opacity: contentOpacity }]}>
+          {content}
+        </Animated.View>
+      </View>
+    );
+  }
+
+  // Slide animation
+  if (isSlideAnimation) {
     return (
       <Animated.View
         style={[
@@ -179,6 +229,16 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 100,
     backgroundColor: colorMaps.layer.background,
+  },
+  fillBackground: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colorMaps.layer.background,
+  },
+  fillContent: {
+    flex: 1,
   },
   container: {
     flex: 1,

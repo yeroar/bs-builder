@@ -94,7 +94,6 @@ export default function BtcBuySuccessScreen({
           {/* Amount Display */}
           <CurrencyInput
             value={amount}
-            variant="transparent"
             topContextVariant="btc"
             topContextValue={satsEquivalent}
             bottomContextVariant="none"

@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import TransactionSuccessSlot, { TransactionSuccessSlotRef } from "../TransactionSuccessSlot";
+import TransactionSuccessSlot, { TransactionSuccessSlotRef, EnterAnimation } from "../TransactionSuccessSlot";
 import FoldPageViewHeader from "../../../../components/TopNav/FoldPageViewHeader";
 import CurrencyInput from "../../../../components/CurrencyInput/CurrencyInput";
 import Button from "../../../../components/Buttons/Button/Button";
@@ -13,8 +13,8 @@ export interface BtcBuySuccessSlotProps {
   actionLabel?: string;
   onClose?: () => void;
   onActionPress?: () => void;
-  /** Disable built-in animation when using external animation */
-  animated?: boolean;
+  /** Animation type for entering */
+  enterAnimation?: EnterAnimation;
   testID?: string;
 }
 
@@ -24,13 +24,13 @@ const BtcBuySuccessSlot = forwardRef<TransactionSuccessSlotRef, BtcBuySuccessSlo
   actionLabel = "Done",
   onClose,
   onActionPress,
-  animated = true,
+  enterAnimation = "slide",
   testID,
 }, ref) => {
   return (
     <TransactionSuccessSlot
       ref={ref}
-      animated={animated}
+      enterAnimation={enterAnimation}
       header={
         <FoldPageViewHeader
           title="Purchase submitted"
@@ -66,7 +66,6 @@ const BtcBuySuccessSlot = forwardRef<TransactionSuccessSlotRef, BtcBuySuccessSlo
     >
       <CurrencyInput
         value={amount}
-        variant="transparent"
         topContextVariant="btc"
         topContextValue={satsEquivalent}
         bottomContextVariant="none"

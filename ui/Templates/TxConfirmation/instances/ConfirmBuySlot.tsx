@@ -1,5 +1,4 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
 import TxConfirmation from "../TxConfirmation";
 import { FoldText } from "../../../../components/Primitives/FoldText";
 import { CurrencyInput } from "../../../../components/CurrencyInput";
@@ -8,7 +7,7 @@ import ReceiptDetails from "../../../../components/ListItem/Receipt/ReceiptDetai
 import ListItemReceipt from "../../../../components/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
 import Button from "../../../../components/Buttons/Button/Button";
-import { colorMaps, spacing } from "../../../../components/tokens";
+import { colorMaps } from "../../../../components/tokens";
 
 export interface ConfirmBuySlotProps {
   amount: string;
@@ -60,75 +59,50 @@ export default function ConfirmBuySlot({
   testID,
 }: ConfirmBuySlotProps) {
   return (
-    <TxConfirmation>
-      <View style={styles.content} testID={testID}>
-        {/* Currency Input Section */}
-        <View style={styles.currencySection}>
-          <CurrencyInput
-            value={amount}
-            topContextVariant="btc"
-            topContextValue={satsEquivalent}
-            bottomContextVariant={paymentMethodVariant === "null" ? "addPaymentMethod" : "paymentMethod"}
-            paymentMethodVariant={paymentMethodVariant}
-            paymentMethodBrand={paymentMethodBrand}
-            paymentMethodLabel={paymentMethodLabel}
-            onPaymentMethodPress={onPaymentMethodPress}
-          />
-        </View>
-
-        {/* Receipt Details */}
-        <View style={styles.detailsSection}>
-          <ReceiptDetails>
-            <ListItemReceipt label="Bitcoin price" value={bitcoinPrice} />
-            <ListItemReceipt label="Amount" value={purchaseAmount} />
-            <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
-          </ReceiptDetails>
-        </View>
-      </View>
-
-      {/* Footer */}
-      <ModalFooter
-        modalVariant="default"
-        disclaimer={
-          <FoldText type="body-sm" style={styles.disclaimerText}>
-            Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
-            <FoldText type="body-sm-bold" style={styles.disclaimerBold}>
-              up to 14 days
+    <TxConfirmation
+      currencyInput={
+        <CurrencyInput
+          value={amount}
+          topContextVariant="btc"
+          topContextValue={satsEquivalent}
+          bottomContextVariant={paymentMethodVariant === "null" ? "addPaymentMethod" : "paymentMethod"}
+          paymentMethodVariant={paymentMethodVariant}
+          paymentMethodBrand={paymentMethodBrand}
+          paymentMethodLabel={paymentMethodLabel}
+          onPaymentMethodPress={onPaymentMethodPress}
+          testID={testID}
+        />
+      }
+      receiptDetails={
+        <ReceiptDetails>
+          <ListItemReceipt label="Bitcoin price" value={bitcoinPrice} />
+          <ListItemReceipt label="Amount" value={purchaseAmount} />
+          <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
+        </ReceiptDetails>
+      }
+      footer={
+        <ModalFooter
+          modalVariant="default"
+          disclaimer={
+            <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+              Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
+              <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                up to 14 days
+              </FoldText>
+              {" "}from purchase to unlock.
             </FoldText>
-            {" "}from purchase to unlock.
-          </FoldText>
-        }
-        primaryButton={
-          <Button
-            label={actionLabel}
-            hierarchy="primary"
-            size="md"
-            disabled={paymentMethodVariant === "null"}
-            onPress={onConfirmPress}
-          />
-        }
-      />
-    </TxConfirmation>
+          }
+          primaryButton={
+            <Button
+              label={actionLabel}
+              hierarchy="primary"
+              size="md"
+              disabled={paymentMethodVariant === "null"}
+              onPress={onConfirmPress}
+            />
+          }
+        />
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
-  currencySection: {
-    alignItems: "center",
-    paddingHorizontal: spacing["400"],
-  },
-  detailsSection: {
-    paddingHorizontal: spacing["500"],
-    paddingVertical: spacing["400"],
-  },
-  disclaimerText: {
-    color: colorMaps.face.tertiary,
-    textAlign: "center",
-  },
-  disclaimerBold: {
-    color: colorMaps.face.primary,
-  },
-});

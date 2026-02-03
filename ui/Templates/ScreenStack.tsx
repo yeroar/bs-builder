@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { View, StyleSheet, Animated, Dimensions } from "react-native";
-import { colorMaps } from "../../components/tokens";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -15,8 +14,6 @@ export interface ScreenStackProps {
   animateInitial?: boolean;
   /** Called when the last screen finishes animating out (stack becomes empty) */
   onEmpty?: () => void;
-  /** Make screen backgrounds transparent (useful when content handles its own background/animation) */
-  transparentBackground?: boolean;
 }
 
 interface ScreenState {
@@ -31,7 +28,6 @@ export default function ScreenStack({
   onBack,
   animateInitial = false,
   onEmpty,
-  transparentBackground = false,
 }: ScreenStackProps) {
   const [screens, setScreens] = useState<ScreenState[]>(() =>
     stack.map(key => ({
@@ -123,7 +119,6 @@ export default function ScreenStack({
           key={screen.key}
           style={[
             styles.screen,
-            transparentBackground && styles.screenTransparent,
             {
               zIndex: index,
               transform: [{ translateX: screen.animValue }],
@@ -140,7 +135,6 @@ export default function ScreenStack({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
   },
   screen: {
     position: "absolute",
@@ -148,9 +142,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: colorMaps.layer.background,
-  },
-  screenTransparent: {
-    backgroundColor: "transparent",
   },
 });

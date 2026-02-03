@@ -6,11 +6,8 @@ import BottomContext, { BottomContextVariant } from "./BottomContext";
 import { PmSelectorVariant } from "./PmSelector";
 import { colorMaps, spacing } from "../tokens";
 
-export type CurrencyInputVariant = "default" | "transparent";
-
 export interface CurrencyInputProps {
   value: string;
-  variant?: CurrencyInputVariant;
   topContextVariant?: TopContextVariant;
   topContextValue?: string;
   topContextLeadingIcon?: React.ReactNode;
@@ -31,7 +28,6 @@ export interface CurrencyInputProps {
 
 export default function CurrencyInput({
   value = "$0",
-  variant = "default",
   topContextVariant = "btc",
   topContextValue = "~฿0",
   topContextLeadingIcon,
@@ -47,15 +43,9 @@ export default function CurrencyInput({
   style,
   testID,
 }: CurrencyInputProps) {
-  const isTransparent = variant === "transparent";
-
   return (
     <View
-      style={[
-        styles.container,
-        isTransparent && styles.containerTransparent,
-        style,
-      ]}
+      style={[styles.container, style]}
       testID={testID}
     >
       {topContextSlot || (
@@ -87,14 +77,10 @@ export default function CurrencyInput({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colorMaps.layer.background,
     alignItems: "center",
     gap: spacing["600"],
     paddingVertical: spacing["1200"],
     width: "100%",
-  },
-  containerTransparent: {
-    backgroundColor: "transparent",
   },
   amount: {
     color: colorMaps.face.primary,

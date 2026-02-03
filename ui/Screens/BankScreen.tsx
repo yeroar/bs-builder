@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, Modal, Keyboard, LayoutAnimation, Platform, UIManager, Animated, Dimensions } from "react-native";
+import { View, StyleSheet, Modal, Keyboard, LayoutAnimation, Platform, UIManager } from "react-native";
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -34,8 +34,10 @@ import BtcEnterAmount from "../Templates/EnterAmount/instances/BtcEnterAmount";
 import BtcSellEnterAmount from "../Templates/EnterAmount/instances/BtcSellEnterAmount";
 import ConfirmBuySlot from "../Templates/TxConfirmation/instances/ConfirmBuySlot";
 import ConfirmSellSlot from "../Templates/TxConfirmation/instances/ConfirmSellSlot";
-import BtcBuySuccessSlot from "../Templates/Success/instances/BtcBuySuccessSlot";
-import BtcSellSuccessSlot from "../Templates/Success/instances/BtcSellSuccessSlot";
+import SendBitcoinEnterAmount from "../Templates/EnterAmount/instances/SendBitcoinEnterAmount";
+import SendBitcoinConfirmationSlot from "../Templates/TxConfirmation/instances/SendBitcoinConfirmationSlot";
+import SendBitcoinSuccessSlot from "../Templates/Success/instances/SendBitcoinSuccessSlot";
+import { CurrencyInput, BottomContext } from "../../components/CurrencyInput";
 import AddPaymentSlot from "../Slots/BTC/patterns/Payment Methods/AddPaymentSlot";
 import ChooseBankAccountSlot from "../Slots/BTC/patterns/Payment Methods/ChooseBankAccountSlot";
 import ChooseDebitCardSlot from "../Slots/BTC/patterns/Payment Methods/ChooseDebitCardSlot";
@@ -46,7 +48,7 @@ import { TransactionSuccessSlotRef } from "../Templates/Success/TransactionSucce
 import ScreenStack from "../Templates/ScreenStack";
 import { PmSelectorVariant } from "../../components/CurrencyInput/PmSelector";
 
-type FlowType = "buy" | "sell";
+type FlowType = "buy" | "sell" | "send";
 type FlowStep = "enterAmount" | "confirm";
 
 interface BankScreenProps {
@@ -81,10 +83,9 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   // Selected card brand for display
   const [selectedCardBrand, setSelectedCardBrand] = useState<string | undefined>();
 
-  // Animation states for success transition
-  const [isAnimatingToSuccess, setIsAnimatingToSuccess] = useState(false);
-  const fillAnimation = useRef(new Animated.Value(0)).current;
-  const screenHeight = Dimensions.get("window").height;
+  // Send flow state
+  const [sendSatsAmount, setSendSatsAmount] = useState(0);
+
   const successScreenRef = useRef<TransactionSuccessSlotRef>(null);
 
 
@@ -170,6 +171,19 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
     handleOpenFlow("sell");
   };
 
+  const handleOpenSendFlow = () => {
+    setSendSatsAmount(0);
+    setActiveFlow("send");
+    setFlowStack(["enterAmount"]);
+    setShowFlowOverlay(true);
+  };
+
+  const handleSendEnterAmountContinue = (sats: number) => {
+    console.log("Send amount entered:", sats, "sats");
+    setSendSatsAmount(sats);
+    setFlowStack(prev => [...prev, "confirm"]);
+  };
+
   const handleFlowClose = () => {
     if (activeFlow === "sell") {
       // For sell, FullscreenTemplate handles animation, then we close directly
@@ -199,23 +213,9 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
   const handleConfirm = () => {
     console.log(`${activeFlow} confirmed for:`, flowAmount);
-
-    // Reset animation values
-    fillAnimation.setValue(0);
-
-    // Start the transition animation
-    setIsAnimatingToSuccess(true);
-
-    Animated.timing(fillAnimation, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: false,
-    }).start(() => {
-      setFlowStack([]);
-      setShowFlowOverlay(false);
-      setShowSuccess(true);
-      setIsAnimatingToSuccess(false);
-    });
+    setFlowStack([]);
+    setShowFlowOverlay(false);
+    setShowSuccess(true);
   };
 
   const handleSuccessDone = () => {
@@ -418,7 +418,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   // Unified flow screen renderer
   const renderFlowScreen = (step: string) => {
     const numAmount = parseFloat(flowAmount) || 0;
-    const btcPrice = 100000;
+    const btcPrice = 102500; // $102,500 per BTC
     const feeAmount = numAmount * 0.01;
     const netAmount = numAmount - feeAmount;
     const satsEquivalent = activeFlow === "buy"
@@ -437,9 +437,68 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
       return `~${formatted} sats`;
     };
 
-    const isBuy = activeFlow === "buy";
-    const title = isBuy ? "Buy bitcoin" : "Sell bitcoin";
+    const satsToUsd = (sats: number): number => {
+      return (sats / 100000000) * btcPrice;
+    };
 
+    const formatUsdFromSats = (sats: number): string => {
+      const usd = satsToUsd(sats);
+      if (usd < 0.01) return "< $0.01";
+      return `~$${usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
+    const isBuy = activeFlow === "buy";
+    const isSend = activeFlow === "send";
+    const title = isBuy ? "Buy bitcoin" : isSend ? "Send bitcoin" : "Sell bitcoin";
+
+    // Send flow screens
+    if (isSend) {
+      switch (step) {
+        case "enterAmount":
+          return (
+            <FullscreenTemplate
+              title={title}
+              onLeftPress={handleFlowClose}
+              scrollable={false}
+              navVariant="start"
+              disableAnimation={false}
+            >
+              <SendBitcoinEnterAmount
+                maxSats={7000000} // 0.07 BTC
+                btcPriceUsd={btcPrice}
+                onContinue={handleSendEnterAmountContinue}
+              />
+            </FullscreenTemplate>
+          );
+        case "confirm":
+          const sendFeeSats = Math.round(sendSatsAmount * 0.001); // 0.1% fee
+          const sendUsdEquivalent = formatUsdFromSats(sendSatsAmount);
+          const sendFeeUsd = formatUsdFromSats(sendFeeSats);
+          return (
+            <FullscreenTemplate
+              title={title}
+              onLeftPress={handleConfirmBack}
+              scrollable={false}
+              navVariant="step"
+              disableAnimation
+            >
+              <SendBitcoinConfirmationSlot
+                satsAmount={sendSatsAmount}
+                usdEquivalent={sendUsdEquivalent}
+                bitcoinAddress="3NC53Da...9wff5iY"
+                feeSats={sendFeeSats}
+                feeUsd={sendFeeUsd}
+                estimatedTime="Arrives within 24hrs"
+                onConfirmPress={handleConfirm}
+              />
+            </FullscreenTemplate>
+          );
+        default:
+          return null;
+      }
+    }
+
+    // Buy/Sell flow screens
     switch (step) {
       case "enterAmount":
         return (
@@ -507,12 +566,6 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
         return null;
     }
   };
-
-  const animatedFillHeight = fillAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, screenHeight],
-  });
-
 
   return (
     <>
@@ -601,7 +654,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
           <BtcSlot
             onBuyPress={handleOpenBuyModal}
             onSellPress={handleOpenSellFlow}
-            onSwapPress={() => console.log("Swap pressed")}
+            onSendPress={handleOpenSendFlow}
             onAutoStackPress={() => console.log("Auto stack pressed")}
             onDirectToBitcoinPress={() => console.log("Direct to bitcoin pressed")}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
@@ -650,7 +703,6 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
               renderScreen={renderFlowScreen}
               animateInitial={activeFlow === "buy"}
               onEmpty={handleFlowEmpty}
-              transparentBackground={activeFlow === "sell"}
             />
           </View>
 
@@ -674,40 +726,103 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
         </>
       )}
 
-      {/* Yellow fill animation overlay */}
-      {isAnimatingToSuccess && (
-        <Animated.View
-          style={[
-            styles.fillOverlay,
-            {
-              height: animatedFillHeight,
-              backgroundColor: colorMaps.object.primary.bold.default,
-            },
-          ]}
-          pointerEvents="none"
-        />
-      )}
-
       {/* Success Screen Overlay */}
       {showSuccess && activeFlow === "buy" && (
-        <BtcBuySuccessSlot
-          ref={successScreenRef}
-          amount={`$${parseFloat(flowAmount).toFixed(2)}`}
-          satsEquivalent={`~${Math.round(parseFloat(flowAmount) * 100).toLocaleString()} sats`}
-          onClose={handleSuccessDone}
-          onActionPress={handleSuccessActionPress}
-          animated={false}
-        />
+        <FullscreenTemplate
+          title="Purchase submitted"
+          leftIcon="x"
+          onLeftPress={handleSuccessDone}
+          scrollable={false}
+          variant="yellow"
+          enterAnimation="fill"
+        >
+          <View style={styles.successContent}>
+            <CurrencyInput
+              value={`$${parseFloat(flowAmount).toFixed(2)}`}
+              topContextVariant="btc"
+              topContextValue={`~${Math.round(parseFloat(flowAmount) * 100).toLocaleString()} sats`}
+              bottomContextVariant="none"
+            />
+          </View>
+          <ModalFooter
+            type="inverse"
+            disclaimer={
+              <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
+                <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                  up to 14 days
+                </FoldText>
+                {" "}from purchase to unlock.
+              </FoldText>
+            }
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        </FullscreenTemplate>
       )}
 
       {showSuccess && activeFlow === "sell" && (
-        <BtcSellSuccessSlot
-          amount={`$${parseFloat(flowAmount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-          satsEquivalent={`~${Math.round((parseFloat(flowAmount) / 100000) * 100000000).toLocaleString()} sats`}
-          onClose={handleSuccessDone}
-          onActionPress={handleSuccessActionPress}
-          animated={false}
-        />
+        <FullscreenTemplate
+          title="Bitcoin sold"
+          leftIcon="x"
+          onLeftPress={handleSuccessDone}
+          scrollable={false}
+          variant="yellow"
+          enterAnimation="fill"
+        >
+          <View style={styles.successContent}>
+            <CurrencyInput
+              value={`$${parseFloat(flowAmount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              topContextVariant="btc"
+              topContextValue={`~${Math.round((parseFloat(flowAmount) / 100000) * 100000000).toLocaleString()} sats`}
+              bottomContextSlot={
+                <BottomContext variant="maxButton">
+                  <Button
+                    label="View details"
+                    hierarchy="secondary"
+                    size="xs"
+                    onPress={handleSuccessActionPress}
+                  />
+                </BottomContext>
+              }
+            />
+          </View>
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        </FullscreenTemplate>
+      )}
+
+      {showSuccess && activeFlow === "send" && (
+        <FullscreenTemplate
+          title="Send initiated"
+          leftIcon="x"
+          onLeftPress={handleSuccessDone}
+          scrollable={false}
+          variant="yellow"
+          enterAnimation="fill"
+        >
+          <SendBitcoinSuccessSlot
+            satsAmount={sendSatsAmount}
+            usdEquivalent={`~$${((sendSatsAmount / 100000000) * 102500).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+            onDone={handleSuccessDone}
+            onViewDetails={handleSuccessActionPress}
+          />
+        </FullscreenTemplate>
       )}
     </>
   );
@@ -732,12 +847,10 @@ const styles = StyleSheet.create({
     color: colorMaps.face.primary,
     marginBottom: spacing["200"],
   },
-  fillOverlay: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 250,
+  successContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: spacing["400"],
   },
   buyFlowOverlay: {
     position: "absolute",

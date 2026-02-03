@@ -1,12 +1,10 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
 import TxConfirmation from "../TxConfirmation";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
 import ReceiptDetails from "../../../../components/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
 import Button from "../../../../components/Buttons/Button/Button";
-import { spacing } from "../../../../components/tokens";
 
 export interface ConfirmSellSlotProps {
   amount: string;
@@ -50,53 +48,35 @@ export default function ConfirmSellSlot({
   testID,
 }: ConfirmSellSlotProps) {
   return (
-    <TxConfirmation>
-      <View style={styles.content} testID={testID}>
-        {/* Currency Input Section */}
-        <View style={styles.currencySection}>
-          <CurrencyInput
-            value={amount}
-            topContextSlot={<TopContext variant="btc" value={satsEquivalent} />}
-            bottomContextSlot={<BottomContext variant="empty" />}
-          />
-        </View>
-
-        {/* Receipt Details */}
-        <View style={styles.detailsSection}>
-          <ReceiptDetails>
-            <ListItemReceipt label="Bitcoin price" value={bitcoinPrice} />
-            <ListItemReceipt label="Amount" value={saleAmount} />
-            <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
-          </ReceiptDetails>
-        </View>
-      </View>
-
-      {/* Footer */}
-      <ModalFooter
-        modalVariant="default"
-        primaryButton={
-          <Button
-            label={actionLabel}
-            hierarchy="primary"
-            size="md"
-            onPress={onConfirmPress}
-          />
-        }
-      />
-    </TxConfirmation>
+    <TxConfirmation
+      currencyInput={
+        <CurrencyInput
+          value={amount}
+          topContextSlot={<TopContext variant="btc" value={satsEquivalent} />}
+          bottomContextSlot={<BottomContext variant="empty" />}
+          testID={testID}
+        />
+      }
+      receiptDetails={
+        <ReceiptDetails>
+          <ListItemReceipt label="Bitcoin price" value={bitcoinPrice} />
+          <ListItemReceipt label="Amount" value={saleAmount} />
+          <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
+        </ReceiptDetails>
+      }
+      footer={
+        <ModalFooter
+          modalVariant="default"
+          primaryButton={
+            <Button
+              label={actionLabel}
+              hierarchy="primary"
+              size="md"
+              onPress={onConfirmPress}
+            />
+          }
+        />
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
-  currencySection: {
-    alignItems: "center",
-    paddingHorizontal: spacing["400"],
-  },
-  detailsSection: {
-    paddingHorizontal: spacing["500"],
-    paddingVertical: spacing["400"],
-  },
-});

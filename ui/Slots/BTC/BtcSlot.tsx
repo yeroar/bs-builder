@@ -25,7 +25,7 @@ export interface BtcSlotProps {
   rewardsSats?: string;
   onBuyPress?: () => void;
   onSellPress?: () => void;
-  onSwapPress?: () => void;
+  onSendPress?: () => void;
   onAutoStackPress?: () => void;
   onDirectToBitcoinPress?: () => void;
   onSeeAllTransactionsPress?: () => void;
@@ -47,7 +47,7 @@ export default function BtcSlot({
   rewardsSats = "18,434 sats",
   onBuyPress,
   onSellPress,
-  onSwapPress,
+  onSendPress,
   onAutoStackPress,
   onDirectToBitcoinPress,
   onSeeAllTransactionsPress,
@@ -111,7 +111,7 @@ export default function BtcSlot({
           <Button label="Sell" hierarchy="primary" size="sm" onPress={onSellPress} />
         }
         tertiaryButton={
-          <Button label="Swap" hierarchy="primary" size="sm" onPress={onSwapPress} />
+          <Button label="Send" hierarchy="primary" size="sm" onPress={onSendPress} />
         }
       />
       <Divider />

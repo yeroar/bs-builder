@@ -69,24 +69,22 @@ export default function Keypad({
         </View>
       </View>
 
-      {actionBar && (
-        children ? (
-          <ModalFooter modalVariant="default" primaryButton={children} />
-        ) : (
-          <ModalFooter
-            modalVariant="default"
-            primaryButton={
-              <Button
-                label={actionLabel}
-                hierarchy="primary"
-                size="md"
-                disabled={actionDisabled}
-                onPress={onActionPress}
-              />
-            }
-          />
-        )
-      )}
+      {children ? (
+        <ModalFooter modalVariant="default" primaryButton={children} />
+      ) : actionBar ? (
+        <ModalFooter
+          modalVariant="default"
+          primaryButton={
+            <Button
+              label={actionLabel}
+              hierarchy="primary"
+              size="md"
+              disabled={actionDisabled}
+              onPress={onActionPress}
+            />
+          }
+        />
+      ) : null}
     </View>
   );
 }

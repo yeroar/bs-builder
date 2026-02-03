@@ -14,7 +14,7 @@ figma.connect(
         rewardsSats="18,434 sats"
         onBuyPress={() => {}}
         onSellPress={() => {}}
-        onSwapPress={() => {}}
+        onSendPress={() => {}}
         onAutoStackPress={() => {}}
         onDirectToBitcoinPress={() => {}}
         onSeeAllTransactionsPress={() => {}}
