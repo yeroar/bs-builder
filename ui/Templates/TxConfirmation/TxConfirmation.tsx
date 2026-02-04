@@ -54,9 +54,18 @@ export default function TxConfirmation({
           </View>
           {disclaimer && (
             <View style={styles.disclaimerContainer}>
-              <FoldText type="body-sm" style={styles.disclaimerText}>
-                {disclaimer}
-              </FoldText>
+              {disclaimer.split("\n").map((paragraph, index) => (
+                <FoldText
+                  key={index}
+                  type="body-sm"
+                  style={[
+                    styles.disclaimerText,
+                    index > 0 && styles.disclaimerParagraph,
+                  ]}
+                >
+                  {paragraph}
+                </FoldText>
+              ))}
             </View>
           )}
         </ScrollView>
@@ -67,9 +76,18 @@ export default function TxConfirmation({
           </View>
           {disclaimer && (
             <View style={styles.disclaimerContainer}>
-              <FoldText type="body-sm" style={styles.disclaimerText}>
-                {disclaimer}
-              </FoldText>
+              {disclaimer.split("\n").map((paragraph, index) => (
+                <FoldText
+                  key={index}
+                  type="body-sm"
+                  style={[
+                    styles.disclaimerText,
+                    index > 0 && styles.disclaimerParagraph,
+                  ]}
+                >
+                  {paragraph}
+                </FoldText>
+              ))}
             </View>
           )}
           <View style={styles.spacer} />
@@ -108,5 +126,8 @@ const styles = StyleSheet.create({
   },
   disclaimerText: {
     color: colorMaps.face.tertiary,
+  },
+  disclaimerParagraph: {
+    marginTop: spacing["200"],
   },
 });

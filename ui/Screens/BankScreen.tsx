@@ -21,7 +21,7 @@ import BtcSlot from "../Slots/BTC/BtcSlot";
 import CashSlot from "../Slots/Cash/CashSlot";
 import BtcBuyModalSlot, { BuyAmount } from "../Slots/BTC/BtcBuyModalSlot";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, OneTimeDepositFlow } from "./flows";
+import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow } from "./flows";
 
 type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit";
 
@@ -106,8 +106,13 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   const handleOpenDepositFlow = () => setActiveFlow("deposit");
 
   const handleFlowComplete = () => {
+    const wasDepositFlow = activeFlow === "deposit";
     setActiveFlow(null);
-    setShowBtcSlot(true);
+    if (wasDepositFlow) {
+      setShowCashSlot(true);
+    } else {
+      setShowBtcSlot(true);
+    }
   };
 
   const handleFlowClose = () => {
@@ -273,7 +278,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
       )}
 
       {activeFlow === "deposit" && (
-        <OneTimeDepositFlow
+        <DepositFlow
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
         />

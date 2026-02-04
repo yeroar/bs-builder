@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import OneTimeDepositEnterAmount from "../../Templates/EnterAmount/instances/OneTimeDepositEnterAmount";
-import ConfirmOneTimeDepositSlot from "../../Templates/TxConfirmation/instances/ConfirmOneTimeDepositSlot";
-import { CurrencyInput } from "../../../components/CurrencyInput";
+import RecurringDepositEnterAmount from "../../Templates/EnterAmount/instances/RecurringDepositEnterAmount";
+import ConfirmRecurringDepositSlot from "../../Templates/TxConfirmation/instances/ConfirmRecurringDepositSlot";
+import { CurrencyInput, TopContext, BottomContext } from "../../../components/CurrencyInput";
 import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
@@ -14,12 +14,17 @@ import { spacing } from "../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";
 
-export interface OneTimeDepositFlowProps {
+export interface RecurringDepositFlowProps {
+  frequency?: string;
   onComplete: () => void;
   onClose: () => void;
 }
 
-export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepositFlowProps) {
+export default function RecurringDepositFlow({
+  frequency = "Weekly",
+  onComplete,
+  onClose
+}: RecurringDepositFlowProps) {
   // Modal state
   const [isModalVisible, setIsModalVisible] = useState(true);
 
@@ -41,6 +46,24 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
     const [intPart, decPart] = fixed.split(".");
     const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return `${formattedInt}.${decPart}`;
+  };
+
+  // Get day of week for frequency label
+  const getDayOfWeek = () => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return days[new Date().getDay()];
+  };
+
+  const getStartingDate = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const hour12 = hours % 12 || 12;
+    const day = getDayOfWeek();
+    const month = now.toLocaleString("en-US", { month: "short" });
+    const date = now.getDate();
+    return `${hour12}:${minutes.toString().padStart(2, "0")} ${ampm} ${day}, ${month} ${date}`;
   };
 
   // Modal handlers
@@ -97,13 +120,14 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
       case "enterAmount":
         return (
           <FullscreenTemplate
-            title="One-time deposit"
+            title="Recurring deposit"
             onLeftPress={() => setFlowStack([])}
             scrollable={false}
             navVariant="step"
             disableAnimation
           >
-            <OneTimeDepositEnterAmount
+            <RecurringDepositEnterAmount
+              frequency={frequency}
               actionLabel="Continue"
               onActionPress={handleEnterAmountContinue}
             />
@@ -112,16 +136,17 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
       case "confirm":
         return (
           <FullscreenTemplate
-            title="One-time deposit"
+            title="Recurring deposit"
             onLeftPress={handleConfirmBack}
             scrollable={false}
             navVariant="step"
             disableAnimation
           >
-            <ConfirmOneTimeDepositSlot
+            <ConfirmRecurringDepositSlot
               amount={`$${formatWithCommas(numAmount)}`}
-              transferAmount={`$${formatWithCommas(numAmount)}`}
-              totalAmount={`$${formatWithCommas(numAmount)}`}
+              frequency={frequency}
+              startingDate={getStartingDate()}
+              frequencyLabel={`${frequency} on ${getDayOfWeek()}`}
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
@@ -141,7 +166,7 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
 
     return (
       <FullscreenTemplate
-        title="Deposit initiated"
+        title="Recurring deposit initiated"
         leftIcon="x"
         onLeftPress={handleSuccessDone}
         scrollable={false}
@@ -151,11 +176,17 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
         <View style={styles.successContent}>
           <CurrencyInput
             value={`$${formatWithCommas(numAmount)}`}
-            topContextVariant="empty"
-            bottomContextVariant="paymentMethod"
-            paymentMethodVariant={selectedPaymentMethod}
-            paymentMethodBrand={selectedBrand}
-            paymentMethodLabel={selectedLabel}
+            topContextSlot={<TopContext variant="frequency" value={frequency} />}
+            bottomContextSlot={
+              <BottomContext variant="maxButton">
+                <Button
+                  label="View details"
+                  hierarchy="secondary"
+                  size="xs"
+                  onPress={handleSuccessDone}
+                />
+              </BottomContext>
+            }
           />
         </View>
         <ModalFooter

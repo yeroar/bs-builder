@@ -39,17 +39,17 @@ export default function ListItemReceipt({
         <View style={styles.rightColumn}>
           {isVertical ? (
             <>
-              <FoldText type="body-md-bold" style={styles.value}>
+              <FoldText type="body-md-bold" style={styles.value} numberOfLines={1}>
                 {value}
               </FoldText>
               {hasDenominator && denominator && (
-                <FoldText type="body-md" style={styles.denominator}>
+                <FoldText type="body-md" style={styles.denominator} numberOfLines={1}>
                   {denominator}
                 </FoldText>
               )}
             </>
           ) : (
-            <FoldText type="body-md-bold" style={styles.value}>
+            <FoldText type="body-md-bold" style={styles.value} numberOfLines={1}>
               {value}
               {hasDenominator && denominator && (
                 <FoldText type="body-md" style={styles.denominator}>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     gap: spacing["300"],
   },
   leftColumn: {
-    flex: 1,
+    flexShrink: 0,
   },
   label: {
     color: colorMaps.face.secondary,

@@ -2,24 +2,24 @@ import React, { useState } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import OneTimeDepositEnterAmount from "../../Templates/EnterAmount/instances/OneTimeDepositEnterAmount";
-import ConfirmOneTimeDepositSlot from "../../Templates/TxConfirmation/instances/ConfirmOneTimeDepositSlot";
+import InstantDepositEnterAmount from "../../Templates/EnterAmount/instances/InstantDepositEnterAmount";
+import ConfirmInstantDepositSlot from "../../Templates/TxConfirmation/instances/ConfirmInstantDepositSlot";
 import { CurrencyInput } from "../../../components/CurrencyInput";
 import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import ChooseBankAccountSlot from "../../Slots/BTC/patterns/Payment Methods/ChooseBankAccountSlot";
+import ChooseDebitCardSlot from "../../Slots/BTC/patterns/Payment Methods/ChooseDebitCardSlot";
 import { PmSelectorVariant } from "../../../components/CurrencyInput/PmSelector";
 import { spacing } from "../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";
 
-export interface OneTimeDepositFlowProps {
+export interface InstantDepositFlowProps {
   onComplete: () => void;
   onClose: () => void;
 }
 
-export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepositFlowProps) {
+export default function InstantDepositFlow({ onComplete, onClose }: InstantDepositFlowProps) {
   // Modal state
   const [isModalVisible, setIsModalVisible] = useState(true);
 
@@ -32,9 +32,9 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
-  const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
-  const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
-  const [tempSelectedBankLabel, setTempSelectedBankLabel] = useState<string | undefined>();
+  const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
+  const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
+  const [tempSelectedCardLabel, setTempSelectedCardLabel] = useState<string | undefined>();
 
   const formatWithCommas = (num: number, decimals = 2): string => {
     const fixed = num.toFixed(decimals);
@@ -49,11 +49,11 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
     onClose();
   };
 
-  const handleConfirmBankSelection = () => {
-    if (tempSelectedBankId) {
-      setSelectedPaymentMethod("bankAccount");
-      setSelectedBrand(tempSelectedBankBrand);
-      setSelectedLabel(tempSelectedBankLabel);
+  const handleConfirmCardSelection = () => {
+    if (tempSelectedCardId) {
+      setSelectedPaymentMethod("cardAccount");
+      setSelectedBrand(tempSelectedCardBrand);
+      setSelectedLabel(tempSelectedCardLabel);
       setIsModalVisible(false);
       setFlowStack(["enterAmount"]);
     }
@@ -92,18 +92,22 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
 
   const renderScreen = (step: string) => {
     const numAmount = parseFloat(flowAmount) || 0;
+    const feeRate = 0.015; // 1.5%
+    const feeAmount = numAmount * feeRate;
+    const totalAmount = numAmount + feeAmount;
 
     switch (step) {
       case "enterAmount":
         return (
           <FullscreenTemplate
-            title="One-time deposit"
+            title="Instant deposit"
             onLeftPress={() => setFlowStack([])}
             scrollable={false}
             navVariant="step"
             disableAnimation
           >
-            <OneTimeDepositEnterAmount
+            <InstantDepositEnterAmount
+              maxAmount="$500.00"
               actionLabel="Continue"
               onActionPress={handleEnterAmountContinue}
             />
@@ -112,16 +116,18 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
       case "confirm":
         return (
           <FullscreenTemplate
-            title="One-time deposit"
+            title="Instant deposit"
             onLeftPress={handleConfirmBack}
             scrollable={false}
             navVariant="step"
             disableAnimation
           >
-            <ConfirmOneTimeDepositSlot
+            <ConfirmInstantDepositSlot
               amount={`$${formatWithCommas(numAmount)}`}
               transferAmount={`$${formatWithCommas(numAmount)}`}
-              totalAmount={`$${formatWithCommas(numAmount)}`}
+              feePercentage="1.5%"
+              feeAmount={`+ $${formatWithCommas(feeAmount)}`}
+              totalAmount={`$${formatWithCommas(totalAmount)}`}
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
@@ -206,21 +212,21 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
                   label="Continue"
                   hierarchy="primary"
                   size="md"
-                  disabled={!tempSelectedBankId}
-                  onPress={handleConfirmBankSelection}
+                  disabled={!tempSelectedCardId}
+                  onPress={handleConfirmCardSelection}
                 />
               }
             />
           }
         >
-          <ChooseBankAccountSlot
-            selectedAccountId={tempSelectedBankId}
-            onSelectAccount={(account) => {
-              setTempSelectedBankId(account.id);
-              setTempSelectedBankBrand(account.brand);
-              setTempSelectedBankLabel(`${account.name} •••• ${account.lastFour}`);
+          <ChooseDebitCardSlot
+            selectedCardId={tempSelectedCardId}
+            onSelectCard={(card) => {
+              setTempSelectedCardId(card.id);
+              setTempSelectedCardBrand(card.brand);
+              setTempSelectedCardLabel(`${card.name} •••• ${card.lastFour}`);
             }}
-            onAddBankAccount={handleCloseModal}
+            onAddDebitCard={handleCloseModal}
           />
         </MiniModal>
       </Modal>

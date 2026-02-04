@@ -2,4 +2,7 @@ export { default as BtcBuyFlow } from "./BtcBuyFlow";
 export { default as BtcSellFlow } from "./BtcSellFlow";
 export { default as BtcSendFlow } from "./BtcSendFlow";
 export { default as BtcAutoStackFlow } from "./BtcAutoStackFlow";
+export { default as DepositFlow } from "./DepositFlow";
+export { default as InstantDepositFlow } from "./InstantDepositFlow";
 export { default as OneTimeDepositFlow } from "./OneTimeDepositFlow";
+export { default as RecurringDepositFlow } from "./RecurringDepositFlow";
