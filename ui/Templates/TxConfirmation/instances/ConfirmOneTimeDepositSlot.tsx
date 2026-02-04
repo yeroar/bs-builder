@@ -1,13 +1,11 @@
 import React from "react";
 import TxConfirmation from "../TxConfirmation";
-import { FoldText } from "../../../../components/Primitives/FoldText";
 import { CurrencyInput } from "../../../../components/CurrencyInput";
 import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
 import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../../components/modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { colorMaps } from "../../../../components/tokens";
 
 export interface ConfirmOneTimeDepositSlotProps {
   amount: string;
@@ -52,14 +50,10 @@ export default function ConfirmOneTimeDepositSlot({
           <ListItemReceipt label="Total" value={totalAmount} />
         </ReceiptDetails>
       }
+      disclaimer="Deposit are limited to $15,000 per transfer, $150,000 per day, $50,000 per month, and a maximum total balance of $30,000."
       footer={
         <ModalFooter
-          modalVariant="default"
-          disclaimer={
-            <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-              Your deposit may take 1-5 business days to complete.
-            </FoldText>
-          }
+          type="default"
           primaryButton={
             <Button
               label="Confirm deposit"

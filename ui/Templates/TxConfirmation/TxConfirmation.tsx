@@ -1,6 +1,7 @@
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import Divider from "../../../components/Primitives/Divider/Divider";
+import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface TxConfirmationProps {
@@ -12,6 +13,8 @@ export interface TxConfirmationProps {
   footer?: React.ReactNode;
   /** Children for custom layouts (used when currencyInput/receiptDetails not provided) */
   children?: React.ReactNode;
+  /** Disclaimer text at the bottom */
+  disclaimer?: string;
   /** Whether content is scrollable (default: true) */
   scrollable?: boolean;
 }
@@ -21,6 +24,7 @@ export default function TxConfirmation({
   receiptDetails,
   footer,
   children,
+  disclaimer,
   scrollable = true,
 }: TxConfirmationProps) {
   // Use slots if provided, otherwise fall back to children
@@ -31,6 +35,7 @@ export default function TxConfirmation({
       {currencyInput}
       <Divider style={styles.divider} />
       {receiptDetails}
+      {disclaimer && <Divider style={styles.dividerBottom} />}
     </>
   ) : (
     children
@@ -47,12 +52,26 @@ export default function TxConfirmation({
           <View style={styles.content}>
             {contentElement}
           </View>
+          {disclaimer && (
+            <View style={styles.disclaimerContainer}>
+              <FoldText type="body-sm" style={styles.disclaimerText}>
+                {disclaimer}
+              </FoldText>
+            </View>
+          )}
         </ScrollView>
       ) : (
         <>
           <View style={styles.content}>
             {contentElement}
           </View>
+          {disclaimer && (
+            <View style={styles.disclaimerContainer}>
+              <FoldText type="body-sm" style={styles.disclaimerText}>
+                {disclaimer}
+              </FoldText>
+            </View>
+          )}
           <View style={styles.spacer} />
         </>
       )}
@@ -70,6 +89,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+
   },
   content: {
     paddingHorizontal: spacing["500"],
@@ -78,6 +98,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   divider: {
-    marginBottom: spacing["500"],
+    marginBottom: spacing["400"],
+  },
+  dividerBottom: {
+    marginVertical: spacing["600"],
+  },
+  disclaimerContainer: {
+    paddingHorizontal: spacing["500"],
+  },
+  disclaimerText: {
+    color: colorMaps.face.tertiary,
   },
 });

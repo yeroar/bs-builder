@@ -7,7 +7,13 @@ figma.connect(
   {
     props: {
       children: figma.children("*"),
+      disclaimer: figma.boolean("hasDisclaimer", {
+        true: figma.string("disclaimer"),
+        false: undefined,
+      }),
     },
-    example: ({ children }) => <TxConfirmation>{children}</TxConfirmation>,
+    example: ({ children, disclaimer }) => (
+      <TxConfirmation disclaimer={disclaimer}>{children}</TxConfirmation>
+    ),
   }
 );
