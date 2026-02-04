@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import ModalFooter from "../../../../components/modals/ModalFooter";
-import { spacing } from "../../../../components/tokens";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import ModalFooter from "../../../../../components/modals/ModalFooter";
+import { spacing } from "../../../../../components/tokens";
 
-export interface SendBitcoinSuccessSlotProps {
+export interface BtcSendSuccessSlotProps {
   satsAmount?: number;
   usdEquivalent?: string;
   onDone?: () => void;
@@ -13,13 +13,13 @@ export interface SendBitcoinSuccessSlotProps {
   testID?: string;
 }
 
-export default function SendBitcoinSuccessSlot({
+export default function BtcSendSuccessSlot({
   satsAmount = 10000000,
   usdEquivalent = "~$10,250.00",
   onDone,
   onViewDetails,
   testID,
-}: SendBitcoinSuccessSlotProps) {
+}: BtcSendSuccessSlotProps) {
   const formatSats = (sats: number): string => {
     return `${sats.toLocaleString()} sats`;
   };

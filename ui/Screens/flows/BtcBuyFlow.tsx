@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import BtcEnterAmount from "../../Templates/EnterAmount/instances/BtcEnterAmount";
-import ConfirmBuySlot from "../../Templates/TxConfirmation/instances/ConfirmBuySlot";
+import BtcBuyEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcBuyEnterAmount";
+import BtcConfirmBuySlot from "../../Templates/TxConfirmation/instances/BTC/BtcConfirmBuySlot";
 import { CurrencyInput } from "../../../components/CurrencyInput";
 import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
@@ -18,7 +18,7 @@ import { colorMaps, spacing } from "../../../components/tokens";
 type FlowStep = "enterAmount" | "confirm";
 type ModalStep = "initial" | "bankAccount" | "debitCard";
 
-export interface BuyBitcoinFlowProps {
+export interface BtcBuyFlowProps {
   /** Initial amount if pre-selected (e.g., "$50") */
   initialAmount?: string;
   onComplete: () => void;
@@ -27,7 +27,7 @@ export interface BuyBitcoinFlowProps {
 
 const BTC_PRICE_USD = 102500;
 
-export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: BuyBitcoinFlowProps) {
+export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBuyFlowProps) {
   // Flow state
   const [flowStack, setFlowStack] = useState<FlowStep[]>(() => {
     // If initial amount provided, skip to confirm
@@ -200,7 +200,7 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
             navVariant="step"
             disableAnimation
           >
-            <BtcEnterAmount
+            <BtcBuyEnterAmount
               maxAmount="$500.00"
               actionLabel="Continue"
               onActionPress={handleEnterAmountContinue}
@@ -216,7 +216,7 @@ export default function BuyBitcoinFlow({ initialAmount, onComplete, onClose }: B
             navVariant="step"
             disableAnimation
           >
-            <ConfirmBuySlot
+            <BtcConfirmBuySlot
               amount={`$${formatWithCommas(numAmount)}`}
               satsEquivalent={formatSats(satsEquivalent)}
               bitcoinPrice="$100,000.00"

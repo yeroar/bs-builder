@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Animated, Dimensions, Modal } from "react
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
 import GiftCardConfirmationSlot from "../Templates/TxConfirmation/instances/GiftCardConfirmationSlot";
 import SendAsAGiftSlot from "../Slots/GiftCard/SendAsAGiftSlot";
-import GiftCardSuccessScreen from "../Templates/Success/instances/GiftCardSuccessScreen";
+import GiftCardSuccessScreen from "../Templates/Success/instances/BTC/GiftCardSuccessScreen";
 import ModalFooter from "../../components/modals/ModalFooter";
 import MiniModal from "../../components/modals/MiniModal";
 import Button from "../../components/Primitives/Buttons/Button/Button";

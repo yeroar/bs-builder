@@ -1,15 +1,15 @@
 import React from "react";
-import TxConfirmation from "../TxConfirmation";
-import { FoldText } from "../../../../components/Primitives/FoldText";
-import { CurrencyInput } from "../../../../components/CurrencyInput";
-import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { colorMaps } from "../../../../components/tokens";
+import TxConfirmation from "../../TxConfirmation";
+import { FoldText } from "../../../../../components/Primitives/FoldText";
+import { CurrencyInput } from "../../../../../components/CurrencyInput";
+import { PmSelectorVariant } from "../../../../../components/CurrencyInput/PmSelector";
+import ReceiptDetails from "../../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import ModalFooter from "../../../../../components/modals/ModalFooter";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { colorMaps } from "../../../../../components/tokens";
 
-export interface ConfirmBuySlotProps {
+export interface BtcConfirmBuySlotProps {
   amount: string;
   satsEquivalent?: string;
   bitcoinPrice?: string;
@@ -43,7 +43,7 @@ const formatSats = (sats: number): string => {
   return `~${formatNumber(sats)} sats`;
 };
 
-export default function ConfirmBuySlot({
+export default function BtcConfirmBuySlot({
   amount = "$100",
   satsEquivalent = "~10,000 sats",
   bitcoinPrice = "$100,000.00",
@@ -57,7 +57,7 @@ export default function ConfirmBuySlot({
   onPaymentMethodPress,
   onConfirmPress,
   testID,
-}: ConfirmBuySlotProps) {
+}: BtcConfirmBuySlotProps) {
   return (
     <TxConfirmation
       currencyInput={

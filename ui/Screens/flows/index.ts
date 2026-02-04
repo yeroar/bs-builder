@@ -1,4 +1,5 @@
-export { default as BuyBitcoinFlow } from "./BuyBitcoinFlow";
-export { default as SellBitcoinFlow } from "./SellBitcoinFlow";
-export { default as SendBitcoinFlow } from "./SendBitcoinFlow";
-export { default as AutoStackFlow } from "./AutoStackFlow";
+export { default as BtcBuyFlow } from "./BtcBuyFlow";
+export { default as BtcSellFlow } from "./BtcSellFlow";
+export { default as BtcSendFlow } from "./BtcSendFlow";
+export { default as BtcAutoStackFlow } from "./BtcAutoStackFlow";
+export { default as OneTimeDepositFlow } from "./OneTimeDepositFlow";

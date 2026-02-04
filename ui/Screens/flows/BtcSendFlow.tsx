@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import SendBitcoinEnterAmount from "../../Templates/EnterAmount/instances/SendBitcoinEnterAmount";
-import SendBitcoinConfirmationSlot from "../../Templates/TxConfirmation/instances/SendBitcoinConfirmationSlot";
-import SendBitcoinSuccessSlot from "../../Templates/Success/instances/SendBitcoinSuccessSlot";
+import BtcSendEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcSendEnterAmount";
+import BtcSendConfirmationSlot from "../../Templates/TxConfirmation/instances/BTC/BtcSendConfirmationSlot";
+import BtcSendSuccessSlot from "../../Templates/Success/instances/BTC/BtcSendSuccessSlot";
 import { spacing } from "../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";
 
-export interface SendBitcoinFlowProps {
+export interface BtcSendFlowProps {
   onComplete: () => void;
   onClose: () => void;
 }
 
 const BTC_PRICE_USD = 102500;
 
-export default function SendBitcoinFlow({ onComplete, onClose }: SendBitcoinFlowProps) {
+export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
   const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
   const [satsAmount, setSatsAmount] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -70,7 +70,7 @@ export default function SendBitcoinFlow({ onComplete, onClose }: SendBitcoinFlow
             scrollable={false}
             navVariant="start"
           >
-            <SendBitcoinEnterAmount
+            <BtcSendEnterAmount
               maxSats={7000000}
               btcPriceUsd={BTC_PRICE_USD}
               onContinue={handleEnterAmountContinue}
@@ -86,7 +86,7 @@ export default function SendBitcoinFlow({ onComplete, onClose }: SendBitcoinFlow
             navVariant="step"
             disableAnimation
           >
-            <SendBitcoinConfirmationSlot
+            <BtcSendConfirmationSlot
               satsAmount={satsAmount}
               usdEquivalent={usdEquivalent}
               bitcoinAddress="3NC53Da...9wff5iY"
@@ -112,7 +112,7 @@ export default function SendBitcoinFlow({ onComplete, onClose }: SendBitcoinFlow
         variant="yellow"
         enterAnimation="fill"
       >
-        <SendBitcoinSuccessSlot
+        <BtcSendSuccessSlot
           satsAmount={satsAmount}
           usdEquivalent={formatUsdFromSats(satsAmount)}
           onDone={handleSuccessDone}

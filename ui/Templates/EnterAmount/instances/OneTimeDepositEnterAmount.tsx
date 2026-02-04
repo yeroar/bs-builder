@@ -6,21 +6,19 @@ import { CurrencyInput, TopContext, BottomContext } from "../../../../components
 import { Keypad } from "../../../../components/Keypad";
 import { spacing } from "../../../../components/tokens";
 
-export interface BtcEnterAmountProps {
+export interface OneTimeDepositEnterAmountProps {
   initialValue?: string;
-  maxAmount?: string;
   actionLabel?: string;
   onActionPress?: (amount: string) => void;
   testID?: string;
 }
 
-export default function BtcEnterAmount({
+export default function OneTimeDepositEnterAmount({
   initialValue = "0",
-  maxAmount = "$100.00",
   actionLabel = "Continue",
   onActionPress,
   testID,
-}: BtcEnterAmountProps) {
+}: OneTimeDepositEnterAmountProps) {
   const {
     amount,
     handleNumberPress,
@@ -30,13 +28,6 @@ export default function BtcEnterAmount({
     isEmpty,
     formatDisplayValue,
   } = useAmountInput({ initialValue });
-
-  const calculateBtcEquivalent = (val: string) => {
-    const numVal = parseFloat(val) || 0;
-    const btcVal = numVal * 0.000012;
-    if (btcVal === 0) return "~₿0";
-    return `~₿${btcVal.toFixed(8).replace(/\.?0+$/, "")}`;
-  };
 
   const handleActionPress = () => {
     onActionPress?.(amount);
@@ -48,7 +39,7 @@ export default function BtcEnterAmount({
         <CurrencyInput
           value={formatDisplayValue(amount)}
           topContextSlot={
-            <TopContext variant="btc" value={calculateBtcEquivalent(amount)} />
+            <TopContext variant="empty" />
           }
           bottomContextSlot={
             <BottomContext variant="empty" />

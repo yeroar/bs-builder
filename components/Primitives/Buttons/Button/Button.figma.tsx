@@ -41,7 +41,6 @@ figma.connect(
         disabled={props.disabled}
         leadingSlot={props.leadingSlot}
         trailingSlot={props.trailingSlot}
-        onPress={() => { }}
       />
     ),
   }

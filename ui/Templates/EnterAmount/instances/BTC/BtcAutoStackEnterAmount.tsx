@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import EnterAmount from "../EnterAmount";
-import useAmountInput from "../useAmountInput";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import { Keypad } from "../../../../components/Keypad";
-import { spacing } from "../../../../components/tokens";
+import EnterAmount from "../../EnterAmount";
+import useAmountInput from "../../useAmountInput";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import { Keypad } from "../../../../../components/Keypad";
+import { spacing } from "../../../../../components/tokens";
 
-export interface AutoStackEnterAmountProps {
+export interface BtcAutoStackEnterAmountProps {
   initialValue?: string;
   frequency?: string;
   actionLabel?: string;
@@ -14,13 +14,13 @@ export interface AutoStackEnterAmountProps {
   testID?: string;
 }
 
-export default function AutoStackEnterAmount({
+export default function BtcAutoStackEnterAmount({
   initialValue = "0",
   frequency = "Daily",
   actionLabel = "Continue",
   onActionPress,
   testID,
-}: AutoStackEnterAmountProps) {
+}: BtcAutoStackEnterAmountProps) {
   const {
     amount,
     handleNumberPress,

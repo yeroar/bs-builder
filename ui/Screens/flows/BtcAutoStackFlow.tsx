@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import AutoStackEnterAmount from "../../Templates/EnterAmount/instances/AutoStackEnterAmount";
-import AutoStackConfirmationSlot from "../../Templates/TxConfirmation/instances/AutoStackConfirmationSlot";
+import BtcAutoStackEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcAutoStackEnterAmount";
+import BtcAutoStackConfirmationSlot from "../../Templates/TxConfirmation/instances/BTC/BtcAutoStackConfirmationSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../components/CurrencyInput";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
@@ -12,7 +12,7 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";
 
-export interface AutoStackFlowProps {
+export interface BtcAutoStackFlowProps {
   frequency?: string;
   onComplete: () => void;
   onClose: () => void;
@@ -20,7 +20,7 @@ export interface AutoStackFlowProps {
 
 const BTC_PRICE_USD = 102500;
 
-export default function AutoStackFlow({ frequency = "Daily", onComplete, onClose }: AutoStackFlowProps) {
+export default function BtcAutoStackFlow({ frequency = "Daily", onComplete, onClose }: BtcAutoStackFlowProps) {
   const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
   const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -68,7 +68,7 @@ export default function AutoStackFlow({ frequency = "Daily", onComplete, onClose
             scrollable={false}
             navVariant="start"
           >
-            <AutoStackEnterAmount
+            <BtcAutoStackEnterAmount
               frequency={frequency}
               actionLabel="Continue"
               onActionPress={handleEnterAmountContinue}
@@ -84,7 +84,7 @@ export default function AutoStackFlow({ frequency = "Daily", onComplete, onClose
             navVariant="step"
             disableAnimation
           >
-            <AutoStackConfirmationSlot
+            <BtcAutoStackConfirmationSlot
               satsAmount={satsAmount}
               usdEquivalent={usdEquivalent}
               totalPurchase={`$${numAmount.toFixed(2)}`}

@@ -1,16 +1,16 @@
 import React from "react";
-import TxConfirmation from "../TxConfirmation";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import Divider from "../../../../components/Primitives/Divider/Divider";
-import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../../components/Primitives/FoldText";
-import { colorMaps } from "../../../../components/tokens";
+import TxConfirmation from "../../TxConfirmation";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import { PmSelectorVariant } from "../../../../../components/CurrencyInput/PmSelector";
+import ReceiptDetails from "../../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import Divider from "../../../../../components/Primitives/Divider/Divider";
+import ModalFooter from "../../../../../components/modals/ModalFooter";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../../components/Primitives/FoldText";
+import { colorMaps } from "../../../../../components/tokens";
 
-export interface AutoStackConfirmationSlotProps {
+export interface BtcBtcAutoStackConfirmationSlotProps {
   /** Sats amount to display */
   satsAmount?: number;
   /** USD equivalent */
@@ -42,7 +42,7 @@ export interface AutoStackConfirmationSlotProps {
   testID?: string;
 }
 
-export default function AutoStackConfirmationSlot({
+export default function BtcAutoStackConfirmationSlot({
   satsAmount = 10000000,
   usdEquivalent = "~$10,250.00",
   paymentMethodVariant = "foldAccount",
@@ -59,7 +59,7 @@ export default function AutoStackConfirmationSlot({
   totalCost = "$100.00",
   onConfirmPress,
   testID,
-}: AutoStackConfirmationSlotProps) {
+}: BtcBtcAutoStackConfirmationSlotProps) {
   const formatSats = (sats: number): string => {
     return `${sats.toLocaleString()} sats`;
   };

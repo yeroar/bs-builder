@@ -3,10 +3,10 @@ export { default as AddPaymentSlot } from "./BTC/patterns/Payment Methods/AddPay
 export { default as ActivationSuccessSlot } from "./ActivationSuccessSlot";
 export { default as BankHomeSlot } from "./BankHomeSlot";
 export { default as BtcBuyModalSlot } from "./BTC/BtcBuyModalSlot";
-export { default as BtcBuySuccessSlot } from "../Templates/Success/instances/BtcBuySuccessSlot";
+export { default as BtcBuySuccessSlot } from "../Templates/Success/instances/BTC/BtcBuySuccessSlot";
 export { default as BtcSlot } from "./BTC/BtcSlot";
-export { default as ConfirmBuySlot } from "../Templates/TxConfirmation/instances/ConfirmBuySlot";
-export { default as BtcEnterAmount } from "../Templates/EnterAmount/instances/BtcEnterAmount";
+export { default as BtcConfirmBuySlot } from "../Templates/TxConfirmation/instances/BTC/BtcConfirmBuySlot";
+export { default as BtcBuyEnterAmount } from "../Templates/EnterAmount/instances/BTC/BtcBuyEnterAmount";
 export { default as TagHomeSlot } from "./TagHomeSlot";
 export { default as SearchGCEmptySlot } from "./GiftCard/SearchGCEmptySlot";
 export { default as SendAsAGiftSlot } from "./GiftCard/SendAsAGiftSlot";

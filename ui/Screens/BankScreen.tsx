@@ -21,9 +21,9 @@ import BtcSlot from "../Slots/BTC/BtcSlot";
 import CashSlot from "../Slots/Cash/CashSlot";
 import BtcBuyModalSlot, { BuyAmount } from "../Slots/BTC/BtcBuyModalSlot";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import { BuyBitcoinFlow, SellBitcoinFlow, SendBitcoinFlow, AutoStackFlow } from "./flows";
+import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, OneTimeDepositFlow } from "./flows";
 
-type FlowType = "buy" | "sell" | "send" | "autoStack";
+type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit";
 
 interface BankScreenProps {
   onTabPress: (tab: "left" | "center" | "right" | "notifications" | "history" | "componentLibrary") => void;
@@ -103,6 +103,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   const handleOpenSellFlow = () => setActiveFlow("sell");
   const handleOpenSendFlow = () => setActiveFlow("send");
   const handleOpenAutoStackFlow = () => setActiveFlow("autoStack");
+  const handleOpenDepositFlow = () => setActiveFlow("deposit");
 
   const handleFlowComplete = () => {
     setActiveFlow(null);
@@ -128,6 +129,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onCashPress={handleOpenCashScreen}
             onBuyPress={handleOpenBuyModal}
             onSellPress={handleOpenSellFlow}
+            onDepositPress={handleOpenDepositFlow}
           />
         }
         rightComponents={[
@@ -202,7 +204,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
       {showCashSlot && (
         <FullscreenTemplate onLeftPress={handleCloseCashScreen} scrollable>
           <CashSlot
-            onAddCashPress={() => console.log("Add cash pressed")}
+            onAddCashPress={handleOpenDepositFlow}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
           />
         </FullscreenTemplate>
@@ -241,7 +243,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
       {/* Flow Screens */}
       {activeFlow === "buy" && (
-        <BuyBitcoinFlow
+        <BtcBuyFlow
           initialAmount={selectedBuyAmount ?? undefined}
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
@@ -249,22 +251,29 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
       )}
 
       {activeFlow === "sell" && (
-        <SellBitcoinFlow
+        <BtcSellFlow
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
         />
       )}
 
       {activeFlow === "send" && (
-        <SendBitcoinFlow
+        <BtcSendFlow
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
         />
       )}
 
       {activeFlow === "autoStack" && (
-        <AutoStackFlow
+        <BtcAutoStackFlow
           frequency="Daily"
+          onComplete={handleFlowComplete}
+          onClose={handleFlowClose}
+        />
+      )}
+
+      {activeFlow === "deposit" && (
+        <OneTimeDepositFlow
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
         />

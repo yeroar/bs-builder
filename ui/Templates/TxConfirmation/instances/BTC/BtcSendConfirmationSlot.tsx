@@ -1,12 +1,12 @@
 import React from "react";
-import TxConfirmation from "../TxConfirmation";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import TxConfirmation from "../../TxConfirmation";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import ReceiptDetails from "../../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import ModalFooter from "../../../../../components/modals/ModalFooter";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
 
-export interface SendBitcoinConfirmationSlotProps {
+export interface BtcSendConfirmationSlotProps {
   satsAmount?: number;
   usdEquivalent?: string;
   bitcoinAddress?: string;
@@ -17,7 +17,7 @@ export interface SendBitcoinConfirmationSlotProps {
   testID?: string;
 }
 
-export default function SendBitcoinConfirmationSlot({
+export default function BtcSendConfirmationSlot({
   satsAmount = 10000000,
   usdEquivalent = "~$10,250.00",
   bitcoinAddress = "3NC53Da...9wff5iY",
@@ -26,7 +26,7 @@ export default function SendBitcoinConfirmationSlot({
   estimatedTime = "Arrives within 24hrs",
   onConfirmPress,
   testID,
-}: SendBitcoinConfirmationSlotProps) {
+}: BtcSendConfirmationSlotProps) {
   const formatSats = (sats: number): string => {
     return `${sats.toLocaleString()} sats`;
   };

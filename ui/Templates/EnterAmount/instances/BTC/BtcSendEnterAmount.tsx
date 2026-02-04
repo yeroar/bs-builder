@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet } from "react-native";
-import EnterAmount from "../EnterAmount";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import { Keypad } from "../../../../components/Keypad";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { spacing } from "../../../../components/tokens";
+import EnterAmount from "../../EnterAmount";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import { Keypad } from "../../../../../components/Keypad";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { spacing } from "../../../../../components/tokens";
 
-export interface SendBitcoinEnterAmountProps {
+export interface BtcSendEnterAmountProps {
   maxSats?: number;
   btcPriceUsd?: number;
   onContinue?: (sats: number) => void;
@@ -14,13 +14,13 @@ export interface SendBitcoinEnterAmountProps {
   testID?: string;
 }
 
-export default function SendBitcoinEnterAmount({
+export default function BtcSendEnterAmount({
   maxSats = 7000000, // 0.07 BTC in sats
   btcPriceUsd = 102500, // $102,500 per BTC
   onContinue,
   onClose,
   testID,
-}: SendBitcoinEnterAmountProps) {
+}: BtcSendEnterAmountProps) {
   const [satsAmount, setSatsAmount] = useState("");
 
   const satsToUsd = useCallback((sats: number): number => {

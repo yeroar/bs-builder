@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import BtcSellEnterAmount from "../../Templates/EnterAmount/instances/BtcSellEnterAmount";
-import ConfirmSellSlot from "../../Templates/TxConfirmation/instances/ConfirmSellSlot";
+import BtcSellEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcSellEnterAmount";
+import BtcConfirmSellSlot from "../../Templates/TxConfirmation/instances/BTC/BtcConfirmSellSlot";
 import { CurrencyInput, BottomContext } from "../../../components/CurrencyInput";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
@@ -11,14 +11,14 @@ import { spacing } from "../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";
 
-export interface SellBitcoinFlowProps {
+export interface BtcSellFlowProps {
   onComplete: () => void;
   onClose: () => void;
 }
 
 const BTC_PRICE_USD = 102500;
 
-export default function SellBitcoinFlow({ onComplete, onClose }: SellBitcoinFlowProps) {
+export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
   const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
   const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -97,7 +97,7 @@ export default function SellBitcoinFlow({ onComplete, onClose }: SellBitcoinFlow
             navVariant="step"
             disableAnimation
           >
-            <ConfirmSellSlot
+            <BtcConfirmSellSlot
               amount={`$${formatWithCommas(numAmount)}`}
               satsEquivalent={formatSats(satsEquivalent)}
               bitcoinPrice="$100,000.00"
