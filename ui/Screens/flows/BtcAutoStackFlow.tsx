@@ -2,17 +2,25 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
+import IntroTemplate from "../../Templates/IntroTemplate";
 import BtcAutoStackEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcAutoStackEnterAmount";
 import BtcAutoStackConfirmationSlot from "../../Templates/TxConfirmation/instances/BTC/BtcAutoStackConfirmationSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../components/CurrencyInput";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
+import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
+import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
+import { CalendarIcon } from "../../../components/Icons/CalendarIcon";
+import { SettingsIcon } from "../../../components/Icons/SettingsIcon";
+import { RocketIcon } from "../../../components/Icons/RocketIcon";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-type FlowStep = "enterAmount" | "confirm";
+type FlowStep = "intro" | "enterAmount" | "confirm";
 
 export interface BtcAutoStackFlowProps {
+  /** If true, skip intro and go directly to enterAmount */
+  isFeatureActive?: boolean;
   frequency?: string;
   onComplete: () => void;
   onClose: () => void;
@@ -20,10 +28,24 @@ export interface BtcAutoStackFlowProps {
 
 const BTC_PRICE_USD = 102500;
 
-export default function BtcAutoStackFlow({ frequency = "Daily", onComplete, onClose }: BtcAutoStackFlowProps) {
-  const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
+export default function BtcAutoStackFlow({
+  isFeatureActive = false,
+  frequency = "Daily",
+  onComplete,
+  onClose
+}: BtcAutoStackFlowProps) {
+  // Intro-gated flow: show intro first if feature not active
+  const initialStep: FlowStep = isFeatureActive ? "enterAmount" : "intro";
+  const [flowStack, setFlowStack] = useState<FlowStep[]>([initialStep]);
+
+  // Track if intro was shown to determine navVariant for subsequent screens
+  const showedIntro = !isFeatureActive;
   const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleIntroContinue = () => {
+    setFlowStack(prev => [...prev, "enterAmount"]);
+  };
 
   const handleEnterAmountContinue = (amount: string) => {
     setFlowAmount(amount);
@@ -60,13 +82,59 @@ export default function BtcAutoStackFlow({ frequency = "Daily", onComplete, onCl
     const usdEquivalent = `~$${numAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     switch (step) {
-      case "enterAmount":
+      case "intro":
         return (
           <FullscreenTemplate
-            title="Auto stack bitcoin"
             onLeftPress={handleFlowClose}
             scrollable={false}
             navVariant="start"
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Continue"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleIntroContinue}
+                  />
+                }
+              />
+            }
+          >
+            <IntroTemplate
+              header="Auto stack"
+              body="Set your savings on autopilot. Schedule daily, weekly, or bi-weekly bitcoin buys that fit your life."
+            >
+              <ListItem
+                variant="feature"
+                title="Pick the schedule"
+                secondaryText="Choose how often you buy—then sit back and relax."
+                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<CalendarIcon />} />}
+              />
+              <ListItem
+                variant="feature"
+                title="Set how much"
+                secondaryText="Start with as little as $10."
+                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<SettingsIcon />} />}
+              />
+              <ListItem
+                variant="feature"
+                title="No fees for Fold+"
+                secondaryText="Fold+ members stack with zero fees."
+                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<RocketIcon />} />}
+              />
+            </IntroTemplate>
+          </FullscreenTemplate>
+        );
+      case "enterAmount":
+        // Intro-gated: if showed intro, this is a step (back arrow); otherwise start (X)
+        return (
+          <FullscreenTemplate
+            title="Auto stack bitcoin"
+            onLeftPress={showedIntro ? handleConfirmBack : handleFlowClose}
+            scrollable={false}
+            navVariant={showedIntro ? "step" : "start"}
           >
             <BtcAutoStackEnterAmount
               frequency={frequency}

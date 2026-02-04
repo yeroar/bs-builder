@@ -33,14 +33,14 @@ figma.connect(
         disabled: true,
       }),
     },
-    example: (props) => (
+    example: ({ hierarchy, label, size, disabled, leadingSlot, trailingSlot }) => (
       <Button
-        label={props.label}
-        hierarchy={props.hierarchy}
-        size={props.size}
-        disabled={props.disabled}
-        leadingSlot={props.leadingSlot}
-        trailingSlot={props.trailingSlot}
+        hierarchy={hierarchy}
+        label={label}
+        size={size}
+        disabled={disabled}
+        leadingSlot={leadingSlot}
+        trailingSlot={trailingSlot}
       />
     ),
   }

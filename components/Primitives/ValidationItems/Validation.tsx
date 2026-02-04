@@ -25,9 +25,27 @@ export default function Validation({
   const isDanger = type === "danger";
   const isSuccess = type === "success";
 
+  // Get icon color based on type
+  const getIconColor = () => {
+    if (isDanger) return colorMaps.face.negativeBold;
+    return colorMaps.face.primary;
+  };
+
+  // Check if leadingIcon has content (not undefined, null, or empty array)
+  const hasLeadingIcon = leadingIcon &&
+    !(Array.isArray(leadingIcon) && leadingIcon.length === 0);
+
   // Use custom leadingIcon if provided, otherwise use default based on type
   const renderLeadingIcon = () => {
-    if (leadingIcon) {
+    if (hasLeadingIcon) {
+      // Clone the icon with correct size and color
+      if (React.isValidElement(leadingIcon)) {
+        return React.cloneElement(leadingIcon as React.ReactElement<any>, {
+          width: 16,
+          height: 16,
+          color: getIconColor(),
+        });
+      }
       return leadingIcon;
     }
     if (isSuccess) {

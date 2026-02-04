@@ -13,7 +13,7 @@ export interface PrimaryHeaderProps {
   leadingSlot?: React.ReactNode;
   trailingSlot?: React.ReactNode;
   validationChildren?: React.ReactNode;
-  noPadding?: boolean;
+  noPaddings?: boolean;
 }
 
 export default function PrimaryHeader({
@@ -26,10 +26,10 @@ export default function PrimaryHeader({
   leadingSlot,
   trailingSlot,
   validationChildren,
-  noPadding = false,
+  noPaddings = false,
 }: PrimaryHeaderProps) {
   return (
-    <View style={[styles.container, noPadding && styles.noPadding]}>
+    <View style={[styles.container, noPaddings && styles.noPaddings]}>
       {iconSlot}
       <View style={styles.copy}>
         <FoldText type="header-xl" style={styles.header}>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     gap: spacing["300"],
     marginTop: spacing["200"],
   },
-  noPadding: {
+  noPaddings: {
     paddingHorizontal: 0,
     paddingTop: 0,
     paddingBottom: 0,

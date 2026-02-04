@@ -7,7 +7,7 @@ import figma from "@figma/code-connect";
 
 figma.connect(
   ListItem,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=32-6870",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=32-6870&m=dev",
   {
     props: {
       title: figma.string("title"),
@@ -18,7 +18,10 @@ figma.connect(
       isActive: figma.boolean("isActive"),
       hasDiv: figma.boolean("hasDiv"),
       leadingSlot: figma.children("leftSlot"),
-      trailingSlot: figma.children("rightIcon"),
+      trailingSlot: figma.boolean("hasTrailingIcon", {
+        true: figma.children("rightSlot"),
+        false: undefined,
+      }),
       chip: figma.boolean("hasChip", {
         true: figma.children("chip"),
         false: undefined,

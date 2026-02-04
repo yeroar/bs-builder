@@ -14,12 +14,8 @@ figma.connect(
       }),
       leadingIcon: figma.children("leadingIcon"),
     },
-    example: (props) => (
-      <Validation
-        label={props.label}
-        type={props.type}
-        leadingIcon={props.leadingIcon}
-      />
+    example: ({ label, type, leadingIcon }) => (
+      <Validation label={label} type={type} leadingIcon={leadingIcon} />
     ),
   }
 );

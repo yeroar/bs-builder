@@ -141,15 +141,7 @@ export default function ListItem({
               </View>
             ) : (
               <View style={styles.trailingContainer}>
-                {trailingSlot !== undefined ? (
-                  trailingSlot
-                ) : (isFeature || isNotification) ? (
-                  <ChevronRightIcon
-                    width={24}
-                    height={24}
-                    color={colorMaps.face.primary}
-                  />
-                ) : null}
+                {trailingSlot}
               </View>
             )}
           </View>

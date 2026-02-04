@@ -7,7 +7,7 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=27-6343",
   {
     props: {
-      children: figma.children(["success01", "success02", "success03", "danger01", "danger02", "danger03"]),
+      children: figma.children("*"),
     },
     example: (props) => (
       <ValidationGroup>

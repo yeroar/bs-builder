@@ -21,7 +21,8 @@ figma.connect(
       disabled: figma.enum("state", {
         disabled: true,
       }),
-      icon: figma.children("icon"),
+      // @ts-expect-error - Code Connect instance type
+      icon: figma.instance("icon"),
     },
     example: (props) => (
       <IconOnly

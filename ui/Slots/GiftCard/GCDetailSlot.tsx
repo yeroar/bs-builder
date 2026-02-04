@@ -48,7 +48,7 @@ export default function GCDetailSlot({
         header={title}
         hasBodyText={false}
         hasDisclaimer={false}
-        noPadding
+        noPaddings
         validationChildren={
           <ValidationGroup>
             <Validation

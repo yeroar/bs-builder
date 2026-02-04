@@ -4,18 +4,27 @@ import PrimaryHeader from "../PrimaryHeader"
 
 figma.connect(
   PrimaryHeader,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=23-1869",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=146-6467&t=4rZc6fXPGVHheUm9-4",
   {
     props: {
-      header: figma.string("header"),
+      noPaddings: figma.boolean("noPaddings"),
+
+      iconSlot: figma.boolean("hasIconContainer", {
+        true: figma.children("iconContainerBrand"),
+        false: undefined,
+      }),
+
+      header: figma.textContent("Header"),
       body: figma.boolean("hasBodyText", {
-        true: figma.string("body"),
+        true: figma.textContent("Body"),
         false: undefined,
       }),
-      disclaimer: figma.boolean("hasDisclaimer", {
-        true: figma.string("disclaimer"),
+
+      validationChildren: figma.boolean("hasValidation", {
+        true: figma.children("vaildationArray"),
         false: undefined,
       }),
+
       leadingSlot: figma.boolean("hasActionBar", {
         true: figma.instance("leadingAction"),
         false: undefined,
@@ -24,24 +33,22 @@ figma.connect(
         true: figma.instance("secondaryButton"),
         false: undefined,
       }),
-      validationChildren: figma.boolean("hasValidation", {
-        true: figma.children("vaildationArray"),
-        false: undefined,
-      }),
-      iconSlot: figma.boolean("hasIconContainer", {
-        true: figma.children("iconContainerBrand"),
+
+      disclaimer: figma.boolean("hasDisclaimer", {
+        true: figma.textContent("Disclaimer"),
         false: undefined,
       }),
     },
-    example: (props) => (
+    example: ({ noPaddings, iconSlot, header, body, validationChildren, leadingSlot, trailingSlot, disclaimer }) => (
       <PrimaryHeader
-        header={props.header}
-        body={props.body}
-        iconSlot={props.iconSlot}
-        validationChildren={props.validationChildren}
-        leadingSlot={props.leadingSlot}
-        trailingSlot={props.trailingSlot}
-        disclaimer={props.disclaimer}
+        noPaddings={noPaddings}
+        iconSlot={iconSlot}
+        header={header}
+        body={body}
+        validationChildren={validationChildren}
+        leadingSlot={leadingSlot}
+        trailingSlot={trailingSlot}
+        disclaimer={disclaimer}
       />
     ),
   }
