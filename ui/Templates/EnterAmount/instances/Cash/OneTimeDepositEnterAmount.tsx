@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import EnterAmount from "../EnterAmount";
-import useAmountInput from "../useAmountInput";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
-import { Keypad } from "../../../../components/Keypad";
-import { spacing } from "../../../../components/tokens";
+import EnterAmount from "../../EnterAmount";
+import useAmountInput from "../../useAmountInput";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/CurrencyInput";
+import { Keypad } from "../../../../../components/Keypad";
+import { spacing } from "../../../../../components/tokens";
 
 export interface OneTimeDepositEnterAmountProps {
   initialValue?: string;

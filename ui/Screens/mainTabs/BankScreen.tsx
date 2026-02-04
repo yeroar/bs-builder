@@ -4,26 +4,30 @@ import { View, StyleSheet, Modal, Keyboard, LayoutAnimation, Platform, UIManager
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-import RootTemplate from "../Templates/RootTemplate";
-import { FoldText } from "../../components/Primitives/FoldText";
-import FoldPressable from "../../components/Primitives/FoldPressable";
-import Button from "../../components/Primitives/Buttons/Button/Button";
-import { colorMaps, spacing } from "../../components/tokens";
+import RootTemplate from "../../Templates/RootTemplate";
+import { FoldText } from "../../../components/Primitives/FoldText";
+import FoldPressable from "../../../components/Primitives/FoldPressable";
+import Button from "../../../components/Primitives/Buttons/Button/Button";
+import { colorMaps, spacing } from "../../../components/tokens";
 
-import { BellIcon } from "../../components/Icons/BellIcon";
-import { ClockIcon } from "../../components/Icons/ClockIcon";
-import MiniModal from "../../components/modals/MiniModal";
-import ActivateDebitCardSlot from "../../components/modals/minimodalslots/ActivateDebitCardSlot";
-import ActivationSuccessSlot from "../Slots/ActivationSuccessSlot";
-import ModalFooter from "../../components/modals/ModalFooter";
-import BankHomeSlot from "../Slots/BankHomeSlot";
-import BtcSlot from "../Slots/BTC/BtcSlot";
-import CashSlot from "../Slots/Cash/CashSlot";
-import BtcBuyModalSlot, { BuyAmount } from "../Slots/BTC/BtcBuyModalSlot";
-import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow } from "./flows";
+import { BellIcon } from "../../../components/Icons/BellIcon";
+import { ClockIcon } from "../../../components/Icons/ClockIcon";
+import MiniModal from "../../../components/modals/MiniModal";
+import ActivateDebitCardSlot from "../../../components/modals/minimodalslots/ActivateDebitCardSlot";
+import ActivationSuccessSlot from "../../Slots/ActivateCards/ActivationSuccessSlot";
+import ModalFooter from "../../../components/modals/ModalFooter";
+import BankHomeSlot from "../../Slots/MainTabs/BankHomeSlot";
+import BtcSlot from "../../Slots/BTC/BtcSlot";
+import CashSlot from "../../Slots/Cash/CashSlot";
+import BtcBuyModalSlot, { BuyAmount } from "../../Slots/BTC/BtcBuyModalSlot";
+import FullscreenTemplate from "../../Templates/FullscreenTemplate";
+import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow } from "../flows";
+import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
+import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";
+import RedeemBtcGiftCardSuccessSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardSuccessSlot";
 
 type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit";
+type RedeemStep = "entry" | "confirmation" | "success";
 
 interface BankScreenProps {
   onTabPress: (tab: "left" | "center" | "right" | "notifications" | "history" | "componentLibrary") => void;
@@ -50,6 +54,12 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
   // Active flow state
   const [activeFlow, setActiveFlow] = useState<FlowType | null>(null);
+
+  // Redeem BTC Gift Card modal state
+  const [isRedeemModalVisible, setIsRedeemModalVisible] = useState(false);
+  const [redeemStep, setRedeemStep] = useState<RedeemStep>("entry");
+  const [redeemCardNumber, setRedeemCardNumber] = useState("");
+  const [redeemPin, setRedeemPin] = useState("");
 
   const isFormValid = cardNumber.length > 0 && cvv.length > 0;
 
@@ -119,6 +129,23 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
     setActiveFlow(null);
   };
 
+  // Redeem handlers
+  const handleOpenRedeemModal = () => {
+    setRedeemStep("entry");
+    setRedeemCardNumber("");
+    setRedeemPin("");
+    setIsRedeemModalVisible(true);
+  };
+  const handleCloseRedeemModal = () => setIsRedeemModalVisible(false);
+  const handleRedeemContinue = () => setRedeemStep("confirmation");
+  const handleRedeemBack = () => setRedeemStep("entry");
+  const handleRedeemConfirm = () => setRedeemStep("success");
+  const handleRedeemDone = () => {
+    setIsRedeemModalVisible(false);
+    setRedeemStep("entry");
+  };
+  const isRedeemFormValid = redeemCardNumber.length > 0 && redeemPin.length > 0;
+
   return (
     <>
       <RootTemplate
@@ -135,6 +162,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onBuyPress={handleOpenBuyModal}
             onSellPress={handleOpenSellFlow}
             onDepositPress={handleOpenDepositFlow}
+            onRedeemPress={handleOpenRedeemModal}
           />
         }
         rightComponents={[
@@ -245,6 +273,55 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
           />
         </MiniModal>
       </Modal>
+
+      {/* Redeem BTC Gift Card Flow */}
+      {isRedeemModalVisible && redeemStep === "entry" && (
+        <FullscreenTemplate
+          onLeftPress={handleCloseRedeemModal}
+          scrollable
+          footer={
+            <ModalFooter
+              type="default"
+              disclaimer="Applicable bitcoin exchange fees may apply. Need a Bitcoin Gift Card?"
+              primaryButton={
+                <Button label="Continue" hierarchy="primary" size="md" disabled={!isRedeemFormValid} onPress={handleRedeemContinue} />
+              }
+            />
+          }
+        >
+          <RedeemBtcGiftCardSlot
+            cardNumber={redeemCardNumber}
+            pin={redeemPin}
+            onCardNumberChange={setRedeemCardNumber}
+            onPinChange={setRedeemPin}
+          />
+        </FullscreenTemplate>
+      )}
+
+      {/* Redeem BTC Gift Card Confirmation */}
+      {isRedeemModalVisible && redeemStep === "confirmation" && (
+        <FullscreenTemplate
+          title="Redeem gift card"
+          navVariant="step"
+          onLeftPress={handleRedeemBack}
+          footer={
+            <ModalFooter
+              type="default"
+              disclaimer="Having trouble redeeming?"
+              primaryButton={
+                <Button label="Redeem" hierarchy="primary" size="md" onPress={handleRedeemConfirm} />
+              }
+            />
+          }
+        >
+          <RedeemBtcGiftCardConfirmationSlot />
+        </FullscreenTemplate>
+      )}
+
+      {/* Redeem BTC Gift Card Success */}
+      {isRedeemModalVisible && redeemStep === "success" && (
+        <RedeemBtcGiftCardSuccessSlot onDone={handleRedeemDone} />
+      )}
 
       {/* Flow Screens */}
       {activeFlow === "buy" && (

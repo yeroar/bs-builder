@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import { View, StyleSheet, ScrollView, Animated, Dimensions, Modal } from "react-native";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import GiftCardConfirmationSlot from "../Templates/TxConfirmation/instances/GiftCardConfirmationSlot";
+import GiftCardConfirmationSlot from "../Templates/TxConfirmation/instances/GiftCard/GiftCardConfirmationSlot";
 import SendAsAGiftSlot from "../Slots/GiftCard/SendAsAGiftSlot";
-import GiftCardSuccessScreen from "../Templates/Success/instances/BTC/GiftCardSuccessScreen";
+import GiftCardSuccessSlot from "../Templates/Success/instances/GiftCard/GiftCardSuccessSlot";
 import ModalFooter from "../../components/modals/ModalFooter";
 import MiniModal from "../../components/modals/MiniModal";
 import Button from "../../components/Primitives/Buttons/Button/Button";
-import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Slots/BTC/patterns/Payment Methods/ChoosePaymentMethodFoldSlot";
+import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Slots/BTC/patterns/PaymentMethods/ChoosePaymentMethodFoldSlot";
 import { StarIcon } from "../../components/Icons/StarIcon";
 import FoldPressable from "../../components/Primitives/FoldPressable";
 import { PmSelectorVariant } from "../../components/CurrencyInput/PmSelector";
@@ -233,7 +233,7 @@ export default function GiftCardConfirmationScreen({
 
       {/* Success Screen */}
       {showSuccess && (
-        <GiftCardSuccessScreen
+        <GiftCardSuccessSlot
           brand={brand}
           brandLabel={brandLabel}
           amount={amount}

@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { FoldText } from "../../components/Primitives/FoldText";
-import TextField from "../../components/Inputs/TextContainer/TextField";
-import { colorMaps, spacing } from "../../components/tokens";
+import { FoldText } from "../../../components/Primitives/FoldText";
+import TextField from "../../../components/Inputs/TextContainer/TextField";
+import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface ActivateDebitCardSlotProps {
   cardNumber?: string;

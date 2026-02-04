@@ -10,9 +10,9 @@ import { BellIcon } from './components/Icons/BellIcon';
 import { ClockIcon } from './components/Icons/ClockIcon';
 import FoldPressable from './components/Primitives/FoldPressable';
 
-import BankScreen from './ui/Screens/BankScreen';
-import ExchangeScreen from './ui/Screens/ExchangeScreen';
-import TagScreen from './ui/Screens/TagScreen';
+import BankScreen from './ui/Screens/mainTabs/BankScreen';
+import ExchangeScreen from './ui/Screens/mainTabs/ExchangeScreen';
+import TagScreen from './ui/Screens/mainTabs/TagScreen';
 import HistoryScreen from './ui/Screens/HistoryScreen';
 import TransactionDetailScreen from './ui/Screens/TransactionDetailScreen';
 import { ComponentLibraryScreen } from './components/ComponentLibrary';

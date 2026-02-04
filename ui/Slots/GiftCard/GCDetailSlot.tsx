@@ -48,6 +48,7 @@ export default function GCDetailSlot({
         header={title}
         hasBodyText={false}
         hasDisclaimer={false}
+        noPadding
         validationChildren={
           <ValidationGroup>
             <Validation
@@ -65,7 +66,7 @@ export default function GCDetailSlot({
         }
       />
 
-      <Divider inset />
+      <Divider />
 
       {/* Amount Selector */}
       <QuickBuyInput
@@ -82,10 +83,12 @@ export default function GCDetailSlot({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colorMaps.layer.background,
-    gap: spacing["500"],
+    gap: spacing["600"],
+    paddingTop: spacing["500"],
+    paddingHorizontal: spacing["500"],
+
   },
   amountSection: {
-    paddingHorizontal: spacing["500"],
     paddingBottom: spacing["300"],
   },
 });

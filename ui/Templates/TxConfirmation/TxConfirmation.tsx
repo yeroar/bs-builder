@@ -38,7 +38,10 @@ export default function TxConfirmation({
       {disclaimer && <Divider style={styles.dividerBottom} />}
     </>
   ) : (
-    children
+    <>
+      {children}
+      {disclaimer && <Divider style={styles.dividerBottom} />}
+    </>
   );
 
   return (

@@ -29,6 +29,8 @@ interface FullscreenTemplateProps {
   scrollable?: boolean;
   variant?: "fullscreen" | "progressive" | "yellow";
   step?: React.ReactNode;
+  /** Footer content to display at the bottom of the screen */
+  footer?: React.ReactNode;
   /** Animation type for entering the screen */
   enterAnimation?: EnterAnimation;
   /** Disable entrance slide animation for "start" variant */
@@ -52,6 +54,7 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
   scrollable = true,
   variant = "fullscreen",
   step,
+  footer,
   enterAnimation,
   disableEntranceAnimation = false,
   disableAnimation = false,
@@ -156,6 +159,9 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
       >
         {children}
       </ContentWrapper>
+
+      {/* Footer */}
+      {footer}
     </View>
   );
 

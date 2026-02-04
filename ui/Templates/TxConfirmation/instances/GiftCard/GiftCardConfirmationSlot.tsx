@@ -1,17 +1,17 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import TxConfirmation from "../TxConfirmation";
-import { FoldText } from "../../../../components/Primitives/FoldText";
-import { CurrencyInput } from "../../../../components/CurrencyInput";
-import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
-import Divider from "../../../../components/Primitives/Divider/Divider";
-import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
-import { GiftIcon } from "../../../../components/Icons/GiftIcon";
-import { ChevronRightIcon } from "../../../../components/Icons/ChevronRightIcon";
-import { colorMaps, spacing } from "../../../../components/tokens";
+import TxConfirmation from "../../TxConfirmation";
+import { FoldText } from "../../../../../components/Primitives/FoldText";
+import { CurrencyInput } from "../../../../../components/CurrencyInput";
+import { PmSelectorVariant } from "../../../../../components/CurrencyInput/PmSelector";
+import Divider from "../../../../../components/Primitives/Divider/Divider";
+import ListItem from "../../../../../components/DataDisplay/ListItem/ListItem";
+import ReceiptDetails from "../../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import IconContainer from "../../../../../components/Primitives/IconContainer/IconContainer";
+import { GiftIcon } from "../../../../../components/Icons/GiftIcon";
+import { ChevronRightIcon } from "../../../../../components/Icons/ChevronRightIcon";
+import { colorMaps, spacing } from "../../../../../components/tokens";
 
 export interface GiftCardConfirmationSlotProps {
   brand?: string;

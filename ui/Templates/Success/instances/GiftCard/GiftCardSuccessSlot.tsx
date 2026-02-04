@@ -10,7 +10,7 @@ import FoldPressable from "../../../../../components/Primitives/FoldPressable";
 import { StarIcon } from "../../../../../components/Icons/StarIcon";
 import { colorMaps, spacing } from "../../../../../components/tokens";
 
-export interface GiftCardSuccessScreenProps {
+export interface GiftCardSuccessSlotProps {
   /** Brand for the gift card icon */
   brand?: string;
   /** Brand label to display */
@@ -32,7 +32,7 @@ export interface GiftCardSuccessScreenProps {
   testID?: string;
 }
 
-export default function GiftCardSuccessScreen({
+export default function GiftCardSuccessSlot({
   brand,
   brandLabel = "Gift card",
   amount = "$100",
@@ -43,7 +43,7 @@ export default function GiftCardSuccessScreen({
   onDone,
   animated = true,
   testID,
-}: GiftCardSuccessScreenProps) {
+}: GiftCardSuccessSlotProps) {
   return (
     <TransactionSuccessSlot
       animated={animated}

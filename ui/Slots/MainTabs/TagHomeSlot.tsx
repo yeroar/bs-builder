@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { FoldText } from "../../components/Primitives/FoldText";
-import MarcomHeroCard from "../../components/DataDisplay/Marcom/MarcomHeroCard";
-import ListItem from "../../components/DataDisplay/ListItem/ListItem";
-import ListItemGiftCard from "../../components/DataDisplay/ListItem/GiftCard/ListItemGiftCard";
-import { IconContainer } from "../../components/Primitives/IconContainer";
-import NavBTCSolidIcon from "../../components/Icons/NavBTCSolidIcon";
-import { ChevronRightIcon } from "../../components/Icons/ChevronRightIcon";
-import Divider from "../../components/Primitives/Divider/Divider";
-import SearchBar from "../../components/Inputs/SearchBar/SearchBar";
-import DropDown from "../../components/Selectors/DropDown/DropDown";
-import { colorMaps, spacing } from "../../components/tokens";
+import { FoldText } from "../../../components/Primitives/FoldText";
+import MarcomHeroCard from "../../../components/DataDisplay/Marcom/MarcomHeroCard";
+import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
+import ListItemGiftCard from "../../../components/DataDisplay/ListItem/GiftCard/ListItemGiftCard";
+import { IconContainer } from "../../../components/Primitives/IconContainer";
+import NavBTCSolidIcon from "../../../components/Icons/NavBTCSolidIcon";
+import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
+import Divider from "../../../components/Primitives/Divider/Divider";
+import SearchBar from "../../../components/Inputs/SearchBar/SearchBar";
+import DropDown from "../../../components/Selectors/DropDown/DropDown";
+import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface TagHomeSlotProps {
   onRedeemPress?: () => void;
@@ -79,19 +79,19 @@ export default function TagHomeSlot({
             variant="generic"
             title="Stack bitcoin back on every purchase"
             subtitle="Browse, search, and sort hundreds of gift cards on Fold."
-            backgroundImage={require("../../assets/_marcomRenders.png")}
+            backgroundImage={require("../../../assets/_marcomRenders.png")}
           />
           <MarcomHeroCard
             variant="generic"
             title="Earn rewards with every gift card"
             subtitle="Shop at your favorite brands and stack sats automatically."
-            backgroundImage={require("../../assets/_marcomRenders.png")}
+            backgroundImage={require("../../../assets/_marcomRenders.png")}
           />
           <MarcomHeroCard
             variant="generic"
             title="Turn everyday spending into bitcoin"
             subtitle="Thousands of gift cards available on the Fold platform."
-            backgroundImage={require("../../assets/_marcomRenders.png")}
+            backgroundImage={require("../../../assets/_marcomRenders.png")}
           />
         </ScrollView>
 

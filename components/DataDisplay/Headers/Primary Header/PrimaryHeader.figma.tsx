@@ -1,6 +1,6 @@
 import React from "react"
-import PrimaryHeader from "./PrimaryHeader"
 import figma from "@figma/code-connect"
+import PrimaryHeader from "../PrimaryHeader"
 
 figma.connect(
   PrimaryHeader,
@@ -28,11 +28,16 @@ figma.connect(
         true: figma.children("vaildationArray"),
         false: undefined,
       }),
+      iconSlot: figma.boolean("hasIconContainer", {
+        true: figma.children("iconContainerBrand"),
+        false: undefined,
+      }),
     },
     example: (props) => (
       <PrimaryHeader
         header={props.header}
         body={props.body}
+        iconSlot={props.iconSlot}
         validationChildren={props.validationChildren}
         leadingSlot={props.leadingSlot}
         trailingSlot={props.trailingSlot}

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
-import InstantDepositEnterAmount from "../../Templates/EnterAmount/instances/InstantDepositEnterAmount";
-import ConfirmInstantDepositSlot from "../../Templates/TxConfirmation/instances/ConfirmInstantDepositSlot";
+import InstantDepositEnterAmount from "../../Templates/EnterAmount/instances/Cash/InstantDepositEnterAmount";
+import ConfirmInstantDepositSlot from "../../Templates/TxConfirmation/instances/Cash/ConfirmInstantDepositSlot";
 import { CurrencyInput } from "../../../components/CurrencyInput";
 import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import ChooseDebitCardSlot from "../../Slots/BTC/patterns/Payment Methods/ChooseDebitCardSlot";
+import ChooseDebitCardSlot from "../../Slots/BTC/patterns/PaymentMethods/ChooseDebitCardSlot";
 import { PmSelectorVariant } from "../../../components/CurrencyInput/PmSelector";
 import { spacing } from "../../../components/tokens";
 

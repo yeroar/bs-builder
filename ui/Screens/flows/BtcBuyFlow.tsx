@@ -9,9 +9,9 @@ import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../components/Primitives/FoldText";
-import AddPaymentSlot from "../../Slots/BTC/patterns/Payment Methods/AddPaymentSlot";
-import ChooseBankAccountSlot from "../../Slots/BTC/patterns/Payment Methods/ChooseBankAccountSlot";
-import ChooseDebitCardSlot from "../../Slots/BTC/patterns/Payment Methods/ChooseDebitCardSlot";
+import AddPaymentSlot from "../../Slots/BTC/patterns/PaymentMethods/AddPaymentSlot";
+import ChooseBankAccountSlot from "../../Slots/BTC/patterns/PaymentMethods/ChooseBankAccountSlot";
+import ChooseDebitCardSlot from "../../Slots/BTC/patterns/PaymentMethods/ChooseDebitCardSlot";
 import { PmSelectorVariant } from "../../../components/CurrencyInput/PmSelector";
 import { colorMaps, spacing } from "../../../components/tokens";
 

@@ -1,13 +1,13 @@
 import React from "react";
-import TxConfirmation from "../TxConfirmation";
-import { CurrencyInput } from "../../../../components/CurrencyInput";
-import { PmSelectorVariant } from "../../../../components/CurrencyInput/PmSelector";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../../components/modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../../components/Primitives/FoldText";
-import { colorMaps } from "../../../../components/tokens";
+import TxConfirmation from "../../TxConfirmation";
+import { CurrencyInput } from "../../../../../components/CurrencyInput";
+import { PmSelectorVariant } from "../../../../../components/CurrencyInput/PmSelector";
+import ReceiptDetails from "../../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import ModalFooter from "../../../../../components/modals/ModalFooter";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../../components/Primitives/FoldText";
+import { colorMaps } from "../../../../../components/tokens";
 
 export interface ConfirmInstantDepositSlotProps {
   amount: string;

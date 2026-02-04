@@ -1,12 +1,12 @@
 import { View, StyleSheet } from "react-native";
-import RootTemplate from "../Templates/RootTemplate";
-import { PriceChartContainer } from "../../components/Exchange/PriceChart/PriceChartContainer";
-import ExchangeControl from "../../components/Exchange/ExchangeControl";
-import { BellIcon } from "../../components/Icons/BellIcon";
-import { ClockIcon } from "../../components/Icons/ClockIcon";
-import FoldPressable from "../../components/Primitives/FoldPressable";
-import { colorMaps, spacing } from "../../components/tokens";
-import { BtcPrice, PriceChange } from "../../components/Exchange";
+import RootTemplate from "../../Templates/RootTemplate";
+import { PriceChartContainer } from "../../../components/Exchange/PriceChart/PriceChartContainer";
+import ExchangeControl from "../../../components/Exchange/ExchangeControl";
+import { BellIcon } from "../../../components/Icons/BellIcon";
+import { ClockIcon } from "../../../components/Icons/ClockIcon";
+import FoldPressable from "../../../components/Primitives/FoldPressable";
+import { colorMaps, spacing } from "../../../components/tokens";
+import { BtcPrice, PriceChange } from "../../../components/Exchange";
 
 export interface ExchangeScreenProps {
   onTabPress?: (tab: any) => void;
@@ -14,7 +14,7 @@ export interface ExchangeScreenProps {
   onMenuPress?: () => void;
 }
 
-import { ExchangeProvider } from "../../components/Exchange/ExchangeContext";
+import { ExchangeProvider } from "../../../components/Exchange/ExchangeContext";
 
 export default function ExchangeScreen({ onTabPress, onHistoryPress, onMenuPress }: ExchangeScreenProps) {
   return (

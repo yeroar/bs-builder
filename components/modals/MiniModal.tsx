@@ -26,6 +26,8 @@ export interface MiniModalProps {
   footer?: React.ReactNode;
   variant?: "default" | "keyboard";
   showHeader?: boolean;
+  /** Remove default content padding */
+  noPadding?: boolean;
   style?: ViewStyle;
   testID?: string;
   onNumberPress?: (num: string) => void;
@@ -45,6 +47,7 @@ export default function MiniModal({
   footer,
   variant = "default",
   showHeader = true,
+  noPadding = false,
   style,
   testID,
   onNumberPress,
@@ -185,7 +188,7 @@ export default function MiniModal({
             )}
 
             {/* Content area */}
-            <View style={styles.content}>
+            <View style={[styles.content, noPadding && styles.contentNoPadding]}>
               {children}
             </View>
 
@@ -276,6 +279,9 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing["500"],
+  },
+  contentNoPadding: {
+    padding: 0,
   },
   footerWrapper: {
     borderTopWidth: 0,
