@@ -1,13 +1,13 @@
 import React, { useState, useRef } from "react";
 import { View, StyleSheet, ScrollView, Animated, Dimensions, Modal } from "react-native";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import GiftCardConfirmationSlot from "../Templates/TxConfirmation/instances/GiftCard/GiftCardConfirmationSlot";
+import GiftCardConfirmation from "../Templates/TxConfirmation/instances/GiftCard/GiftCardConfirmation";
 import SendAsAGiftSlot from "../Slots/GiftCard/SendAsAGiftSlot";
-import GiftCardSuccessSlot from "../Templates/Success/instances/GiftCard/GiftCardSuccessSlot";
-import ModalFooter from "../../components/modals/ModalFooter";
-import MiniModal from "../../components/modals/MiniModal";
+import GiftCardSuccess from "../Templates/Success/instances/GiftCard/GiftCardSuccess";
+import ModalFooter from "../../components/Modals/ModalFooter";
+import MiniModal from "../../components/Modals/MiniModal";
 import Button from "../../components/Primitives/Buttons/Button/Button";
-import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Slots/BTC/patterns/PaymentMethods/ChoosePaymentMethodFoldSlot";
+import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Patterns/PaymentMethods/ChoosePaymentMethodFoldSlot";
 import { StarIcon } from "../../components/Icons/StarIcon";
 import FoldPressable from "../../components/Primitives/FoldPressable";
 import { PmSelectorVariant } from "../../components/CurrencyInput/PmSelector";
@@ -162,7 +162,7 @@ export default function GiftCardConfirmationScreen({
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            <GiftCardConfirmationSlot
+            <GiftCardConfirmation
               brand={brand}
               brandLabel={brandLabel}
               amount={amount}
@@ -233,7 +233,7 @@ export default function GiftCardConfirmationScreen({
 
       {/* Success Screen */}
       {showSuccess && (
-        <GiftCardSuccessSlot
+        <GiftCardSuccess
           brand={brand}
           brandLabel={brandLabel}
           amount={amount}

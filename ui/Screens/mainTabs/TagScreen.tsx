@@ -6,7 +6,7 @@ import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import FoldPressable from "../../../components/Primitives/FoldPressable";
 import { colorMaps } from "../../../components/tokens";
 import TagHomeSlot from "../../Slots/MainTabs/TagHomeSlot";
-import ModalFooter from "../../../components/modals/ModalFooter";
+import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
 import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";

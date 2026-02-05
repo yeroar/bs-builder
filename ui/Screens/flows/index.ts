@@ -1,10 +1,17 @@
-export { default as BtcBuyFlow } from "./BtcBuyFlow";
-export { default as BtcSellFlow } from "./BtcSellFlow";
-export { default as BtcSendFlow } from "./BtcSendFlow";
-export { default as BtcAutoStackFlow } from "./BtcAutoStackFlow";
-export { default as DepositFlow } from "./DepositFlow";
-export { default as InstantDepositFlow } from "./InstantDepositFlow";
-export { default as OneTimeDepositFlow } from "./OneTimeDepositFlow";
-export { default as RecurringDepositFlow } from "./RecurringDepositFlow";
-export { default as DirectToBitcoinFlow } from "./DirectToBitcoinFlow";
-export { default as RoundUpsFlow } from "./RoundUpsFlow";
+// BTC Flows
+export {
+  BtcBuyFlow,
+  BtcSellFlow,
+  BtcSendFlow,
+  BtcAutoStackFlow,
+  DirectToBitcoinFlow,
+} from "./BTC";
+
+// Cash Flows
+export {
+  DepositFlow,
+  InstantDepositFlow,
+  OneTimeDepositFlow,
+  RecurringDepositFlow,
+  RoundUpsFlow,
+} from "./Cash";

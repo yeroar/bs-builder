@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import KeypadButton from "./KeypadButton";
-import ModalFooter from "../modals/ModalFooter";
+import ModalFooter from "../Modals/ModalFooter";
 import Button from "../Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../tokens";
 

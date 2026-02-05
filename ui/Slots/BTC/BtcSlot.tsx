@@ -17,7 +17,7 @@ import SpotBuysIcon from "../../../components/Icons/SpotBuysIcon";
 import CoinsStackedIcon from "../../../components/Icons/CoinsStackedIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
-import { Frequency } from "../../Screens/flows/BtcAutoStackFlow";
+import { Frequency } from "../../Screens/flows/BTC/BtcAutoStackFlow";
 
 export interface AutoStackConfig {
   amount: string;

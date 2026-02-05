@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import PillSelector from "../../../components/Selectors/PillSelector/PillSelector";
 import TextField from "../../../components/Inputs/TextContainer/TextField";
-import ModalFooter from "../../../components/modals/ModalFooter";
+import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../../../components/tokens";
 

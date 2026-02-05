@@ -12,10 +12,10 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 import { BellIcon } from "../../../components/Icons/BellIcon";
 import { ClockIcon } from "../../../components/Icons/ClockIcon";
-import MiniModal from "../../../components/modals/MiniModal";
-import ActivateDebitCardSlot from "../../../components/modals/minimodalslots/ActivateDebitCardSlot";
+import MiniModal from "../../../components/Modals/MiniModal";
+import ActivateDebitCardSlot from "../../../components/Modals/minimodalslots/ActivateDebitCardSlot";
 import ActivationSuccessSlot from "../../Slots/ActivateCards/ActivationSuccessSlot";
-import ModalFooter from "../../../components/modals/ModalFooter";
+import ModalFooter from "../../../components/Modals/ModalFooter";
 import BankHomeSlot from "../../Slots/MainTabs/BankHomeSlot";
 import BtcSlot from "../../Slots/BTC/BtcSlot";
 import CashSlot from "../../Slots/Cash/CashSlot";
@@ -26,8 +26,8 @@ import { DirectToBitcoinConfig, AutoStackConfig } from "../../Slots/BTC/BtcSlot"
 import { RoundUpsConfig } from "../../Slots/Cash/CashSlot";
 import { Multiplier } from "../../Slots/Cash/RoundUpsSlot";
 import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
-import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";
-import RedeemBtcGiftCardSuccessSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardSuccessSlot";
+import RedeemBtcGiftCardConfirmation from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmation";
+import RedeemBtcGiftCardSuccess from "../../Templates/Success/instances/GiftCard/RedeemBtcGiftCardSuccess";
 
 type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit" | "directToBitcoin" | "roundUps";
 type RedeemStep = "entry" | "confirmation" | "success";
@@ -331,13 +331,13 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             />
           }
         >
-          <RedeemBtcGiftCardConfirmationSlot />
+          <RedeemBtcGiftCardConfirmation />
         </FullscreenTemplate>
       )}
 
       {/* Redeem BTC Gift Card Success */}
       {isRedeemModalVisible && redeemStep === "success" && (
-        <RedeemBtcGiftCardSuccessSlot onDone={handleRedeemDone} />
+        <RedeemBtcGiftCardSuccess onDone={handleRedeemDone} />
       )}
 
       {/* Flow Screens */}
