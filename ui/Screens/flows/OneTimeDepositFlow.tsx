@@ -152,10 +152,7 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
           <CurrencyInput
             value={`$${formatWithCommas(numAmount)}`}
             topContextVariant="empty"
-            bottomContextVariant="paymentMethod"
-            paymentMethodVariant={selectedPaymentMethod}
-            paymentMethodBrand={selectedBrand}
-            paymentMethodLabel={selectedLabel}
+            bottomContextVariant="empty"
           />
         </View>
         <ModalFooter

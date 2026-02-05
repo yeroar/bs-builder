@@ -44,11 +44,11 @@ export default function BtcSellEnterAmount({
     onMaxExceeded: () => setShowToast(true),
   });
 
-  const calculateBtcEquivalent = (usdVal: string) => {
+  const calculateSatsEquivalent = (usdVal: string) => {
     const numVal = parseFloat(usdVal) || 0;
-    const btcVal = numVal / btcPrice;
-    if (btcVal === 0) return "~₿0";
-    return `~₿${btcVal.toFixed(8).replace(/\.?0+$/, "")}`;
+    if (numVal === 0) return "";
+    const sats = Math.round((numVal / btcPrice) * 100000000);
+    return `~${sats.toLocaleString()} sats`;
   };
 
   const handleMaxPress = () => {
@@ -77,7 +77,11 @@ export default function BtcSellEnterAmount({
         <CurrencyInput
           value={formatDisplayValue(amount)}
           topContextSlot={
-            <TopContext variant="btc" value={calculateBtcEquivalent(amount)} />
+            isEmpty ? (
+              <TopContext variant="empty" value="" />
+            ) : (
+              <TopContext variant="btc" value={calculateSatsEquivalent(amount)} />
+            )
           }
           bottomContextSlot={
             isEmpty ? (

@@ -42,7 +42,9 @@ export default function BtcSendEnterAmount({
 
   const formatMaxBtc = (): string => {
     const btc = maxSats / 100000000;
-    return `Max ฿${btc.toFixed(8)}`;
+    // Remove trailing zeros
+    const formatted = btc.toFixed(8).replace(/\.?0+$/, "");
+    return `Max ฿${formatted}`;
   };
 
   const handleNumberPress = (num: string) => {

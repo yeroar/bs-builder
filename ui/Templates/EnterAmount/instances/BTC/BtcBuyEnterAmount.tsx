@@ -31,11 +31,11 @@ export default function BtcBuyEnterAmount({
     formatDisplayValue,
   } = useAmountInput({ initialValue });
 
-  const calculateBtcEquivalent = (val: string) => {
+  const calculateSatsEquivalent = (val: string) => {
     const numVal = parseFloat(val) || 0;
-    const btcVal = numVal * 0.000012;
-    if (btcVal === 0) return "~₿0";
-    return `~₿${btcVal.toFixed(8).replace(/\.?0+$/, "")}`;
+    if (numVal === 0) return "~฿0";
+    const sats = Math.round(numVal * 0.000012 * 100000000);
+    return `~${sats.toLocaleString()} sats`;
   };
 
   const handleActionPress = () => {
@@ -48,7 +48,7 @@ export default function BtcBuyEnterAmount({
         <CurrencyInput
           value={formatDisplayValue(amount)}
           topContextSlot={
-            <TopContext variant="btc" value={calculateBtcEquivalent(amount)} />
+            <TopContext variant="btc" value={calculateSatsEquivalent(amount)} />
           }
           bottomContextSlot={
             <BottomContext variant="empty" />

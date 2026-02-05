@@ -158,10 +158,7 @@ export default function InstantDepositFlow({ onComplete, onClose }: InstantDepos
           <CurrencyInput
             value={`$${formatWithCommas(numAmount)}`}
             topContextVariant="empty"
-            bottomContextVariant="paymentMethod"
-            paymentMethodVariant={selectedPaymentMethod}
-            paymentMethodBrand={selectedBrand}
-            paymentMethodLabel={selectedLabel}
+            bottomContextVariant="empty"
           />
         </View>
         <ModalFooter
