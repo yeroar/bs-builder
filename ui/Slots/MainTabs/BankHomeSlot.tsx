@@ -24,6 +24,10 @@ import { Validation, ValidationGroup } from "../../../components/Primitives/Vali
 import { ListItemGiftCard, ListItemPaymentMethod } from "../../../components/DataDisplay/ListItem";
 import BankIcon from "../../../components/Icons/BankIcon";
 
+export interface DirectToBitcoinConfig {
+  bitcoinPercent: number;
+}
+
 export interface BankHomeSlotProps {
   onActivateCard?: () => void;
   onBitcoinPress?: () => void;
@@ -33,6 +37,9 @@ export interface BankHomeSlotProps {
   onSellPress?: () => void;
   onDepositPress?: () => void;
   onRedeemPress?: () => void;
+  onDirectToBitcoinPress?: () => void;
+  /** When provided, shows Direct to bitcoin as active with this config */
+  directToBitcoinConfig?: DirectToBitcoinConfig;
 }
 
 export default function BankHomeSlot({
@@ -44,6 +51,8 @@ export default function BankHomeSlot({
   onSellPress,
   onDepositPress,
   onRedeemPress,
+  onDirectToBitcoinPress,
+  directToBitcoinConfig,
 }: BankHomeSlotProps) {
   return (
     <View style={styles.container}>
@@ -167,14 +176,17 @@ export default function BankHomeSlot({
             leadingSlot={
               <IconContainer
                 icon={<DirectToBitcoinIcon width={20} height={20} color={colorMaps.face.primary} />}
-                variant="default-fill"
+                variant={directToBitcoinConfig ? "active" : "default-fill"}
                 size="lg"
               />
             }
             title="Direct to bitcoin"
-            secondaryText="Fee free direct deposits into BTC"
+            secondaryText={directToBitcoinConfig
+              ? `${directToBitcoinConfig.bitcoinPercent}% bitcoin, ${100 - directToBitcoinConfig.bitcoinPercent}% cash`
+              : "Fee free direct deposits into BTC"
+            }
             trailingSlot={<ChevronRightIcon width={20} height={20} color={colorMaps.face.tertiary} />}
-            onPress={() => { }}
+            onPress={onDirectToBitcoinPress}
           />
         </View>
       </View>

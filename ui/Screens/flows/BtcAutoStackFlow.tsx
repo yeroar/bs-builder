@@ -1,48 +1,69 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
 import BtcAutoStackEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcAutoStackEnterAmount";
 import BtcAutoStackConfirmationSlot from "../../Templates/TxConfirmation/instances/BTC/BtcAutoStackConfirmationSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../components/CurrencyInput";
+import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
+import RemoveModalSlot from "../../../components/modals/minimodalslots/RemoveModalSlot";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
 import TileSelector from "../../../components/Selectors/SelectionRow/TileSelector";
+import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
+import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
+import Divider from "../../../components/Primitives/Divider/Divider";
 import { CalendarIcon } from "../../../components/Icons/CalendarIcon";
 import { SettingsIcon } from "../../../components/Icons/SettingsIcon";
 import { RocketIcon } from "../../../components/Icons/RocketIcon";
+import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-type FlowStep = "intro" | "selectFrequency" | "enterAmount" | "confirm";
-type Frequency = "Daily" | "Weekly" | "Monthly";
+type FlowStep = "intro" | "selectFrequency" | "enterAmount" | "confirm" | "details";
+export type Frequency = "Daily" | "Weekly" | "Monthly";
+
+export interface AutoStackConfig {
+  amount: string;
+  frequency: Frequency;
+}
 
 export interface BtcAutoStackFlowProps {
-  /** If true, skip intro and go directly to enterAmount */
+  /** If true, show details view with Turn off button */
   isFeatureActive?: boolean;
-  onComplete: () => void;
+  /** Initial config when feature is active */
+  initialConfig?: AutoStackConfig;
+  /** Called with config when flow completes */
+  onComplete: (config: AutoStackConfig) => void;
   onClose: () => void;
+  /** Called when user taps "Turn off" */
+  onTurnOff?: () => void;
 }
 
 const BTC_PRICE_USD = 102500;
 
 export default function BtcAutoStackFlow({
   isFeatureActive = false,
+  initialConfig,
   onComplete,
-  onClose
+  onClose,
+  onTurnOff,
 }: BtcAutoStackFlowProps) {
-  // Intro-gated flow: show intro first if feature not active
-  const initialStep: FlowStep = isFeatureActive ? "selectFrequency" : "intro";
+  // If feature is active, show details view; otherwise show intro
+  const initialStep: FlowStep = isFeatureActive ? "details" : "intro";
   const [flowStack, setFlowStack] = useState<FlowStep[]>([initialStep]);
 
   // Track if intro was shown to determine navVariant for subsequent screens
   const showedIntro = !isFeatureActive;
-  const [selectedFrequency, setSelectedFrequency] = useState<Frequency>("Daily");
-  const [flowAmount, setFlowAmount] = useState("0");
+  const [selectedFrequency, setSelectedFrequency] = useState<Frequency>(
+    initialConfig?.frequency || "Daily"
+  );
+  const [flowAmount, setFlowAmount] = useState(initialConfig?.amount || "0");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showTurnOffModal, setShowTurnOffModal] = useState(false);
 
   const handleIntroContinue = () => {
     setFlowStack(prev => [...prev, "selectFrequency"]);
@@ -78,7 +99,7 @@ export default function BtcAutoStackFlow({
 
   const handleSuccessDone = () => {
     setShowSuccess(false);
-    onComplete();
+    onComplete({ amount: flowAmount, frequency: selectedFrequency });
   };
 
   const renderScreen = (step: string) => {
@@ -209,6 +230,46 @@ export default function BtcAutoStackFlow({
             />
           </FullscreenTemplate>
         );
+      case "details":
+        const detailsAmount = parseFloat(flowAmount) || 100;
+        return (
+          <FullscreenTemplate
+            title="Auto stack"
+            onLeftPress={handleFlowClose}
+            scrollable={false}
+            navVariant="start"
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Turn off Auto stack"
+                    hierarchy="tertiary"
+                    size="md"
+                    onPress={() => setShowTurnOffModal(true)}
+                  />
+                }
+              />
+            }
+          >
+            <View style={styles.detailsContent}>
+              <CurrencyInput
+                value={`$${detailsAmount.toFixed(0)}`}
+                topContextSlot={<TopContext variant="frequency" value={selectedFrequency} />}
+                bottomContextSlot={<BottomContext variant="empty" />}
+              />
+              <View style={styles.detailsReceipt}>
+                <Divider />
+                <ReceiptDetails>
+                  <ListItemReceipt label="Next purchase" value="$50.00" />
+                  <ListItemReceipt label="Purchase amount" value="+ $1.50" />
+                  <ListItemReceipt label="Fees • 0%" value="Market price" />
+                  <ListItemReceipt label="Total cost" value={`$${detailsAmount.toFixed(2)}`} />
+                </ReceiptDetails>
+              </View>
+            </View>
+          </FullscreenTemplate>
+        );
       default:
         return null;
     }
@@ -266,6 +327,8 @@ export default function BtcAutoStackFlow({
     );
   }
 
+  const frequencyText = selectedFrequency.toLowerCase();
+
   return (
     <View style={styles.container}>
       <ScreenStack
@@ -273,6 +336,49 @@ export default function BtcAutoStackFlow({
         renderScreen={renderScreen}
         onEmpty={handleFlowEmpty}
       />
+
+      {/* Turn Off Confirmation Modal */}
+      <Modal
+        visible={showTurnOffModal}
+        transparent
+        animationType="none"
+        onRequestClose={() => setShowTurnOffModal(false)}
+      >
+        <MiniModal
+          variant="destructive"
+          showHeader={false}
+          onClose={() => setShowTurnOffModal(false)}
+          footer={
+            <ModalFooter
+              primaryButton={
+                <Button
+                  label="Turn off"
+                  hierarchy="destructive"
+                  size="md"
+                  onPress={() => {
+                    setShowTurnOffModal(false);
+                    onTurnOff?.();
+                  }}
+                />
+              }
+              secondaryButton={
+                <Button
+                  label="Dismiss"
+                  hierarchy="secondary"
+                  size="md"
+                  onPress={() => setShowTurnOffModal(false)}
+                />
+              }
+            />
+          }
+        >
+          <RemoveModalSlot
+            icon={<ClockIcon />}
+            title="Turn off Auto stack"
+            body={`Your ${frequencyText} bitcoin buys will stop.`}
+          />
+        </MiniModal>
+      </Modal>
     </View>
   );
 }
@@ -295,5 +401,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     paddingTop: spacing["400"],
+  },
+  detailsContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: spacing["400"],
+  },
+  detailsReceipt: {
+    paddingHorizontal: spacing["500"],
+    paddingTop: spacing["600"],
   },
 });

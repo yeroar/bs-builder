@@ -20,6 +20,11 @@ import { SwapIcon } from "../../../components/Icons/SwapIcon";
 import CreditCardRefreshIcon from "../../../components/Icons/CreditCardRefreshIcon";
 import SpotBuysIcon from "../../../components/Icons/SpotBuysIcon";
 import DirectToBitcoinIcon from "../../../components/Icons/DirectToBitcoinIcon";
+import { RoundUpsIcon } from "../../../components/Icons/RoundUpsIcon";
+
+export interface RoundUpsConfig {
+  multiplier: string;
+}
 
 export interface CashSlotProps {
   cashAmount?: string;
@@ -28,6 +33,8 @@ export interface CashSlotProps {
   onRoundUpsPress?: () => void;
   onDirectDepositPress?: () => void;
   onSeeAllTransactionsPress?: () => void;
+  /** When provided, shows Round ups as active with this config */
+  roundUpsConfig?: RoundUpsConfig;
   transactions?: Array<{
     brand?: string;
     title: string;
@@ -73,6 +80,7 @@ export default function CashSlot({
       date: "",
     },
   ],
+  roundUpsConfig,
 }: CashSlotProps) {
   return (
     <View style={styles.container}>
@@ -115,13 +123,13 @@ export default function CashSlot({
             variant="feature"
             leadingSlot={
               <IconContainer
-                icon={<CreditCardSearchIcon width={20} height={20} color={colorMaps.face.primary} />}
-                variant="default-stroke"
+                icon={<RoundUpsIcon width={20} height={20} color={colorMaps.face.primary} />}
+                variant={roundUpsConfig ? "active" : "default-stroke"}
                 size="lg"
               />
             }
-            title="Round ups"
-            secondaryText="Spare change into sats"
+            title={roundUpsConfig ? `${roundUpsConfig.multiplier} Round up` : "Round ups"}
+            secondaryText={roundUpsConfig ? "Convert every $10" : "Spare change into sats"}
             trailingSlot={<ChevronRightIcon width={20} height={20} color={colorMaps.face.tertiary} />}
             onPress={onRoundUpsPress}
           />

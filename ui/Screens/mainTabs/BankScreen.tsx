@@ -22,6 +22,9 @@ import CashSlot from "../../Slots/Cash/CashSlot";
 import BtcBuyModalSlot, { BuyAmount } from "../../Slots/BTC/BtcBuyModalSlot";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow, DirectToBitcoinFlow, RoundUpsFlow } from "../flows";
+import { DirectToBitcoinConfig, AutoStackConfig } from "../../Slots/BTC/BtcSlot";
+import { RoundUpsConfig } from "../../Slots/Cash/CashSlot";
+import { Multiplier } from "../../Slots/Cash/RoundUpsSlot";
 import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
 import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";
 import RedeemBtcGiftCardSuccessSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardSuccessSlot";
@@ -54,6 +57,12 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
   // Active flow state
   const [activeFlow, setActiveFlow] = useState<FlowType | null>(null);
+
+  // Active automation configs (persisted after flow completion)
+  const [directToBitcoinConfig, setDirectToBitcoinConfig] = useState<DirectToBitcoinConfig | undefined>(undefined);
+  const [roundUpsConfig, setRoundUpsConfig] = useState<RoundUpsConfig | undefined>(undefined);
+  const [roundUpsCurrentAmount, setRoundUpsCurrentAmount] = useState(0);
+  const [autoStackConfig, setAutoStackConfig] = useState<AutoStackConfig | undefined>(undefined);
 
   // Redeem BTC Gift Card modal state
   const [isRedeemModalVisible, setIsRedeemModalVisible] = useState(false);
@@ -165,6 +174,8 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onSellPress={handleOpenSellFlow}
             onDepositPress={handleOpenDepositFlow}
             onRedeemPress={handleOpenRedeemModal}
+            onDirectToBitcoinPress={handleOpenDirectToBitcoinFlow}
+            directToBitcoinConfig={directToBitcoinConfig}
           />
         }
         rightComponents={[
@@ -231,6 +242,8 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onDirectToBitcoinPress={handleOpenDirectToBitcoinFlow}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
             onRewardsPress={() => console.log("Rewards pressed")}
+            autoStackConfig={autoStackConfig}
+            directToBitcoinConfig={directToBitcoinConfig}
           />
         </FullscreenTemplate>
       )}
@@ -242,6 +255,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onAddCashPress={handleOpenDepositFlow}
             onRoundUpsPress={handleOpenRoundUpsFlow}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
+            roundUpsConfig={roundUpsConfig}
           />
         </FullscreenTemplate>
       )}
@@ -351,8 +365,19 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
       {activeFlow === "autoStack" && (
         <BtcAutoStackFlow
-          onComplete={handleFlowComplete}
+          isFeatureActive={!!autoStackConfig}
+          initialConfig={autoStackConfig}
+          onComplete={(config) => {
+            setAutoStackConfig(config);
+            setActiveFlow(null);
+            setShowBtcSlot(true);
+          }}
           onClose={handleFlowClose}
+          onTurnOff={() => {
+            setAutoStackConfig(undefined);
+            setActiveFlow(null);
+            setShowBtcSlot(true);
+          }}
         />
       )}
 
@@ -365,24 +390,42 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
       {activeFlow === "directToBitcoin" && (
         <DirectToBitcoinFlow
+          isFeatureActive={!!directToBitcoinConfig}
+          initialPercentage={directToBitcoinConfig?.bitcoinPercent}
           onSetUpDeposit={() => {
             setActiveFlow("deposit");
           }}
-          onComplete={() => {
+          onComplete={(percentage: number) => {
+            setDirectToBitcoinConfig({ bitcoinPercent: percentage });
             setActiveFlow(null);
             setShowBtcSlot(true);
           }}
           onClose={handleFlowClose}
+          onTurnOff={() => {
+            setDirectToBitcoinConfig(undefined);
+            setActiveFlow(null);
+            setShowBtcSlot(true);
+          }}
         />
       )}
 
       {activeFlow === "roundUps" && (
         <RoundUpsFlow
-          onComplete={() => {
+          isFeatureActive={!!roundUpsConfig}
+          initialMultiplier={roundUpsConfig?.multiplier as Multiplier}
+          currentAmount={roundUpsCurrentAmount}
+          onComplete={(multiplier: string) => {
+            setRoundUpsConfig({ multiplier });
             setActiveFlow(null);
             setShowCashSlot(true);
           }}
           onClose={handleFlowClose}
+          onTurnOff={() => {
+            setRoundUpsConfig(undefined);
+            setRoundUpsCurrentAmount(0);
+            setActiveFlow(null);
+            setShowCashSlot(true);
+          }}
         />
       )}
     </>

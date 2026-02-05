@@ -17,6 +17,16 @@ import SpotBuysIcon from "../../../components/Icons/SpotBuysIcon";
 import CoinsStackedIcon from "../../../components/Icons/CoinsStackedIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
+import { Frequency } from "../../Screens/flows/BtcAutoStackFlow";
+
+export interface AutoStackConfig {
+  amount: string;
+  frequency: Frequency;
+}
+
+export interface DirectToBitcoinConfig {
+  bitcoinPercent: number;
+}
 
 export interface BtcSlotProps {
   bitcoinAmount?: string;
@@ -30,6 +40,10 @@ export interface BtcSlotProps {
   onDirectToBitcoinPress?: () => void;
   onSeeAllTransactionsPress?: () => void;
   onRewardsPress?: () => void;
+  /** When provided, shows Auto stack as active with this config */
+  autoStackConfig?: AutoStackConfig;
+  /** When provided, shows Direct to bitcoin as active with this config */
+  directToBitcoinConfig?: DirectToBitcoinConfig;
   transactions?: Array<{
     icon: "spot-buy" | "direct-to-bitcoin" | "auto-stack";
     title: string;
@@ -52,6 +66,8 @@ export default function BtcSlot({
   onDirectToBitcoinPress,
   onSeeAllTransactionsPress,
   onRewardsPress,
+  autoStackConfig,
+  directToBitcoinConfig,
   transactions = [
     {
       icon: "spot-buy",
@@ -138,14 +154,13 @@ export default function BtcSlot({
             leadingSlot={
               <IconContainer
                 icon={<ClockIcon width={20} height={20} color={colorMaps.face.primary} />}
-                variant="default-stroke"
+                variant={autoStackConfig ? "active" : "default-stroke"}
                 size="lg"
               />
             }
-            title="Auto stack"
-            secondaryText="Set up recurring buys"
+            title={autoStackConfig ? "Daily purchase" : "Auto stack"}
+            secondaryText={autoStackConfig ? `${autoStackConfig.amount} ${autoStackConfig.frequency}` : "Set up recurring buys"}
             trailingSlot={<ChevronRightIcon width={20} height={20} color={colorMaps.face.tertiary} />}
-
             onPress={onAutoStackPress}
           />
 
@@ -154,14 +169,13 @@ export default function BtcSlot({
             leadingSlot={
               <IconContainer
                 icon={<DirectToBitcoinIcon width={20} height={20} color={colorMaps.face.primary} />}
-                variant="default-stroke"
+                variant={directToBitcoinConfig ? "active" : "default-stroke"}
                 size="lg"
               />
             }
             title="Direct to bitcoin"
-            secondaryText="Fee free direct deposits"
+            secondaryText={directToBitcoinConfig ? `${directToBitcoinConfig.bitcoinPercent}% bitcoin, ${100 - directToBitcoinConfig.bitcoinPercent}% cash` : "Fee free direct deposits"}
             trailingSlot={<ChevronRightIcon width={20} height={20} color={colorMaps.face.tertiary} />}
-
             onPress={onDirectToBitcoinPress}
           />
         </View>

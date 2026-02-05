@@ -24,7 +24,7 @@ export interface MiniModalProps {
   onClose?: () => void;
   children?: React.ReactNode;
   footer?: React.ReactNode;
-  variant?: "default" | "keyboard";
+  variant?: "default" | "keyboard" | "destructive";
   showHeader?: boolean;
   /** Remove default content padding */
   noPadding?: boolean;

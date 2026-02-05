@@ -10,13 +10,13 @@ figma.connect(
       variant: figma.enum("variant", {
         default: "default",
         keyboard: "keyboard",
+        destructive: "destructive",
       }),
-      showHeader: figma.boolean("hasTopNav"),
       header: figma.boolean("hasTopNav", {
-        true: figma.children("topNav"),
+        true: figma.instance("topNav"),
         false: undefined,
       }),
-      content: figma.children("contentSlot"),
+      children: figma.children("contentSlot"),
       footer: figma.boolean("hasFooter", {
         true: figma.children("footer"),
         false: undefined,
@@ -25,11 +25,10 @@ figma.connect(
     example: (props) => (
       <MiniModal
         variant={props.variant}
-        showHeader={props.showHeader}
-        footer={props.footer}
         header={props.header}
+        footer={props.footer}
       >
-        {props.content}
+        {props.children}
       </MiniModal>
     ),
   }

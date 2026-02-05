@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
 import EnterAmount from "../../Templates/EnterAmount/EnterAmount";
+import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
+import RemoveModalSlot from "../../../components/modals/minimodalslots/RemoveModalSlot";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
@@ -18,6 +20,7 @@ import { FoldText } from "../../../components/Primitives/FoldText";
 import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import { CalendarIcon } from "../../../components/Icons/CalendarIcon";
 import { RocketIcon } from "../../../components/Icons/RocketIcon";
+import DirectToBitcoinIcon from "../../../components/Icons/DirectToBitcoinIcon";
 import AutomationSuccessSlot from "../../Slots/Cash/AutomationSuccessSlot";
 import DirectToBitcoinSlot from "../../Slots/Cash/DirectToBitcoinSlot";
 import { colorMaps, spacing } from "../../../components/tokens";
@@ -25,20 +28,34 @@ import { colorMaps, spacing } from "../../../components/tokens";
 type FlowStep = "intro" | "configure" | "enterCustom" | "confirm";
 
 export interface DirectToBitcoinFlowProps {
-  onSetUpDeposit: () => void;
-  onComplete: () => void;
+  /** If true, skip intro and show edit mode with Modify button */
+  isFeatureActive?: boolean;
+  /** Initial percentage when feature is active */
+  initialPercentage?: number;
+  onSetUpDeposit?: () => void;
+  /** Called with selected percentage when flow completes */
+  onComplete: (percentage: number) => void;
   onClose: () => void;
+  /** Called when user taps "Turn off" */
+  onTurnOff?: () => void;
 }
 
 export default function DirectToBitcoinFlow({
+  isFeatureActive = false,
+  initialPercentage = 25,
   onSetUpDeposit,
   onComplete,
-  onClose
+  onClose,
+  onTurnOff,
 }: DirectToBitcoinFlowProps) {
-  const [flowStack, setFlowStack] = useState<FlowStep[]>(["intro"]);
-  const [selectedPercentage, setSelectedPercentage] = useState<number>(75);
+  const initialStep: FlowStep = isFeatureActive ? "configure" : "intro";
+  const [flowStack, setFlowStack] = useState<FlowStep[]>([initialStep]);
+  const [selectedPercentage, setSelectedPercentage] = useState<number>(
+    isFeatureActive ? initialPercentage : 75
+  );
   const [customPercentageInput, setCustomPercentageInput] = useState<string>("0");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showTurnOffModal, setShowTurnOffModal] = useState(false);
 
   const handleSelectPercentage = () => {
     setFlowStack(prev => [...prev, "configure"]);
@@ -79,7 +96,7 @@ export default function DirectToBitcoinFlow({
 
   const handleDone = () => {
     setShowSuccess(false);
-    onComplete();
+    onComplete(selectedPercentage);
   };
 
   const handleFlowClose = () => {
@@ -167,21 +184,30 @@ export default function DirectToBitcoinFlow({
       case "configure":
         return (
           <FullscreenTemplate
-            onLeftPress={handleConfigureBack}
+            title={isFeatureActive ? "Direct to bitcoin" : undefined}
+            onLeftPress={isFeatureActive ? handleFlowClose : handleConfigureBack}
             scrollable={false}
-            navVariant="step"
+            navVariant={isFeatureActive ? "start" : "step"}
             footer={
               <ModalFooter
                 type="default"
                 disclaimer="Changes apply to future direct deposits only."
                 primaryButton={
                   <Button
-                    label="Continue"
+                    label={isFeatureActive ? "Modify" : "Continue"}
                     hierarchy="primary"
                     size="md"
-                    onPress={handleConfigureContinue}
+                    onPress={isFeatureActive ? handleConfirm : handleConfigureContinue}
                   />
                 }
+                secondaryButton={isFeatureActive ? (
+                  <Button
+                    label="Turn off Direct to bitcoin"
+                    hierarchy="tertiary"
+                    size="md"
+                    onPress={() => setShowTurnOffModal(true)}
+                  />
+                ) : undefined}
               />
             }
           >
@@ -293,7 +319,10 @@ export default function DirectToBitcoinFlow({
         }
       >
         <AutomationSuccessSlot
-          header={`You're investing ${selectedPercentage}% of direct deposits in bitcoin`}
+          header={isFeatureActive
+            ? `Direct to bitcoin updated to ${selectedPercentage}%`
+            : `You're investing ${selectedPercentage}% of direct deposits in bitcoin`
+          }
           body="Funds will be made available in your bitcoin balance."
         />
       </FullscreenTemplate>
@@ -307,6 +336,49 @@ export default function DirectToBitcoinFlow({
         renderScreen={renderScreen}
         onEmpty={handleFlowEmpty}
       />
+
+      {/* Turn Off Confirmation Modal */}
+      <Modal
+        visible={showTurnOffModal}
+        transparent
+        animationType="none"
+        onRequestClose={() => setShowTurnOffModal(false)}
+      >
+        <MiniModal
+          variant="destructive"
+          showHeader={false}
+          onClose={() => setShowTurnOffModal(false)}
+          footer={
+            <ModalFooter
+              primaryButton={
+                <Button
+                  label="Turn off"
+                  hierarchy="destructive"
+                  size="md"
+                  onPress={() => {
+                    setShowTurnOffModal(false);
+                    onTurnOff?.();
+                  }}
+                />
+              }
+              secondaryButton={
+                <Button
+                  label="Dismiss"
+                  hierarchy="secondary"
+                  size="md"
+                  onPress={() => setShowTurnOffModal(false)}
+                />
+              }
+            />
+          }
+        >
+          <RemoveModalSlot
+            icon={<DirectToBitcoinIcon />}
+            title="Turn off Direct to bitcoin"
+            body="Any incoming deposits that have not settled yet will no longer converted to bitcoin."
+          />
+        </MiniModal>
+      </Modal>
     </View>
   );
 }

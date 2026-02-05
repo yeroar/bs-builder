@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Modal } from "react-native";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
+import MiniModal from "../../../components/modals/MiniModal";
 import ModalFooter from "../../../components/modals/ModalFooter";
+import RemoveModalSlot from "../../../components/modals/minimodalslots/RemoveModalSlot";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
@@ -15,17 +17,34 @@ import AutomationSuccessSlot from "../../Slots/Cash/AutomationSuccessSlot";
 type FlowStep = "intro" | "configure";
 
 export interface RoundUpsFlowProps {
-  onComplete: () => void;
+  /** If true, skip intro and show edit mode with Modify button */
+  isFeatureActive?: boolean;
+  /** Initial multiplier when feature is active */
+  initialMultiplier?: Multiplier;
+  /** Current round-up amount accumulated */
+  currentAmount?: number;
+  /** Called with selected multiplier when flow completes */
+  onComplete: (multiplier: string) => void;
   onClose: () => void;
+  /** Called when user taps "Turn off" */
+  onTurnOff?: () => void;
 }
 
 export default function RoundUpsFlow({
+  isFeatureActive = false,
+  initialMultiplier = "2x",
+  currentAmount = 0,
   onComplete,
-  onClose
+  onClose,
+  onTurnOff,
 }: RoundUpsFlowProps) {
-  const [flowStack, setFlowStack] = useState<FlowStep[]>(["intro"]);
-  const [selectedMultiplier, setSelectedMultiplier] = useState<Multiplier>("2x");
+  const initialStep: FlowStep = isFeatureActive ? "configure" : "intro";
+  const [flowStack, setFlowStack] = useState<FlowStep[]>([initialStep]);
+  const [selectedMultiplier, setSelectedMultiplier] = useState<Multiplier>(
+    isFeatureActive ? initialMultiplier : "2x"
+  );
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showTurnOffModal, setShowTurnOffModal] = useState(false);
 
   const handleIntroContinue = () => {
     setFlowStack(prev => [...prev, "configure"]);
@@ -42,7 +61,7 @@ export default function RoundUpsFlow({
 
   const handleDone = () => {
     setShowSuccess(false);
-    onComplete();
+    onComplete(selectedMultiplier);
   };
 
   const handleFlowClose = () => {
@@ -99,27 +118,36 @@ export default function RoundUpsFlow({
       case "configure":
         return (
           <FullscreenTemplate
-            onLeftPress={handleConfigureBack}
+            onLeftPress={isFeatureActive ? handleFlowClose : handleConfigureBack}
             scrollable={false}
-            navVariant="step"
+            navVariant={isFeatureActive ? "start" : "step"}
             footer={
               <ModalFooter
                 type="default"
                 disclaimer="Only everyday purchases qualify—excludes bitcoin and ACH."
                 primaryButton={
                   <Button
-                    label="Confirm"
+                    label={isFeatureActive ? "Modify" : "Confirm"}
                     hierarchy="primary"
                     size="md"
                     onPress={handleConfirm}
                   />
                 }
+                secondaryButton={isFeatureActive ? (
+                  <Button
+                    label="Turn off Round ups"
+                    hierarchy="tertiary"
+                    size="md"
+                    onPress={() => setShowTurnOffModal(true)}
+                  />
+                ) : undefined}
               />
             }
           >
             <RoundUpsSlot
               selectedMultiplier={selectedMultiplier}
               onMultiplierSelect={setSelectedMultiplier}
+              currentAmount={currentAmount}
             />
           </FullscreenTemplate>
         );
@@ -149,7 +177,10 @@ export default function RoundUpsFlow({
         }
       >
         <AutomationSuccessSlot
-          header={`${selectedMultiplier} Round up confirmed`}
+          header={isFeatureActive
+            ? `Round ups updated to ${selectedMultiplier}`
+            : `${selectedMultiplier} Round up confirmed`
+          }
           body="Bitcoin is purchased every $10 in Round ups; we'll notify you once it's available."
         />
       </FullscreenTemplate>
@@ -163,6 +194,49 @@ export default function RoundUpsFlow({
         renderScreen={renderScreen}
         onEmpty={handleFlowEmpty}
       />
+
+      {/* Turn Off Confirmation Modal */}
+      <Modal
+        visible={showTurnOffModal}
+        transparent
+        animationType="none"
+        onRequestClose={() => setShowTurnOffModal(false)}
+      >
+        <MiniModal
+          variant="destructive"
+          showHeader={false}
+          onClose={() => setShowTurnOffModal(false)}
+          footer={
+            <ModalFooter
+              primaryButton={
+                <Button
+                  label="Turn off"
+                  hierarchy="destructive"
+                  size="md"
+                  onPress={() => {
+                    setShowTurnOffModal(false);
+                    onTurnOff?.();
+                  }}
+                />
+              }
+              secondaryButton={
+                <Button
+                  label="Dismiss"
+                  hierarchy="secondary"
+                  size="md"
+                  onPress={() => setShowTurnOffModal(false)}
+                />
+              }
+            />
+          }
+        >
+          <RemoveModalSlot
+            icon={<RoundUpsIcon />}
+            title="Turn off Round ups"
+            body="Are you sure you want to stop your round-ups and reset your progress? You can restart any time."
+          />
+        </MiniModal>
+      </Modal>
     </View>
   );
 }
