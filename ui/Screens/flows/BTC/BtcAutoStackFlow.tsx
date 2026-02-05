@@ -5,6 +5,7 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import IntroTemplate from "../../../Templates/IntroTemplate";
 import BtcAutoStackEnterAmount from "../../../Slots/BTC/BtcAutoStackEnterAmount";
 import BtcAutoStackConfirmation from "../../../Slots/BTC/BtcAutoStackConfirmation";
+import { Frequency, AutoStackConfig } from "../../../Slots/BTC/BtcSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
@@ -25,12 +26,6 @@ import { FoldText } from "../../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../../components/tokens";
 
 type FlowStep = "intro" | "selectFrequency" | "enterAmount" | "confirm" | "details";
-export type Frequency = "Daily" | "Weekly" | "Monthly";
-
-export interface AutoStackConfig {
-  amount: string;
-  frequency: Frequency;
-}
 
 export interface BtcAutoStackFlowProps {
   /** If true, show details view with Turn off button */

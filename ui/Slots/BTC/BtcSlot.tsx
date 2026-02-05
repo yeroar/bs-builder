@@ -17,7 +17,8 @@ import SpotBuysIcon from "../../../components/Icons/SpotBuysIcon";
 import CoinsStackedIcon from "../../../components/Icons/CoinsStackedIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
-import { Frequency } from "../../Screens/flows/BTC/BtcAutoStackFlow";
+
+export type Frequency = "Daily" | "Weekly" | "Monthly";
 
 export interface AutoStackConfig {
   amount: string;

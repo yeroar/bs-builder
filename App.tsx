@@ -17,7 +17,7 @@ import HistoryScreen from './ui/Screens/HistoryScreen';
 import TransactionDetailScreen from './ui/Screens/TransactionDetailScreen';
 import { ComponentLibraryScreen } from './components/ComponentLibrary';
 import { TransactionData } from './components/Transactions/TransactionList';
-import SearchGCEmptySlot from './ui/Slots/GiftCard/SearchGCEmptySlot';
+import GiftCardSearchScreen from './ui/Screens/GiftCardSearchScreen';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'history' | 'componentLibrary' | 'transactionDetail'>('center');
@@ -91,8 +91,8 @@ export default function App() {
           {renderScreen()}
           {showSearchGiftCards && (
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
-              <SearchGCEmptySlot
-                onSearchBack={() => setShowSearchGiftCards(false)}
+              <GiftCardSearchScreen
+                onBack={() => setShowSearchGiftCards(false)}
               />
             </View>
           )}
