@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, StyleSheet, Modal } from "react-native";
-import FullscreenTemplate from "../../Templates/FullscreenTemplate";
+import FullscreenTemplate, { FullscreenTemplateRef } from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
 import MiniModal from "../../../components/modals/MiniModal";
@@ -45,6 +45,7 @@ export default function RoundUpsFlow({
   );
   const [showSuccess, setShowSuccess] = useState(false);
   const [showTurnOffModal, setShowTurnOffModal] = useState(false);
+  const successRef = useRef<FullscreenTemplateRef>(null);
 
   const handleIntroContinue = () => {
     setFlowStack(prev => [...prev, "configure"]);
@@ -60,6 +61,10 @@ export default function RoundUpsFlow({
   };
 
   const handleDone = () => {
+    successRef.current?.close();
+  };
+
+  const handleSuccessClose = () => {
     setShowSuccess(false);
     onComplete(selectedMultiplier);
   };
@@ -159,7 +164,8 @@ export default function RoundUpsFlow({
   if (showSuccess) {
     return (
       <FullscreenTemplate
-        onLeftPress={handleDone}
+        ref={successRef}
+        onLeftPress={handleSuccessClose}
         scrollable={false}
         navVariant="start"
         footer={
@@ -208,6 +214,7 @@ export default function RoundUpsFlow({
           onClose={() => setShowTurnOffModal(false)}
           footer={
             <ModalFooter
+              type="dualButton"
               primaryButton={
                 <Button
                   label="Turn off"

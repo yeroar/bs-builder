@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, StyleSheet, Modal } from "react-native";
-import FullscreenTemplate from "../../Templates/FullscreenTemplate";
+import FullscreenTemplate, { FullscreenTemplateRef } from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
 import BtcAutoStackEnterAmount from "../../Templates/EnterAmount/instances/BTC/BtcAutoStackEnterAmount";
@@ -16,6 +16,7 @@ import TileSelector from "../../../components/Selectors/SelectionRow/TileSelecto
 import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import Divider from "../../../components/Primitives/Divider/Divider";
+import AutomationSuccessSlot from "../../Slots/Cash/AutomationSuccessSlot";
 import { CalendarIcon } from "../../../components/Icons/CalendarIcon";
 import { SettingsIcon } from "../../../components/Icons/SettingsIcon";
 import { RocketIcon } from "../../../components/Icons/RocketIcon";
@@ -64,6 +65,7 @@ export default function BtcAutoStackFlow({
   const [flowAmount, setFlowAmount] = useState(initialConfig?.amount || "0");
   const [showSuccess, setShowSuccess] = useState(false);
   const [showTurnOffModal, setShowTurnOffModal] = useState(false);
+  const successRef = useRef<FullscreenTemplateRef>(null);
 
   const handleIntroContinue = () => {
     setFlowStack(prev => [...prev, "selectFrequency"]);
@@ -98,6 +100,10 @@ export default function BtcAutoStackFlow({
   };
 
   const handleSuccessDone = () => {
+    successRef.current?.close();
+  };
+
+  const handleSuccessClose = () => {
     setShowSuccess(false);
     onComplete({ amount: flowAmount, frequency: selectedFrequency });
   };
@@ -280,16 +286,40 @@ export default function BtcAutoStackFlow({
 
     return (
       <FullscreenTemplate
+        ref={successRef}
         title="Auto stack initiated"
         leftIcon="x"
-        onLeftPress={handleSuccessDone}
+        onLeftPress={handleSuccessClose}
         scrollable={false}
         variant="yellow"
+        navVariant="start"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            disclaimer={
+              <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                Bitcoin purchases usually settle within a few minutes, but may take up to{" "}
+                <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                  1 business day
+                </FoldText>
+                . We will notify you once the transaction is complete and available for withdrawal
+              </FoldText>
+            }
+            secondaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <View style={styles.successContent}>
           <CurrencyInput
-            value={`$${numAmount.toFixed(2)}`}
+            value={`$${numAmount.toFixed(0)}`}
             topContextSlot={<TopContext variant="frequency" value={selectedFrequency} />}
             bottomContextSlot={
               <BottomContext variant="maxButton">
@@ -303,26 +333,6 @@ export default function BtcAutoStackFlow({
             }
           />
         </View>
-        <ModalFooter
-          type="inverse"
-          disclaimer={
-            <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-              Bitcoin purchases usually settle within a few minutes, but may take up to{" "}
-              <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
-                1 business day
-              </FoldText>
-              . We will notify you once the transaction is complete and available for withdrawal
-            </FoldText>
-          }
-          primaryButton={
-            <Button
-              label="Redeem"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
-        />
       </FullscreenTemplate>
     );
   }
@@ -350,6 +360,7 @@ export default function BtcAutoStackFlow({
           onClose={() => setShowTurnOffModal(false)}
           footer={
             <ModalFooter
+              type="dualButton"
               primaryButton={
                 <Button
                   label="Turn off"

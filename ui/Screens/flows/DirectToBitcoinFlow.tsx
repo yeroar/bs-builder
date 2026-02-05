@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, StyleSheet, Modal } from "react-native";
-import FullscreenTemplate from "../../Templates/FullscreenTemplate";
+import FullscreenTemplate, { FullscreenTemplateRef } from "../../Templates/FullscreenTemplate";
 import ScreenStack from "../../Templates/ScreenStack";
 import IntroTemplate from "../../Templates/IntroTemplate";
 import EnterAmount from "../../Templates/EnterAmount/EnterAmount";
@@ -56,6 +56,7 @@ export default function DirectToBitcoinFlow({
   const [customPercentageInput, setCustomPercentageInput] = useState<string>("0");
   const [showSuccess, setShowSuccess] = useState(false);
   const [showTurnOffModal, setShowTurnOffModal] = useState(false);
+  const successRef = useRef<FullscreenTemplateRef>(null);
 
   const handleSelectPercentage = () => {
     setFlowStack(prev => [...prev, "configure"]);
@@ -95,6 +96,10 @@ export default function DirectToBitcoinFlow({
   };
 
   const handleDone = () => {
+    successRef.current?.close();
+  };
+
+  const handleSuccessClose = () => {
     setShowSuccess(false);
     onComplete(selectedPercentage);
   };
@@ -301,7 +306,8 @@ export default function DirectToBitcoinFlow({
   if (showSuccess) {
     return (
       <FullscreenTemplate
-        onLeftPress={handleDone}
+        ref={successRef}
+        onLeftPress={handleSuccessClose}
         scrollable={false}
         navVariant="start"
         footer={
@@ -350,6 +356,7 @@ export default function DirectToBitcoinFlow({
           onClose={() => setShowTurnOffModal(false)}
           footer={
             <ModalFooter
+              type="dualButton"
               primaryButton={
                 <Button
                   label="Turn off"
