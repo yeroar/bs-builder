@@ -98,8 +98,8 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
       Animated.spring(slideAnim, {
         toValue: 0,
         useNativeDriver: true,
-        tension: 65,
-        friction: 11,
+        tension: 40,
+        friction: 12,
       }).start();
     } else if (isFillAnimation) {
       Animated.timing(fillAnim, {
@@ -218,6 +218,15 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
       >
         {content}
       </Animated.View>
+    );
+  }
+
+  // No animation but still need positioned container for proper z-index
+  if (isStartVariant || isStepVariant) {
+    return (
+      <View style={styles.animatedContainer}>
+        {content}
+      </View>
     );
   }
 

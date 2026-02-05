@@ -21,12 +21,12 @@ import BtcSlot from "../../Slots/BTC/BtcSlot";
 import CashSlot from "../../Slots/Cash/CashSlot";
 import BtcBuyModalSlot, { BuyAmount } from "../../Slots/BTC/BtcBuyModalSlot";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
-import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow } from "../flows";
+import { BtcBuyFlow, BtcSellFlow, BtcSendFlow, BtcAutoStackFlow, DepositFlow, DirectToBitcoinFlow, RoundUpsFlow } from "../flows";
 import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
 import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";
 import RedeemBtcGiftCardSuccessSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardSuccessSlot";
 
-type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit";
+type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit" | "directToBitcoin" | "roundUps";
 type RedeemStep = "entry" | "confirmation" | "success";
 
 interface BankScreenProps {
@@ -114,6 +114,8 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
   const handleOpenSendFlow = () => setActiveFlow("send");
   const handleOpenAutoStackFlow = () => setActiveFlow("autoStack");
   const handleOpenDepositFlow = () => setActiveFlow("deposit");
+  const handleOpenDirectToBitcoinFlow = () => setActiveFlow("directToBitcoin");
+  const handleOpenRoundUpsFlow = () => setActiveFlow("roundUps");
 
   const handleFlowComplete = () => {
     const wasDepositFlow = activeFlow === "deposit";
@@ -226,7 +228,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
             onSellPress={handleOpenSellFlow}
             onSendPress={handleOpenSendFlow}
             onAutoStackPress={handleOpenAutoStackFlow}
-            onDirectToBitcoinPress={() => console.log("Direct to bitcoin pressed")}
+            onDirectToBitcoinPress={handleOpenDirectToBitcoinFlow}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
             onRewardsPress={() => console.log("Rewards pressed")}
           />
@@ -238,6 +240,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
         <FullscreenTemplate onLeftPress={handleCloseCashScreen} scrollable>
           <CashSlot
             onAddCashPress={handleOpenDepositFlow}
+            onRoundUpsPress={handleOpenRoundUpsFlow}
             onSeeAllTransactionsPress={() => console.log("See all transactions pressed")}
           />
         </FullscreenTemplate>
@@ -348,7 +351,6 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
 
       {activeFlow === "autoStack" && (
         <BtcAutoStackFlow
-          frequency="Daily"
           onComplete={handleFlowComplete}
           onClose={handleFlowClose}
         />
@@ -357,6 +359,29 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress }: 
       {activeFlow === "deposit" && (
         <DepositFlow
           onComplete={handleFlowComplete}
+          onClose={handleFlowClose}
+        />
+      )}
+
+      {activeFlow === "directToBitcoin" && (
+        <DirectToBitcoinFlow
+          onSetUpDeposit={() => {
+            setActiveFlow("deposit");
+          }}
+          onComplete={() => {
+            setActiveFlow(null);
+            setShowBtcSlot(true);
+          }}
+          onClose={handleFlowClose}
+        />
+      )}
+
+      {activeFlow === "roundUps" && (
+        <RoundUpsFlow
+          onComplete={() => {
+            setActiveFlow(null);
+            setShowCashSlot(true);
+          }}
           onClose={handleFlowClose}
         />
       )}

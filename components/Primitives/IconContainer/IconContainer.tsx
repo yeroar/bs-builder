@@ -133,7 +133,12 @@ export default function IconContainer({
           resizeMode="cover"
         />
       ) : (
-        icon
+        icon && React.isValidElement(icon)
+          ? React.cloneElement(icon as React.ReactElement<any>, {
+              width: sizeConfig.iconSize,
+              height: sizeConfig.iconSize,
+            })
+          : icon
       )}
     </View>
   );

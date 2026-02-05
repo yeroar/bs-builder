@@ -4,7 +4,7 @@ interface IProps extends SvgProps {}
 
 export const CalendarIcon = (props: IProps) => {
   return (
-    <Svg width="16" height="16" fill="none" viewBox="0 0 16 16" {...props}>
+    <Svg width="20" height="20" fill="none" viewBox="0 0 16 16" {...props}>
       <G clipPath="url(#a)">
         <Path
           fill={props.color || "#383323"}

@@ -10,18 +10,19 @@ import ModalFooter from "../../../components/modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
+import TileSelector from "../../../components/Selectors/SelectionRow/TileSelector";
 import { CalendarIcon } from "../../../components/Icons/CalendarIcon";
 import { SettingsIcon } from "../../../components/Icons/SettingsIcon";
 import { RocketIcon } from "../../../components/Icons/RocketIcon";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-type FlowStep = "intro" | "enterAmount" | "confirm";
+type FlowStep = "intro" | "selectFrequency" | "enterAmount" | "confirm";
+type Frequency = "Daily" | "Weekly" | "Monthly";
 
 export interface BtcAutoStackFlowProps {
   /** If true, skip intro and go directly to enterAmount */
   isFeatureActive?: boolean;
-  frequency?: string;
   onComplete: () => void;
   onClose: () => void;
 }
@@ -30,20 +31,24 @@ const BTC_PRICE_USD = 102500;
 
 export default function BtcAutoStackFlow({
   isFeatureActive = false,
-  frequency = "Daily",
   onComplete,
   onClose
 }: BtcAutoStackFlowProps) {
   // Intro-gated flow: show intro first if feature not active
-  const initialStep: FlowStep = isFeatureActive ? "enterAmount" : "intro";
+  const initialStep: FlowStep = isFeatureActive ? "selectFrequency" : "intro";
   const [flowStack, setFlowStack] = useState<FlowStep[]>([initialStep]);
 
   // Track if intro was shown to determine navVariant for subsequent screens
   const showedIntro = !isFeatureActive;
+  const [selectedFrequency, setSelectedFrequency] = useState<Frequency>("Daily");
   const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleIntroContinue = () => {
+    setFlowStack(prev => [...prev, "selectFrequency"]);
+  };
+
+  const handleSelectFrequencyContinue = () => {
     setFlowStack(prev => [...prev, "enterAmount"]);
   };
 
@@ -52,7 +57,7 @@ export default function BtcAutoStackFlow({
     setFlowStack(prev => [...prev, "confirm"]);
   };
 
-  const handleConfirmBack = () => {
+  const handleBack = () => {
     setFlowStack(prev => prev.slice(0, -1));
   };
 
@@ -127,17 +132,59 @@ export default function BtcAutoStackFlow({
             </IntroTemplate>
           </FullscreenTemplate>
         );
-      case "enterAmount":
-        // Intro-gated: if showed intro, this is a step (back arrow); otherwise start (X)
+      case "selectFrequency":
         return (
           <FullscreenTemplate
             title="Auto stack bitcoin"
-            onLeftPress={showedIntro ? handleConfirmBack : handleFlowClose}
+            onLeftPress={showedIntro ? handleBack : handleFlowClose}
             scrollable={false}
             navVariant={showedIntro ? "step" : "start"}
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Continue"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleSelectFrequencyContinue}
+                  />
+                }
+              />
+            }
+          >
+            <View style={styles.frequencyContent}>
+              <TileSelector
+                label="Daily"
+                variable=""
+                state={selectedFrequency === "Daily" ? "active" : "default"}
+                onPress={() => setSelectedFrequency("Daily")}
+              />
+              <TileSelector
+                label="Weekly"
+                variable=""
+                state={selectedFrequency === "Weekly" ? "active" : "default"}
+                onPress={() => setSelectedFrequency("Weekly")}
+              />
+              <TileSelector
+                label="Monthly"
+                variable=""
+                state={selectedFrequency === "Monthly" ? "active" : "default"}
+                onPress={() => setSelectedFrequency("Monthly")}
+              />
+            </View>
+          </FullscreenTemplate>
+        );
+      case "enterAmount":
+        return (
+          <FullscreenTemplate
+            title="Auto stack bitcoin"
+            onLeftPress={handleBack}
+            scrollable={false}
+            navVariant="step"
           >
             <BtcAutoStackEnterAmount
-              frequency={frequency}
+              frequency={selectedFrequency}
               actionLabel="Continue"
               onActionPress={handleEnterAmountContinue}
             />
@@ -147,7 +194,7 @@ export default function BtcAutoStackFlow({
         return (
           <FullscreenTemplate
             title="Auto stack bitcoin"
-            onLeftPress={handleConfirmBack}
+            onLeftPress={handleBack}
             scrollable={false}
             navVariant="step"
             disableAnimation
@@ -182,7 +229,7 @@ export default function BtcAutoStackFlow({
         <View style={styles.successContent}>
           <CurrencyInput
             value={`$${numAmount.toFixed(2)}`}
-            topContextSlot={<TopContext variant="frequency" value={frequency} />}
+            topContextSlot={<TopContext variant="frequency" value={selectedFrequency} />}
             bottomContextSlot={
               <BottomContext variant="maxButton">
                 <Button
@@ -238,6 +285,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
+  },
+  frequencyContent: {
+    flex: 1,
+    padding: spacing["500"],
+    gap: spacing["300"],
   },
   successContent: {
     flex: 1,

@@ -6,7 +6,7 @@ interface IProps extends SvgProps {}
 export const ClockIcon = (props: IProps) => {
   const { color = colorMaps.face.primary, ...rest } = props;
   return (
-    <Svg width="16" height="16" fill="none" viewBox="0 0 16 16" {...rest}>
+    <Svg width="20" height="20" fill="none" viewBox="0 0 16 16" {...rest}>
       <G clipPath="url(#clock-clip)">
         <Path
           fill={color}
