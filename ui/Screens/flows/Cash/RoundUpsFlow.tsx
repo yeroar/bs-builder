@@ -5,7 +5,7 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import IntroTemplate from "../../../Templates/IntroTemplate";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
-import RemoveModalSlot from "../../../../components/Modals/minimodalslots/RemoveModalSlot";
+import RemoveModalSlot from "../../../Slots/Modals/RemoveModalSlot";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";

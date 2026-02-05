@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
-import { FoldText } from "../Primitives/FoldText";
+import { FoldText } from "../../Primitives/FoldText";
 import TopContext, { TopContextVariant } from "./TopContext";
 import BottomContext, { BottomContextVariant } from "./BottomContext";
 import { PmSelectorVariant } from "./PmSelector";
-import { colorMaps, spacing } from "../tokens";
+import { colorMaps, spacing } from "../../tokens";
 
 export interface CurrencyInputProps {
   value: string;

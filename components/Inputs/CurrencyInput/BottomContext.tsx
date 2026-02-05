@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Pressable, StyleSheet, ViewStyle } from "react-native";
-import { FoldText } from "../Primitives/FoldText";
+import { FoldText } from "../../Primitives/FoldText";
 import PmSelector, { PmSelectorVariant } from "./PmSelector";
-import { colorMaps, spacing, radius } from "../tokens";
+import { colorMaps, spacing, radius } from "../../tokens";
 
 export type BottomContextVariant = "maxButton" | "paymentMethod" | "addPaymentMethod" | "empty" | "none";
 

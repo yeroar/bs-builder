@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
-import BtcSendEnterAmount from "../../../Templates/EnterAmount/instances/BTC/BtcSendEnterAmount";
-import BtcSendConfirmation from "../../../Templates/TxConfirmation/instances/BTC/BtcSendConfirmation";
-import BtcSendSuccess from "../../../Templates/Success/instances/BTC/BtcSendSuccess";
+import BtcSendEnterAmount from "../../../Slots/BTC/BtcSendEnterAmount";
+import BtcSendConfirmation from "../../../Slots/BTC/BtcSendConfirmation";
+import BtcSendSuccess from "../../../Slots/BTC/BtcSendSuccess";
 import { spacing } from "../../../../components/tokens";
 
 type FlowStep = "enterAmount" | "confirm";

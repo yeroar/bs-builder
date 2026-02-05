@@ -1,11 +1,11 @@
 import React from "react";
 import { Pressable, View, StyleSheet, ViewStyle } from "react-native";
-import { FoldText } from "../Primitives/FoldText";
-import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
-import { PlusCircleIcon } from "../Icons/PlusCircleIcon";
-import { BankIcon } from "../Icons/BankIcon";
-import { IconContainer } from "../Primitives/IconContainer";
-import { colorMaps, spacing, radius } from "../tokens";
+import { FoldText } from "../../Primitives/FoldText";
+import { ChevronDownIcon } from "../../Icons/ChevronDownIcon";
+import { PlusCircleIcon } from "../../Icons/PlusCircleIcon";
+import { BankIcon } from "../../Icons/BankIcon";
+import { IconContainer } from "../../Primitives/IconContainer";
+import { colorMaps, spacing, radius } from "../../tokens";
 
 export type PmSelectorVariant = "null" | "bankAccount" | "cardAccount" | "foldAccount" | "bitcoinAccount";
 

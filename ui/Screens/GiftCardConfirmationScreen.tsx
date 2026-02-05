@@ -1,16 +1,16 @@
 import React, { useState, useRef } from "react";
 import { View, StyleSheet, ScrollView, Animated, Dimensions, Modal } from "react-native";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import GiftCardConfirmation from "../Templates/TxConfirmation/instances/GiftCard/GiftCardConfirmation";
+import GiftCardConfirmation from "../Slots/GiftCard/GiftCardConfirmation";
 import SendAsAGiftSlot from "../Slots/GiftCard/SendAsAGiftSlot";
-import GiftCardSuccess from "../Templates/Success/instances/GiftCard/GiftCardSuccess";
+import GiftCardSuccess from "../Slots/GiftCard/GiftCardSuccess";
 import ModalFooter from "../../components/Modals/ModalFooter";
 import MiniModal from "../../components/Modals/MiniModal";
 import Button from "../../components/Primitives/Buttons/Button/Button";
-import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Patterns/PaymentMethods/ChoosePaymentMethodFoldSlot";
+import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Slots/Shared/PaymentMethods/ChoosePaymentMethodFoldSlot";
 import { StarIcon } from "../../components/Icons/StarIcon";
 import FoldPressable from "../../components/Primitives/FoldPressable";
-import { PmSelectorVariant } from "../../components/CurrencyInput/PmSelector";
+import { PmSelectorVariant } from "../../components/Inputs/CurrencyInput/PmSelector";
 import { colorMaps, spacing } from "../../components/tokens";
 
 const screenHeight = Dimensions.get("window").height;

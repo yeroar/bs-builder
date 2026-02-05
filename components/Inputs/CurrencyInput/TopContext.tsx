@@ -1,8 +1,8 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
-import { FoldText } from "../Primitives/FoldText";
-import { CalendarIcon } from "../Icons/CalendarIcon";
-import { colorMaps, spacing } from "../tokens";
+import { FoldText } from "../../Primitives/FoldText";
+import { CalendarIcon } from "../../Icons/CalendarIcon";
+import { colorMaps, spacing } from "../../tokens";
 
 export type TopContextVariant = "btc" | "frequency" | "giftcard" | "empty";
 

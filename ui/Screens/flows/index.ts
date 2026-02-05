@@ -15,3 +15,6 @@ export {
   RecurringDepositFlow,
   RoundUpsFlow,
 } from "./Cash";
+
+// GiftCard Flows
+export { RedeemGiftCardFlow } from "./GiftCard";

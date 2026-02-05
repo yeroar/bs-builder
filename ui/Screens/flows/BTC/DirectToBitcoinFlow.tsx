@@ -6,7 +6,7 @@ import IntroTemplate from "../../../Templates/IntroTemplate";
 import EnterAmount from "../../../Templates/EnterAmount/EnterAmount";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
-import RemoveModalSlot from "../../../../components/Modals/minimodalslots/RemoveModalSlot";
+import RemoveModalSlot from "../../../Slots/Modals/RemoveModalSlot";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
@@ -14,7 +14,7 @@ import PrimaryHeader from "../../../../components/DataDisplay/Headers/PrimaryHea
 import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import Divider from "../../../../components/Primitives/Divider/Divider";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/CurrencyInput";
+import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import { Keypad } from "../../../../components/Keypad";
 import { FoldText } from "../../../../components/Primitives/FoldText";
 import { ClockIcon } from "../../../../components/Icons/ClockIcon";

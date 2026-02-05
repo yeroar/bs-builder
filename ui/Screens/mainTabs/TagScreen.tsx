@@ -9,8 +9,8 @@ import TagHomeSlot from "../../Slots/MainTabs/TagHomeSlot";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import RedeemBtcGiftCardSlot from "../../Slots/GiftCard/RedeemBtcGiftCardSlot";
-import RedeemBtcGiftCardConfirmationSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardConfirmationSlot";
-import RedeemBtcGiftCardSuccessSlot from "../../Templates/TxConfirmation/instances/GiftCard/RedeemBtcGiftCardSuccessSlot";
+import RedeemBtcGiftCardConfirmation from "../../Slots/GiftCard/RedeemBtcGiftCardConfirmation";
+import RedeemBtcGiftCardSuccess from "../../Slots/GiftCard/RedeemBtcGiftCardSuccess";
 
 type RedeemStep = "entry" | "confirmation" | "success";
 
@@ -107,13 +107,13 @@ export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onS
             />
           }
         >
-          <RedeemBtcGiftCardConfirmationSlot />
+          <RedeemBtcGiftCardConfirmation />
         </FullscreenTemplate>
       )}
 
       {/* Redeem BTC Gift Card Success */}
       {isRedeemModalVisible && redeemStep === "success" && (
-        <RedeemBtcGiftCardSuccessSlot onDone={handleRedeemDone} />
+        <RedeemBtcGiftCardSuccess onDone={handleRedeemDone} />
       )}
     </>
   );
