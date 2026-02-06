@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
+import SendBitcoinSlot from "../../../Slots/BTC/SendBitcoinSlot";
+import ScanSlot from "../../../Slots/BTC/ScanSlot";
 import BtcSendEnterAmount from "../../../Slots/BTC/BtcSendEnterAmount";
 import BtcSendConfirmation from "../../../Slots/BTC/BtcSendConfirmation";
 import BtcSendSuccess from "../../../Slots/BTC/BtcSendSuccess";
 import { spacing } from "../../../../components/tokens";
 
-type FlowStep = "enterAmount" | "confirm";
+type FlowStep = "walletSearch" | "scan" | "enterAmount" | "confirm";
 
 export interface BtcSendFlowProps {
   onComplete: () => void;
@@ -17,9 +19,11 @@ export interface BtcSendFlowProps {
 const BTC_PRICE_USD = 102500;
 
 export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
-  const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
+  const [flowStack, setFlowStack] = useState<FlowStep[]>(["walletSearch"]);
   const [satsAmount, setSatsAmount] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState("3NC53Da...9wff5iY");
 
   const formatUsdFromSats = (sats: number): string => {
     const usd = (sats / 100000000) * BTC_PRICE_USD;
@@ -27,12 +31,21 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
     return `~$${usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
+  const handleAddressSelect = (address: string) => {
+    setSelectedAddress(address);
+    setFlowStack(prev => [...prev, "enterAmount"]);
+  };
+
+  const handleScanPress = () => {
+    setFlowStack(prev => [...prev, "scan"]);
+  };
+
   const handleEnterAmountContinue = (sats: number) => {
     setSatsAmount(sats);
     setFlowStack(prev => [...prev, "confirm"]);
   };
 
-  const handleConfirmBack = () => {
+  const handleBack = () => {
     setFlowStack(prev => prev.slice(0, -1));
   };
 
@@ -62,13 +75,42 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
     const feeUsd = formatUsdFromSats(feeSats);
 
     switch (step) {
-      case "enterAmount":
+      case "walletSearch":
         return (
           <FullscreenTemplate
             title="Send bitcoin"
             onLeftPress={handleFlowClose}
             scrollable={false}
             navVariant="start"
+          >
+            <SendBitcoinSlot
+              searchValue={searchValue}
+              onSearchChange={setSearchValue}
+              onClearPress={() => setSearchValue("")}
+              onScanPress={handleScanPress}
+              onAddressSelect={handleAddressSelect}
+            />
+          </FullscreenTemplate>
+        );
+      case "scan":
+        return (
+          <FullscreenTemplate
+            title="Send bitcoin"
+            onLeftPress={handleBack}
+            scrollable={false}
+            navVariant="start"
+          >
+            <ScanSlot />
+          </FullscreenTemplate>
+        );
+      case "enterAmount":
+        return (
+          <FullscreenTemplate
+            title="Send bitcoin"
+            onLeftPress={handleBack}
+            scrollable={false}
+            navVariant="step"
+            disableAnimation
           >
             <BtcSendEnterAmount
               maxSats={7000000}
@@ -81,7 +123,7 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
         return (
           <FullscreenTemplate
             title="Send bitcoin"
-            onLeftPress={handleConfirmBack}
+            onLeftPress={handleBack}
             scrollable={false}
             navVariant="step"
             disableAnimation
@@ -89,7 +131,7 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
             <BtcSendConfirmation
               satsAmount={satsAmount}
               usdEquivalent={usdEquivalent}
-              bitcoinAddress="3NC53Da...9wff5iY"
+              bitcoinAddress={selectedAddress}
               feeSats={feeSats}
               feeUsd={feeUsd}
               estimatedTime="Arrives within 24hrs"

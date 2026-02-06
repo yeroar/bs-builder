@@ -11,12 +11,14 @@ import { BtcPrice, PriceChange } from "../../../components/Exchange";
 export interface ExchangeScreenProps {
   onTabPress?: (tab: any) => void;
   onHistoryPress?: () => void;
+  onBuyPress?: () => void;
+  onSellPress?: () => void;
   onMenuPress?: () => void;
 }
 
 import { ExchangeProvider } from "../../../components/Exchange/ExchangeContext";
 
-export default function ExchangeScreen({ onTabPress, onHistoryPress, onMenuPress }: ExchangeScreenProps) {
+export default function ExchangeScreen({ onTabPress, onHistoryPress, onBuyPress, onSellPress, onMenuPress }: ExchangeScreenProps) {
   return (
     <RootTemplate
       variant="root"
@@ -25,7 +27,7 @@ export default function ExchangeScreen({ onTabPress, onHistoryPress, onMenuPress
       leftIcon="menu"
       onLeftPress={onMenuPress}
       rightComponents={[
-        <FoldPressable key="clock" onPress={onHistoryPress}>
+        <FoldPressable key="clock" onPress={() => onHistoryPress?.()}>
           <ClockIcon width={24} height={24} color={colorMaps.face.primary} />
         </FoldPressable>,
         <FoldPressable key="bell" onPress={() => onTabPress("componentLibrary")}>
@@ -42,7 +44,7 @@ export default function ExchangeScreen({ onTabPress, onHistoryPress, onMenuPress
           <View style={styles.chartWrapper}>
             <PriceChartContainer />
           </View>
-          <ExchangeControl />
+          <ExchangeControl onBuy={onBuyPress} onSell={onSellPress} />
         </View>
       </ExchangeProvider>
     </RootTemplate>

@@ -9,6 +9,7 @@ import { FoldText } from "../../../components/Primitives/FoldText";
 import Divider from "../../../components/Primitives/Divider/Divider";
 import { GiftCardsTile } from "../../../components/DataDisplay/GiftCardsTile";
 import CategoryBoostsTile from "../../../components/DataDisplay/CategoryBoosts/CategoryBoostsTile";
+import Chip from "../../../components/Primitives/Chip/Chip";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 // Icons
@@ -26,13 +27,23 @@ export interface RoundUpsConfig {
   multiplier: string;
 }
 
+export interface RecurringDepositConfig {
+  title: string;
+  secondaryText: string;
+  status?: "active" | "paused";
+}
+
 export interface CashSlotProps {
   cashAmount?: string;
   onAddCashPress?: () => void;
+  onWithdrawPress?: () => void;
   onAuthorizedUsersPress?: () => void;
   onRoundUpsPress?: () => void;
   onDirectDepositPress?: () => void;
+  onRecurringDepositPress?: () => void;
   onSeeAllTransactionsPress?: () => void;
+  /** When provided, shows recurring deposit row below balance */
+  recurringDepositConfig?: RecurringDepositConfig;
   /** When provided, shows Round ups as active with this config */
   roundUpsConfig?: RoundUpsConfig;
   transactions?: Array<{
@@ -46,12 +57,15 @@ export interface CashSlotProps {
 }
 
 export default function CashSlot({
-  cashAmount = "$0",
+  cashAmount = "$4,900.00",
   onAddCashPress,
+  onWithdrawPress,
   onAuthorizedUsersPress,
   onRoundUpsPress,
   onDirectDepositPress,
+  onRecurringDepositPress,
   onSeeAllTransactionsPress,
+  recurringDepositConfig,
   transactions = [
     {
       title: "Wells Fargo ••• 0684",
@@ -91,9 +105,30 @@ export default function CashSlot({
         actionBar={
           <ActionBar>
             <Button label="Add cash" hierarchy="primary" size="sm" onPress={onAddCashPress} />
+            <Button label="Withdraw" hierarchy="secondary" size="sm" onPress={onWithdrawPress} />
           </ActionBar>
         }
       />
+
+      {recurringDepositConfig && (
+        <View style={styles.recurringDepositSection}>
+          <ListItem
+            variant="feature"
+            title={recurringDepositConfig.title}
+            secondaryText={recurringDepositConfig.secondaryText}
+            chip={recurringDepositConfig.status === "paused" ? <Chip label="Paused" type="accent" /> : undefined}
+            leadingSlot={
+              <IconContainer
+                variant="active"
+                size="lg"
+                icon={<CalendarIcon width={20} height={20} color={colorMaps.face.primary} />}
+              />
+            }
+            trailingSlot={<ChevronRightIcon width={20} height={20} color={colorMaps.face.tertiary} />}
+            onPress={onRecurringDepositPress}
+          />
+        </View>
+      )}
 
       <Divider />
 
@@ -343,6 +378,9 @@ const styles = StyleSheet.create({
   },
   sectionSubtitle: {
     color: colorMaps.face.tertiary,
+  },
+  recurringDepositSection: {
+    paddingHorizontal: spacing["500"],
   },
   listContainer: {
     gap: spacing["none"],

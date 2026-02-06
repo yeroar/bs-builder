@@ -4,7 +4,7 @@ import figma from "@figma/code-connect";
 
 figma.connect(
   MiniModal,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=32-14052",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=32-14052&m=dev",
   {
     props: {
       variant: figma.enum("variant", {

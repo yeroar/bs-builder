@@ -12,10 +12,20 @@ import SearchBar from "../../../components/Inputs/SearchBar/SearchBar";
 import DropDown from "../../../components/Selectors/DropDown/DropDown";
 import { colorMaps, spacing } from "../../../components/tokens";
 
+export interface GiftCardData {
+  id: string;
+  brand: string;
+  title: string;
+  cashback: string;
+  availability: string;
+  boosted?: boolean;
+  favorite?: boolean;
+}
+
 export interface TagHomeSlotProps {
   onRedeemPress?: () => void;
   onSearchGiftCards?: () => void;
-  onGiftCardPress?: (cardId: string) => void;
+  onGiftCardPress?: (card: GiftCardData) => void;
 }
 
 export default function TagHomeSlot({
@@ -33,6 +43,7 @@ export default function TagHomeSlot({
       title: "Walgreens",
       cashback: "Up to 2% sats back",
       availability: "Online and in-store",
+      boosted: true,
     },
     {
       id: "2",
@@ -40,6 +51,7 @@ export default function TagHomeSlot({
       title: "Wayfair",
       cashback: "Up to 3.5% sats back",
       availability: "Online only",
+      favorite: true,
     },
     {
       id: "3",
@@ -47,6 +59,7 @@ export default function TagHomeSlot({
       title: "White House Black Market",
       cashback: "Up to 5% sats back",
       availability: "Online and in-store",
+      boosted: true,
     },
     {
       id: "4",
@@ -149,6 +162,8 @@ export default function TagHomeSlot({
                 title={card.title}
                 secondaryText={card.cashback}
                 tertiaryText={card.availability}
+                boosted={card.boosted}
+                favorite={card.favorite}
                 leadingSlot={<IconContainer brand={card.brand} />}
                 trailingSlot={
                   <ChevronRightIcon
@@ -157,7 +172,7 @@ export default function TagHomeSlot({
                     color={colorMaps.face.tertiary}
                   />
                 }
-                onPress={() => onGiftCardPress?.(card.id)}
+                onPress={() => onGiftCardPress?.(card)}
               />
             ))}
           </View>

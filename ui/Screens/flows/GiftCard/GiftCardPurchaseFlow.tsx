@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { Modal } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import GCDetailSlot from "../../../Slots/GiftCard/GCDetailSlot";
+import GCDetailModal from "../../../../components/Modals/GCDetailModal";
 import GiftCardConfirmation from "../../../Slots/GiftCard/GiftCardConfirmation";
 import GiftCardSuccess from "../../../Slots/GiftCard/GiftCardSuccess";
 import FoldPressable from "../../../../components/Primitives/FoldPressable";
@@ -14,8 +15,8 @@ type FlowStep = "detail" | "confirmation" | "success";
 export interface SelectedCard {
   brand: string;
   title: string;
-  cashback: string;
-  availability: string;
+  logo: React.ReactNode;
+  offer: React.ReactNode;
 }
 
 export interface GiftCardPurchaseFlowProps {
@@ -32,16 +33,6 @@ export default function GiftCardPurchaseFlow({
   const [step, setStep] = useState<FlowStep>("detail");
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
 
-  const handleSelectAmount = (amount: number) => {
-    setSelectedAmount(amount);
-  };
-
-  const handleContinueToConfirmation = () => {
-    if (selectedAmount) {
-      setStep("confirmation");
-    }
-  };
-
   const handleBack = () => {
     setStep("detail");
   };
@@ -56,46 +47,24 @@ export default function GiftCardPurchaseFlow({
 
   if (step === "detail") {
     return (
-      <FullscreenTemplate
-        title={`${card.title} gift card`}
-        onLeftPress={onClose}
-        rightComponent={
-          <FoldPressable onPress={() => console.log("Favorite")}>
-            <StarIcon width={24} height={24} color={colorMaps.face.tertiary} />
-          </FoldPressable>
-        }
-        footer={
-          <ModalFooter
-            type="default"
-            primaryButton={
-              <Button
-                label="Continue"
-                hierarchy="primary"
-                size="md"
-                disabled={!selectedAmount}
-                onPress={handleContinueToConfirmation}
-              />
-            }
-            secondaryButton={
-              <Button
-                label={`Favorite ${card.title}`}
-                hierarchy="secondary"
-                size="md"
-                onPress={() => console.log("Favorite")}
-              />
-            }
-          />
-        }
+      <Modal
+        visible
+        transparent
+        animationType="none"
+        onRequestClose={onClose}
       >
-        <GCDetailSlot
-          brand={card.brand}
+        <GCDetailModal
+          logo={card.logo}
           title={`${card.title} gift card`}
-          satsBack={card.cashback}
-          availability={card.availability}
-          selectedAmount={selectedAmount}
-          onAmountSelect={handleSelectAmount}
+          offer={card.offer}
+          onClose={onClose}
+          onContinue={(amount) => {
+            setSelectedAmount(amount);
+            setStep("confirmation");
+          }}
+          onFavorite={() => console.log("Favorite")}
         />
-      </FullscreenTemplate>
+      </Modal>
     );
   }
 

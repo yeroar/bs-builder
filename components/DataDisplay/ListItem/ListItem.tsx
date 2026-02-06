@@ -85,7 +85,7 @@ export default function ListItem({
           <View style={styles.content}>
             {/* Left Column */}
             <View style={styles.leftColumn}>
-              {/* Main row with title and chip */}
+              {/* Main row with title and chips */}
               <View style={styles.titleRow}>
                 <FoldText
                   type="body-md-bold"

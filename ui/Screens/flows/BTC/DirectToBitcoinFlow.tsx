@@ -10,20 +10,16 @@ import RemoveModalSlot from "../../../Slots/Modals/RemoveModalSlot";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
-import PrimaryHeader from "../../../../components/DataDisplay/Headers/PrimaryHeader";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import Divider from "../../../../components/Primitives/Divider/Divider";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import { Keypad } from "../../../../components/Keypad";
-import { FoldText } from "../../../../components/Primitives/FoldText";
 import { ClockIcon } from "../../../../components/Icons/ClockIcon";
 import { CalendarIcon } from "../../../../components/Icons/CalendarIcon";
 import { RocketIcon } from "../../../../components/Icons/RocketIcon";
 import DirectToBitcoinIcon from "../../../../components/Icons/DirectToBitcoinIcon";
 import AutomationSuccess from "../../../Templates/Success/AutomationSuccess";
 import DirectToBitcoinSlot from "../../../Slots/BTC/DirectToBitcoinSlot";
-import { colorMaps, spacing } from "../../../../components/tokens";
+import DirectToBitcoinConfirmSlot from "../../../Slots/BTC/DirectToBitcoinConfirmSlot";
+import { spacing } from "../../../../components/tokens";
 
 type FlowStep = "intro" | "configure" | "enterCustom" | "confirm";
 
@@ -278,24 +274,10 @@ export default function DirectToBitcoinFlow({
               />
             }
           >
-            <View style={styles.confirmContent}>
-              <PrimaryHeader
-                header={`Invest ${selectedPercentage}% of direct deposits in bitcoin`}
-                body="Total amount will vary based on the price of bitcoin and the amount of your paycheck deposited to Fold."
-                hasDisclaimer={false}
-              />
-              <View style={styles.receiptContainer}>
-                <ReceiptDetails>
-                  <ListItemReceipt label="Direct to bitcoin" value={`${selectedPercentage}% per deposit`} />
-                  <ListItemReceipt label="Direct to cash" value={`${cashPercentage}% per deposit`} />
-                  <ListItemReceipt label="Processing fees" value="4%" />
-                </ReceiptDetails>
-                <Divider />
-                <FoldText type="body-sm" style={styles.receiptDisclaimer}>
-                  The minimum bitcoin purchase is $10. If your chosen percentage results in less than $10, the deposit will bypass the Direct to Bitcoin automation and will instead be added to your cash balance.
-                </FoldText>
-              </View>
-            </View>
+            <DirectToBitcoinConfirmSlot
+              bitcoinPercentage={selectedPercentage}
+              cashPercentage={cashPercentage}
+            />
           </FullscreenTemplate>
         );
       default:
@@ -402,17 +384,5 @@ const styles = StyleSheet.create({
   customContent: {
     flex: 1,
     paddingHorizontal: spacing["400"],
-  },
-  confirmContent: {
-    flex: 1,
-    backgroundColor: colorMaps.layer.background,
-  },
-  receiptContainer: {
-    paddingHorizontal: spacing["500"],
-    paddingTop: spacing["400"],
-    gap: spacing["600"],
-  },
-  receiptDisclaimer: {
-    color: colorMaps.face.tertiary,
   },
 });

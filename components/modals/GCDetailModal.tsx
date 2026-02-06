@@ -8,10 +8,9 @@ import { spacing } from "../tokens";
 
 export interface GCDetailModalProps {
   visible?: boolean;
-  brand: string;
+  logo: React.ReactNode;
   title: string;
-  satsBack?: string;
-  availability?: string;
+  offer: React.ReactNode;
   amounts?: number[];
   onClose?: () => void;
   onContinue?: (amount: number) => void;
@@ -20,10 +19,9 @@ export interface GCDetailModalProps {
 
 export default function GCDetailModal({
   visible = true,
-  brand,
+  logo,
   title,
-  satsBack,
-  availability,
+  offer,
   amounts,
   onClose,
   onContinue,
@@ -68,10 +66,9 @@ export default function GCDetailModal({
     >
       <View style={styles.content}>
         <GCDetailSlot
-          brand={brand}
+          logo={logo}
           title={title}
-          satsBack={satsBack}
-          availability={availability}
+          offer={offer}
           amounts={amounts}
           selectedAmount={selectedAmount}
           onAmountSelect={setSelectedAmount}

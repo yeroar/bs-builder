@@ -6,7 +6,7 @@ figma.connect(
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=157-19771",
   {
     props: {
-      percentage: figma.enum("percentage", {
+      percentage: figma.enum("state", {
         "0%": 0,
         "25%": 25,
         "50%": 50,
@@ -16,9 +16,9 @@ figma.connect(
     },
     example: (props) => (
       <Ring
-        percentage={props.percentage ?? 25}
+        percentage={props.percentage}
         size={280}
-        onChange={() => {}}
+        onChange={() => { }}
       />
     ),
   }

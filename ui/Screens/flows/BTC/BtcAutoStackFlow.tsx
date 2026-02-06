@@ -13,7 +13,7 @@ import RemoveModalSlot from "../../../Slots/Modals/RemoveModalSlot";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
 import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
-import TileSelector from "../../../../components/Selectors/SelectionRow/TileSelector";
+import FrequencyAutoStackSlot from "../../../Slots/BTC/FrequencyAutoStackSlot";
 import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import Divider from "../../../../components/Primitives/Divider/Divider";
@@ -175,26 +175,10 @@ export default function BtcAutoStackFlow({
               />
             }
           >
-            <View style={styles.frequencyContent}>
-              <TileSelector
-                label="Daily"
-                variable=""
-                state={selectedFrequency === "Daily" ? "active" : "default"}
-                onPress={() => setSelectedFrequency("Daily")}
-              />
-              <TileSelector
-                label="Weekly"
-                variable=""
-                state={selectedFrequency === "Weekly" ? "active" : "default"}
-                onPress={() => setSelectedFrequency("Weekly")}
-              />
-              <TileSelector
-                label="Monthly"
-                variable=""
-                state={selectedFrequency === "Monthly" ? "active" : "default"}
-                onPress={() => setSelectedFrequency("Monthly")}
-              />
-            </View>
+            <FrequencyAutoStackSlot
+              selectedFrequency={selectedFrequency}
+              onFrequencySelect={setSelectedFrequency}
+            />
           </FullscreenTemplate>
         );
       case "enterAmount":
@@ -397,11 +381,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  frequencyContent: {
-    flex: 1,
-    padding: spacing["500"],
-    gap: spacing["300"],
   },
   successContent: {
     flex: 1,

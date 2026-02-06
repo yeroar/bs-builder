@@ -124,15 +124,25 @@ export default function Button({
     }).start();
   };
 
+  // Separate layout props for the wrapper vs visual props for the pressable.
+  // width/flex/alignSelf must go on the Animated.View wrapper because
+  // the Pressable's "100%" is relative to its parent (Animated.View).
+  const { width: styleWidth, flex: styleFlex, alignSelf: styleAlignSelf, ...visualStyle } = (style || {}) as ViewStyle;
+
+  const wrapperStyle: ViewStyle = { transform: [{ scale: scaleAnim }] };
+  if (styleWidth !== undefined) wrapperStyle.width = styleWidth;
+  if (styleFlex !== undefined) wrapperStyle.flex = styleFlex;
+  if (styleAlignSelf !== undefined) wrapperStyle.alignSelf = styleAlignSelf;
+
   const getStyle = ({ pressed }: PressableStateCallbackType): ViewStyle[] => [
     styles.container,
     containerStyle,
     { backgroundColor: getBackgroundColor(hierarchy, pressed, disabled) },
-    style as ViewStyle,
+    ...(style ? [visualStyle] : []),
   ];
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View style={wrapperStyle}>
       <Pressable
         style={getStyle}
         onPress={onPress}

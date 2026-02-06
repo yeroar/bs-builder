@@ -18,7 +18,7 @@ figma.connect(
       <ListItem
         variant="receipt"
         leadingSlot={props.leadingSlot}
-        title="Title" // Unified ListItem uses title/secondaryText
+        title="Title"
         secondaryText="Description"
         rightTitle="Amount"
         rightSecondaryText="Status"

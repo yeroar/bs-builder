@@ -3,21 +3,19 @@ import GCDetailSlot from "./GCDetailSlot";
 
 figma.connect(
   GCDetailSlot,
-  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=139-22462",
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=139-22462&t=oAFcEQeQzXtt4Itn-4",
   {
     props: {
-      brand: figma.string("brand"),
-      title: figma.textContent("Header"),
-      satsBack: figma.textContent("satsBack"),
-      availability: figma.textContent("availability"),
+      logo: figma.children("iconContainerBrand"),
+      title: figma.textContent("header"),
+      offer: figma.children("*"),
     },
     example: (props) => (
       <GCDetailSlot
-        brand={props.brand ?? "uber"}
-        title={props.title ?? "Uber gift card"}
-        satsBack={props.satsBack}
-        availability={props.availability}
-        onAmountSelect={() => {}}
+        logo={props.logo}
+        title={props.title}
+        offer={props.offer}
+        onAmountSelect={() => { }}
       />
     ),
   }

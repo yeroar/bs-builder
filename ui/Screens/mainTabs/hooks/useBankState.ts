@@ -1,15 +1,16 @@
 import { useState, useCallback } from "react";
 import { DirectToBitcoinConfig, AutoStackConfig } from "../../../Slots/BTC/BtcSlot";
-import { RoundUpsConfig } from "../../../Slots/Cash/CashSlot";
+import { RoundUpsConfig, RecurringDepositConfig } from "../../../Slots/Cash/CashSlot";
 import { Multiplier } from "../../../Slots/Cash/RoundUpsSlot";
 
-export type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit" | "directToBitcoin" | "roundUps" | "redeem";
+export type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit" | "withdraw" | "directToBitcoin" | "roundUps" | "redeem" | "authorizedUser" | "recurringDeposit" | "manageRecurringDeposit";
 
 export interface BankState {
   // Automation configs
   directToBitcoinConfig: DirectToBitcoinConfig | undefined;
   roundUpsConfig: RoundUpsConfig | undefined;
   autoStackConfig: AutoStackConfig | undefined;
+  recurringDepositConfig: RecurringDepositConfig | undefined;
 
   // Flow state
   activeFlow: FlowType | null;
@@ -44,6 +45,7 @@ export interface BankActions {
   handleAutoStackComplete: (config: AutoStackConfig) => void;
   handleDirectToBitcoinComplete: (percentage: number) => void;
   handleRoundUpsComplete: (multiplier: string) => void;
+  handleRecurringDepositComplete: () => void;
   handleTurnOffAutoStack: () => void;
   handleTurnOffDirectToBitcoin: () => void;
   handleTurnOffRoundUps: () => void;
@@ -54,6 +56,7 @@ export default function useBankState(): [BankState, BankActions] {
   const [directToBitcoinConfig, setDirectToBitcoinConfig] = useState<DirectToBitcoinConfig | undefined>();
   const [roundUpsConfig, setRoundUpsConfig] = useState<RoundUpsConfig | undefined>();
   const [autoStackConfig, setAutoStackConfig] = useState<AutoStackConfig | undefined>();
+  const [recurringDepositConfig, setRecurringDepositConfig] = useState<RecurringDepositConfig | undefined>();
 
   // Flow state
   const [activeFlow, setActiveFlow] = useState<FlowType | null>(null);
@@ -80,9 +83,9 @@ export default function useBankState(): [BankState, BankActions] {
 
   // Flow completion handlers
   const handleFlowComplete = useCallback(() => {
-    const wasDepositFlow = activeFlow === "deposit";
+    const returnToCash = activeFlow === "deposit" || activeFlow === "withdraw" || activeFlow === "authorizedUser" || activeFlow === "recurringDeposit" || activeFlow === "manageRecurringDeposit";
     setActiveFlow(null);
-    if (wasDepositFlow) {
+    if (returnToCash) {
       setShowCashScreen(true);
     } else {
       setShowBtcScreen(true);
@@ -103,6 +106,12 @@ export default function useBankState(): [BankState, BankActions] {
 
   const handleRoundUpsComplete = useCallback((multiplier: string) => {
     setRoundUpsConfig({ multiplier });
+    setActiveFlow(null);
+    setShowCashScreen(true);
+  }, []);
+
+  const handleRecurringDepositComplete = useCallback(() => {
+    setRecurringDepositConfig({ title: "Weekly deposit", secondaryText: "$100 every week" });
     setActiveFlow(null);
     setShowCashScreen(true);
   }, []);
@@ -129,6 +138,7 @@ export default function useBankState(): [BankState, BankActions] {
     directToBitcoinConfig,
     roundUpsConfig,
     autoStackConfig,
+    recurringDepositConfig,
     activeFlow,
     pendingBuyAmount,
     showBtcScreen,
@@ -150,6 +160,7 @@ export default function useBankState(): [BankState, BankActions] {
     handleAutoStackComplete,
     handleDirectToBitcoinComplete,
     handleRoundUpsComplete,
+    handleRecurringDepositComplete,
     handleTurnOffAutoStack,
     handleTurnOffDirectToBitcoin,
     handleTurnOffRoundUps,

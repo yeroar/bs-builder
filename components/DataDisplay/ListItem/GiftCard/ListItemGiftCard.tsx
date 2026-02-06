@@ -6,6 +6,7 @@ import {
   Pressable,
 } from "react-native";
 import { FoldText } from "../../../Primitives/FoldText";
+import Chip from "../../../Primitives/Chip/Chip";
 import { colorMaps, spacing } from "../../../tokens";
 
 export interface ListItemGiftCardProps {
@@ -15,6 +16,8 @@ export interface ListItemGiftCardProps {
   leadingSlot?: React.ReactNode;
   trailingSlot?: React.ReactNode;
   chip?: React.ReactNode;
+  boosted?: boolean;
+  favorite?: boolean;
   disabled?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
@@ -28,6 +31,8 @@ export default function ListItemGiftCard({
   leadingSlot,
   trailingSlot,
   chip,
+  boosted,
+  favorite,
   disabled = false,
   onPress,
   style,
@@ -45,6 +50,8 @@ export default function ListItemGiftCard({
               {title}
             </FoldText>
             {chip && <View style={styles.chipContainer}>{chip}</View>}
+            {boosted && <Chip label="Boosted" type="accent" />}
+            {favorite && <Chip label="Favorite" type="primary" />}
           </View>
 
           {/* Secondary text (cashback in accent blue) */}

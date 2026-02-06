@@ -35,7 +35,7 @@ figma.connect(
       }),
 
       disclaimer: figma.boolean("hasDisclaimer", {
-        true: figma.textContent("Disclaimer"),
+        true: figma.string("disclaimer"),
         false: undefined,
       }),
     },

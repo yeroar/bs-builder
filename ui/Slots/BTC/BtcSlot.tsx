@@ -6,6 +6,7 @@ import ListItem from "../../../components/DataDisplay/ListItem/ListItem";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { IconContainer } from "../../../components/Primitives/IconContainer";
 import { FoldText } from "../../../components/Primitives/FoldText";
+import IconOnly from "../../../components/Primitives/Buttons/Button/IconOnly";
 import ProgressVisualization from "../../../components/dataViz/ProgressVisualization";
 import Divider from "../../../components/Primitives/Divider/Divider";
 import { colorMaps, spacing } from "../../../components/tokens";
@@ -128,7 +129,7 @@ export default function BtcSlot({
           <Button label="Sell" hierarchy="primary" size="sm" onPress={onSellPress} />
         }
         tertiaryButton={
-          <Button label="Send" hierarchy="primary" size="sm" onPress={onSendPress} />
+          <IconOnly hierarchy="primary" size="sm" onPress={onSendPress} />
         }
       />
       <Divider />
@@ -137,8 +138,9 @@ export default function BtcSlot({
       <ProductSurfaceSecondary
         label="Rewards"
         amount={rewardsAmount}
+        hasTitleIcon
         onPress={onRewardsPress}
-        dataViz={<ProgressVisualization progress={50} leftText={rewardsSats} />}
+        dataViz={<ProgressVisualization leftText={rewardsSats}><></></ProgressVisualization>}
       />
 
       <Divider />
@@ -256,7 +258,5 @@ const styles = StyleSheet.create({
   },
   seeAllContainer: {
     padding: spacing["500"],
-    alignItems: "center",
-    width: "100%",
   },
 });

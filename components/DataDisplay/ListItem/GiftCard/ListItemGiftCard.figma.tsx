@@ -1,7 +1,5 @@
 import React from "react"
 import ListItemGiftCard from "./ListItemGiftCard"
-import IconContainer from "../../../Primitives/IconContainer/IconContainer"
-import { ChevronRightIcon } from "../../../Icons/ChevronRightIcon"
 import figma from "@figma/code-connect"
 
 figma.connect(
@@ -14,14 +12,18 @@ figma.connect(
       tertiaryText: figma.string("tertiaryText"),
       leadingSlot: figma.instance("leadingSlot") as unknown as React.ReactNode,
       trailingSlot: figma.instance("trailingSlot") as unknown as React.ReactNode,
+      boosted: figma.boolean("isBoosted"),
+      favorite: figma.boolean("Favorite"),
     },
-    example: ({ title, secondaryText, tertiaryText, leadingSlot, trailingSlot }) => (
+    example: (props) => (
       <ListItemGiftCard
-        title={title}
-        secondaryText={secondaryText}
-        tertiaryText={tertiaryText}
-        leadingSlot={leadingSlot}
-        trailingSlot={trailingSlot}
+        title={props.title}
+        secondaryText={props.secondaryText}
+        tertiaryText={props.tertiaryText}
+        leadingSlot={props.leadingSlot}
+        trailingSlot={props.trailingSlot}
+        boosted={props.boosted}
+        favorite={props.favorite}
       />
     ),
   }

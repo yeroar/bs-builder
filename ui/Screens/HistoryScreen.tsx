@@ -1,19 +1,20 @@
 import React from "react";
 import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import TransactionList, { TransactionData } from "../../components/Transactions/TransactionList";
+import TransactionsSlot, { TransactionCategory } from "../Slots/Transactions/TransactionsSlot";
 
 interface HistoryScreenProps {
   onBack: () => void;
-  onTransactionPress?: (transaction: TransactionData) => void;
+  defaultCategory?: TransactionCategory;
 }
 
-export default function HistoryScreen({ onBack, onTransactionPress }: HistoryScreenProps) {
+export default function HistoryScreen({ onBack, defaultCategory }: HistoryScreenProps) {
   return (
     <FullscreenTemplate
       leftIcon="back"
       onLeftPress={onBack}
+      scrollable
     >
-      <TransactionList onTransactionPress={onTransactionPress} />
+      <TransactionsSlot defaultCategory={defaultCategory} />
     </FullscreenTemplate>
   );
 }

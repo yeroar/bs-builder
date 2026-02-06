@@ -13,10 +13,11 @@ type DepositType = "instant" | "oneTime" | "recurring" | null;
 
 export interface DepositFlowProps {
   onComplete: () => void;
+  onRecurringDepositComplete?: () => void;
   onClose: () => void;
 }
 
-export default function DepositFlow({ onComplete, onClose }: DepositFlowProps) {
+export default function DepositFlow({ onComplete, onRecurringDepositComplete, onClose }: DepositFlowProps) {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [activeDepositType, setActiveDepositType] = useState<DepositType>(null);
 
@@ -73,7 +74,14 @@ export default function DepositFlow({ onComplete, onClose }: DepositFlowProps) {
     return (
       <RecurringDepositFlow
         frequency="Weekly"
-        onComplete={handleSubFlowComplete}
+        onComplete={() => {
+          setActiveDepositType(null);
+          if (onRecurringDepositComplete) {
+            onRecurringDepositComplete();
+          } else {
+            onComplete();
+          }
+        }}
         onClose={handleSubFlowClose}
       />
     );

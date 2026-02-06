@@ -1,20 +1,14 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import PrimaryHeader from "../../../components/DataDisplay/Headers/PrimaryHeader";
-import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
-import ValidationGroup from "../../../components/Primitives/ValidationItems/ValidationGroup";
-import Validation from "../../../components/Primitives/ValidationItems/Validation";
-import { RocketIcon } from "../../../components/Icons/RocketIcon";
-import { GlobeIcon } from "../../../components/Icons/GlobeIcon";
 import Divider from "../../../components/Primitives/Divider/Divider";
 import QuickBuyInput from "../../../components/Inputs/QuickBuyInput/QuickBuyInput";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export interface GCDetailSlotProps {
-  brand: string;
+  logo: React.ReactNode;
   title: string;
-  satsBack?: string;
-  availability?: string;
+  offer: React.ReactNode;
   amounts?: number[];
   selectedAmount?: number | null;
   onAmountSelect?: (amount: number) => void;
@@ -23,10 +17,9 @@ export interface GCDetailSlotProps {
 const DEFAULT_AMOUNTS = [10, 20, 250, 500];
 
 export default function GCDetailSlot({
-  brand,
+  logo,
   title,
-  satsBack = "Up to 5% sats back",
-  availability = "Online and in-store",
+  offer,
   amounts = DEFAULT_AMOUNTS,
   selectedAmount: controlledSelectedAmount,
   onAmountSelect,
@@ -44,26 +37,12 @@ export default function GCDetailSlot({
     <View style={styles.container}>
       {/* Header Section */}
       <PrimaryHeader
-        iconSlot={<IconContainer brand={brand} size="lg" />}
+        iconSlot={logo}
         header={title}
         hasBodyText={false}
         hasDisclaimer={false}
         noPaddings
-        validationChildren={
-          <ValidationGroup>
-            <Validation
-              label={satsBack}
-              type="success"
-              leadingIcon={<RocketIcon width={16} height={16} color={colorMaps.face.accentBold} />}
-              labelColor={colorMaps.face.accentBold}
-            />
-            <Validation
-              label={availability}
-              type="success"
-              leadingIcon={<GlobeIcon width={16} height={16} color={colorMaps.face.primary} />}
-            />
-          </ValidationGroup>
-        }
+        validationChildren={offer}
       />
 
       <Divider />

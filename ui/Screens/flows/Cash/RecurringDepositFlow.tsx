@@ -4,7 +4,9 @@ import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import RecurringDepositEnterAmount from "../../../Slots/Cash/RecurringDepositEnterAmount";
 import RecurringDepositConfirmation from "../../../Slots/Cash/RecurringDepositConfirmation";
+import RecurringDepositDetailsSlot from "../../../Slots/Cash/RecurringDepositDetailsSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
+import Divider from "../../../../components/Primitives/Divider/Divider";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
@@ -12,26 +14,36 @@ import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBa
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { spacing } from "../../../../components/tokens";
 
-type FlowStep = "enterAmount" | "confirm";
+type FlowStep = "enterAmount" | "confirm" | "details";
 
 export interface RecurringDepositFlowProps {
+  /** "create" opens bank modal to schedule new; "manage" opens detail view */
+  mode?: "create" | "manage";
   frequency?: string;
+  /** Amount for manage mode */
+  amount?: string;
+  /** Initial paused state for manage mode */
+  initialPaused?: boolean;
   onComplete: () => void;
   onClose: () => void;
 }
 
 export default function RecurringDepositFlow({
+  mode = "create",
   frequency = "Weekly",
+  amount = "100",
+  initialPaused = false,
   onComplete,
   onClose
 }: RecurringDepositFlowProps) {
   // Modal state
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(mode === "create");
 
   // Flow state
-  const [flowStack, setFlowStack] = useState<FlowStep[]>([]);
-  const [flowAmount, setFlowAmount] = useState("0");
+  const [flowStack, setFlowStack] = useState<FlowStep[]>(mode === "manage" ? ["details"] : []);
+  const [flowAmount, setFlowAmount] = useState(mode === "manage" ? amount : "0");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [depositPaused, setDepositPaused] = useState(initialPaused);
 
   // Payment method state
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
@@ -113,6 +125,16 @@ export default function RecurringDepositFlow({
     setIsModalVisible(true);
   };
 
+  // Detail screen handlers
+  const handleTogglePause = () => {
+    setDepositPaused(prev => !prev);
+  };
+
+  const handleRemoveDeposit = () => {
+    setFlowStack([]);
+    onComplete();
+  };
+
   const renderScreen = (step: string) => {
     const numAmount = parseFloat(flowAmount) || 0;
 
@@ -155,6 +177,56 @@ export default function RecurringDepositFlow({
             />
           </FullscreenTemplate>
         );
+      case "details": {
+        const detailAmount = parseFloat(flowAmount) || 100;
+        return (
+          <FullscreenTemplate
+            title="Scheduled deposit"
+            onLeftPress={() => setFlowStack([])}
+            scrollable={false}
+            navVariant="start"
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label={depositPaused ? "Resume" : "Pause"}
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleTogglePause}
+                  />
+                }
+                secondaryButton={
+                  <Button
+                    label="Remove"
+                    hierarchy="tertiary"
+                    size="md"
+                    onPress={handleRemoveDeposit}
+                  />
+                }
+              />
+            }
+          >
+            <View style={styles.detailContent}>
+              <CurrencyInput
+                value={`$${detailAmount.toFixed(0)}`}
+                topContextSlot={<TopContext variant="frequency" value={frequency} />}
+                bottomContextSlot={<BottomContext variant="empty" />}
+              />
+              <View style={styles.detailReceipt}>
+                <Divider />
+                <RecurringDepositDetailsSlot
+                  state={depositPaused ? "paused" : "active"}
+                  frequency={`${frequency} on ${getDayOfWeek()}`}
+                  started={getStartingDate()}
+                  bankLabel={selectedLabel || "bankAccount 1234"}
+                  onBankPress={handleOpenPaymentModal}
+                />
+              </View>
+            </View>
+          </FullscreenTemplate>
+        );
+      }
       default:
         return null;
     }
@@ -272,5 +344,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     paddingTop: spacing["400"],
+  },
+  detailContent: {
+    flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: spacing["400"],
+  },
+  detailReceipt: {
+    paddingHorizontal: spacing["500"],
+    paddingTop: spacing["600"],
   },
 });

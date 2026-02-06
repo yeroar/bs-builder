@@ -1,0 +1,35 @@
+import React from "react";
+import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
+import AuthUserNameSlot, { AuthUserNameFormData } from "../../../../Slots/AuthorizedUser/AuthUserNameSlot";
+import ModalFooter from "../../../../../components/Modals/ModalFooter";
+import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+
+interface AuthUserNameScreenProps {
+  formData: AuthUserNameFormData;
+  onChangeField: (field: keyof AuthUserNameFormData, value: string) => void;
+  onContinue: () => void;
+  onBack: () => void;
+}
+
+export default function AuthUserNameScreen({ formData, onChangeField, onContinue, onBack }: AuthUserNameScreenProps) {
+  const isValid = formData.firstName.trim() !== "" && formData.lastName.trim() !== "";
+
+  return (
+    <FullscreenTemplate
+      onLeftPress={onBack}
+      scrollable
+      navVariant="step"
+      disableAnimation
+      footer={
+        <ModalFooter
+          type="default"
+          primaryButton={
+            <Button label="Continue" hierarchy="primary" size="md" disabled={!isValid} onPress={onContinue} />
+          }
+        />
+      }
+    >
+      <AuthUserNameSlot formData={formData} onChangeField={onChangeField} />
+    </FullscreenTemplate>
+  );
+}
