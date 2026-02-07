@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, forwardRef, useImperativeHandle } from "react";
-import { View, StyleSheet, ScrollView, Animated, Dimensions } from "react-native";
+import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { View, StyleSheet, ScrollView, Animated, Dimensions, Keyboard, Platform } from "react-native";
 import { colorMaps, spacing } from "../../components/tokens";
 import FoldPageViewHeader from "../../components/Navigation/TopNav/FoldPageViewHeader";
 
@@ -37,6 +37,8 @@ interface FullscreenTemplateProps {
   disableEntranceAnimation?: boolean;
   /** Disable slide animation for "start" variant (both entrance and exit) */
   disableAnimation?: boolean;
+  /** When true, footer moves inside ScrollView and keyboard auto-scrolls to focused input */
+  keyboardAware?: boolean;
 }
 
 const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateProps>(({
@@ -58,10 +60,41 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
   enterAnimation,
   disableEntranceAnimation = false,
   disableAnimation = false,
+  keyboardAware = false,
 }, ref) => {
   const ContentWrapper = scrollable ? ScrollView : View;
   const isYellow = variant === "yellow";
   const headerVariant = isYellow ? "fullscreen" : variant;
+
+  // Keyboard height tracking for keyboardAware mode
+  const keyboardAnim = useRef(new Animated.Value(0)).current;
+  const keyboardScrollRef = useRef<ScrollView>(null);
+  const keyboardHeightRef = useRef(0);
+  useEffect(() => {
+    if (!keyboardAware) return;
+    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+    const showSub = Keyboard.addListener(showEvent, (e) => {
+      keyboardHeightRef.current = e.endCoordinates.height;
+      Animated.timing(keyboardAnim, {
+        toValue: e.endCoordinates.height,
+        duration: e.duration || 250,
+        useNativeDriver: false,
+      }).start(() => {
+        // After layout settles, scroll focused input into view
+        keyboardScrollRef.current?.scrollToEnd({ animated: true });
+      });
+    });
+    const hideSub = Keyboard.addListener(hideEvent, (e) => {
+      keyboardHeightRef.current = 0;
+      Animated.timing(keyboardAnim, {
+        toValue: 0,
+        duration: e.duration || 250,
+        useNativeDriver: false,
+      }).start();
+    });
+    return () => { showSub.remove(); hideSub.remove(); };
+  }, [keyboardAware]);
 
   // Determine left icon based on navVariant or explicit leftIcon
   const resolvedLeftIcon = leftIcon ?? (navVariant === "step" ? "chevron-left" : "x");
@@ -151,17 +184,35 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
         step={step}
       />
 
-      {/* Content Slot */}
-      <ContentWrapper
-        style={styles.content}
-        contentContainerStyle={scrollable ? styles.scrollContent : undefined}
-        showsVerticalScrollIndicator={false}
-      >
-        {children}
-      </ContentWrapper>
+      {keyboardAware && scrollable ? (
+        /* Keyboard-aware mode: animated paddingBottom = keyboard height
+           pushes footer above keyboard, ScrollView fills remaining space */
+        <Animated.View style={[styles.content, { paddingBottom: keyboardAnim }]}>
+          <ScrollView
+            ref={keyboardScrollRef}
+            style={styles.content}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {children}
+          </ScrollView>
+          {footer}
+        </Animated.View>
+      ) : (
+        <>
+          {/* Content Slot */}
+          <ContentWrapper
+            style={styles.content}
+            contentContainerStyle={scrollable ? styles.scrollContent : undefined}
+            showsVerticalScrollIndicator={false}
+          >
+            {children}
+          </ContentWrapper>
 
-      {/* Footer */}
-      {footer}
+          {/* Footer */}
+          {footer}
+        </>
+      )}
     </View>
   );
 

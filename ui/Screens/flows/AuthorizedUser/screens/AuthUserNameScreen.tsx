@@ -20,9 +20,11 @@ export default function AuthUserNameScreen({ formData, onChangeField, onContinue
       scrollable
       navVariant="step"
       disableAnimation
+      keyboardAware
       footer={
         <ModalFooter
           type="default"
+          modalVariant="keyboard"
           primaryButton={
             <Button label="Continue" hierarchy="primary" size="md" disabled={!isValid} onPress={onContinue} />
           }
