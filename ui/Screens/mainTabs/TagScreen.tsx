@@ -7,11 +7,7 @@ import { colorMaps } from "../../../components/tokens";
 import TagHomeSlot, { GiftCardData } from "../../Slots/MainTabs/TagHomeSlot";
 import { RedeemGiftCardFlow } from "../flows";
 import GiftCardPurchaseFlow, { SelectedCard } from "../flows/GiftCard/GiftCardPurchaseFlow";
-import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
-import ValidationGroup from "../../../components/Primitives/ValidationItems/ValidationGroup";
-import Validation from "../../../components/Primitives/ValidationItems/Validation";
-import { RocketIcon } from "../../../components/Icons/RocketIcon";
-import { GlobeIcon } from "../../../components/Icons/GlobeIcon";
+import { buildSelectedCard } from "../flows/GiftCard/buildSelectedCard";
 
 interface TagScreenProps {
   onTabPress: (tab: "left" | "center" | "right" | "notifications" | "componentLibrary") => void;
@@ -28,26 +24,7 @@ export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onS
   const handleCloseRedeemFlow = () => setShowRedeemFlow(false);
 
   const handleGiftCardPress = (card: GiftCardData) => {
-    setSelectedCard({
-      brand: card.brand,
-      title: card.title,
-      logo: <IconContainer brand={card.brand} size="lg" />,
-      offer: (
-        <ValidationGroup>
-          <Validation
-            label={card.cashback}
-            type="success"
-            leadingIcon={<RocketIcon width={16} height={16} color={colorMaps.face.accentBold} />}
-            labelColor={colorMaps.face.accentBold}
-          />
-          <Validation
-            label={card.availability}
-            type="success"
-            leadingIcon={<GlobeIcon width={16} height={16} color={colorMaps.face.primary} />}
-          />
-        </ValidationGroup>
-      ),
-    });
+    setSelectedCard(buildSelectedCard(card));
   };
 
   return (

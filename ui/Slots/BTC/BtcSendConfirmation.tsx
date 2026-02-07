@@ -5,6 +5,7 @@ import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/Rec
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
+import { formatSats } from "../../../components/utils/formatWithCommas";
 
 export interface BtcSendConfirmationProps {
   satsAmount?: number;
@@ -27,10 +28,6 @@ export default function BtcSendConfirmation({
   onConfirmPress,
   testID,
 }: BtcSendConfirmationProps) {
-  const formatSats = (sats: number): string => {
-    return `${sats.toLocaleString()} sats`;
-  };
-
   const totalSats = satsAmount + feeSats;
   const totalUsdValue = parseFloat(usdEquivalent.replace(/[~$,]/g, '')) + parseFloat(feeUsd.replace(/[~$,]/g, ''));
   const totalUsd = `(~$${totalUsdValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
@@ -39,7 +36,7 @@ export default function BtcSendConfirmation({
     <TxConfirmation
       currencyInput={
         <CurrencyInput
-          value={formatSats(satsAmount)}
+          value={formatSats(satsAmount, { approximate: false })}
           topContextSlot={<TopContext variant="btc" value={usdEquivalent} />}
           bottomContextSlot={<BottomContext variant="empty" />}
           testID={testID}
@@ -53,19 +50,19 @@ export default function BtcSendConfirmation({
           />
           <ListItemReceipt
             label="Sending"
-            value={formatSats(satsAmount)}
+            value={formatSats(satsAmount, { approximate: false })}
             hasDenominator
             denominator={`(${usdEquivalent})`}
           />
           <ListItemReceipt
             label="Fees"
-            value={formatSats(feeSats)}
+            value={formatSats(feeSats, { approximate: false })}
             hasDenominator
             denominator={`(${feeUsd})`}
           />
           <ListItemReceipt
             label="Total"
-            value={formatSats(totalSats)}
+            value={formatSats(totalSats, { approximate: false })}
             hasDenominator
             denominator={totalUsd}
           />

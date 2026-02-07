@@ -16,6 +16,7 @@ import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../../components/Primitives/FoldText";
 import ChooseDebitCardSlot from "../../../Slots/Shared/PaymentMethods/ChooseDebitCardSlot";
 import { colorMaps, spacing } from "../../../../components/tokens";
+import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
 
@@ -40,13 +41,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
   const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
   const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
   const [tempSelectedCardLabel, setTempSelectedCardLabel] = useState<string | undefined>();
-
-  const formatWithCommas = (num: number, decimals = 2): string => {
-    const fixed = num.toFixed(decimals);
-    const [intPart, decPart] = fixed.split(".");
-    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${formattedInt}.${decPart}`;
-  };
 
   // Modal handlers
   const handleCloseModal = () => {

@@ -9,6 +9,7 @@ import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps } from "../../../components/tokens";
+import { formatSats } from "../../../components/utils/formatWithCommas";
 
 export interface BtcAutoStackConfirmationProps {
   /** Sats amount to display */
@@ -60,15 +61,11 @@ export default function BtcAutoStackConfirmationSlot({
   onConfirmPress,
   testID,
 }: BtcAutoStackConfirmationProps) {
-  const formatSats = (sats: number): string => {
-    return `${sats.toLocaleString()} sats`;
-  };
-
   return (
     <TxConfirmation
       currencyInput={
         <CurrencyInput
-          value={formatSats(satsAmount)}
+          value={formatSats(satsAmount, { approximate: false })}
           topContextSlot={<TopContext variant="btc" value={usdEquivalent} />}
           bottomContextVariant="paymentMethod"
           paymentMethodVariant={paymentMethodVariant}

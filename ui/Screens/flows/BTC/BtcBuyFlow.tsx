@@ -14,6 +14,7 @@ import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBa
 import ChooseDebitCardSlot from "../../../Slots/Shared/PaymentMethods/ChooseDebitCardSlot";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { colorMaps, spacing } from "../../../../components/tokens";
+import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
 type ModalStep = "initial" | "bankAccount" | "debitCard";
@@ -53,18 +54,6 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
   const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
   const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
   const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
-
-  const formatWithCommas = (num: number, decimals = 2): string => {
-    const fixed = num.toFixed(decimals);
-    const [intPart, decPart] = fixed.split(".");
-    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${formattedInt}.${decPart}`;
-  };
-
-  const formatSats = (sats: number): string => {
-    const formatted = String(Math.round(sats)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `~${formatted} sats`;
-  };
 
   // Flow handlers
   const handleEnterAmountContinue = (amount: string) => {
@@ -253,7 +242,7 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
           <CurrencyInput
             value={`$${parseFloat(flowAmount).toFixed(2)}`}
             topContextVariant="btc"
-            topContextValue={`~${satsEquivalent.toLocaleString()} sats`}
+            topContextValue={formatSats(satsEquivalent)}
             bottomContextVariant="none"
           />
         </View>

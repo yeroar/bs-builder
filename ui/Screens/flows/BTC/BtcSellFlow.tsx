@@ -8,6 +8,7 @@ import { CurrencyInput, BottomContext } from "../../../../components/Inputs/Curr
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { spacing } from "../../../../components/tokens";
+import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
 
@@ -22,18 +23,6 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
   const [flowStack, setFlowStack] = useState<FlowStep[]>(["enterAmount"]);
   const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
-
-  const formatWithCommas = (num: number, decimals = 2): string => {
-    const fixed = num.toFixed(decimals);
-    const [intPart, decPart] = fixed.split(".");
-    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${formattedInt}.${decPart}`;
-  };
-
-  const formatSats = (sats: number): string => {
-    const formatted = String(Math.round(sats)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `~${formatted} sats`;
-  };
 
   const handleEnterAmountContinue = (amount: string) => {
     setFlowAmount(amount);
@@ -131,7 +120,7 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
           <CurrencyInput
             value={`$${parseFloat(flowAmount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             topContextVariant="btc"
-            topContextValue={`~${satsEquivalent.toLocaleString()} sats`}
+            topContextValue={formatSats(satsEquivalent)}
             bottomContextSlot={
               <BottomContext variant="maxButton">
                 <Button

@@ -4,6 +4,7 @@ import { CurrencyInput, TopContext, BottomContext } from "../../../components/In
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import { spacing } from "../../../components/tokens";
+import { formatSats } from "../../../components/utils/formatWithCommas";
 
 export interface BtcSendSuccessProps {
   satsAmount?: number;
@@ -20,15 +21,11 @@ export default function BtcSendSuccess({
   onViewDetails,
   testID,
 }: BtcSendSuccessProps) {
-  const formatSats = (sats: number): string => {
-    return `${sats.toLocaleString()} sats`;
-  };
-
   return (
     <View style={styles.container} testID={testID}>
       <View style={styles.content}>
         <CurrencyInput
-          value={formatSats(satsAmount)}
+          value={formatSats(satsAmount, { approximate: false })}
           topContextSlot={<TopContext variant="btc" value={usdEquivalent} />}
           bottomContextSlot={
             <BottomContext variant="maxButton">

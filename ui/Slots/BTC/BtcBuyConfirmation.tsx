@@ -25,24 +25,6 @@ export interface BtcBuyConfirmationProps {
   testID?: string;
 }
 
-// Format number with comma separators
-const formatNumber = (num: number): string => {
-  return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-// Format currency with comma separators
-const formatCurrency = (num: number, decimals = 2): string => {
-  const fixed = num.toFixed(decimals);
-  const [intPart, decPart] = fixed.split(".");
-  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `$${formattedInt}.${decPart}`;
-};
-
-// Format sats with comma separators
-const formatSats = (sats: number): string => {
-  return `~${formatNumber(sats)} sats`;
-};
-
 export default function BtcBuyConfirmation({
   amount = "$100",
   satsEquivalent = "~10,000 sats",

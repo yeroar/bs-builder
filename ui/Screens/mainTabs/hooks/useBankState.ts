@@ -3,7 +3,7 @@ import { DirectToBitcoinConfig, AutoStackConfig } from "../../../Slots/BTC/BtcSl
 import { RoundUpsConfig, RecurringDepositConfig } from "../../../Slots/Cash/CashSlot";
 import { Multiplier } from "../../../Slots/Cash/RoundUpsSlot";
 
-export type FlowType = "buy" | "sell" | "send" | "autoStack" | "deposit" | "withdraw" | "directToBitcoin" | "roundUps" | "redeem" | "authorizedUser" | "recurringDeposit" | "manageRecurringDeposit";
+export type FlowType = "send" | "autoStack" | "deposit" | "withdraw" | "directToBitcoin" | "roundUps" | "redeem" | "authorizedUser" | "recurringDeposit" | "manageRecurringDeposit";
 
 export interface BankState {
   // Automation configs
@@ -14,7 +14,6 @@ export interface BankState {
 
   // Flow state
   activeFlow: FlowType | null;
-  pendingBuyAmount: string | null;
 
   // Sub-screen state
   showBtcScreen: boolean;
@@ -25,9 +24,6 @@ export interface BankActions {
   // Flow actions
   openFlow: (flow: FlowType) => void;
   closeFlow: () => void;
-
-  // Buy flow
-  openBuyFlow: (amount: string | null) => void;
 
   // Sub-screen actions
   openBtcScreen: () => void;
@@ -60,7 +56,6 @@ export default function useBankState(): [BankState, BankActions] {
 
   // Flow state
   const [activeFlow, setActiveFlow] = useState<FlowType | null>(null);
-  const [pendingBuyAmount, setPendingBuyAmount] = useState<string | null>(null);
 
   // Sub-screen state
   const [showBtcScreen, setShowBtcScreen] = useState(false);
@@ -69,11 +64,6 @@ export default function useBankState(): [BankState, BankActions] {
   // Flow actions
   const openFlow = useCallback((flow: FlowType) => setActiveFlow(flow), []);
   const closeFlow = useCallback(() => setActiveFlow(null), []);
-
-  const openBuyFlow = useCallback((amount: string | null) => {
-    setPendingBuyAmount(amount);
-    setActiveFlow("buy");
-  }, []);
 
   // Sub-screen actions
   const openBtcScreen = useCallback(() => setShowBtcScreen(true), []);
@@ -140,7 +130,6 @@ export default function useBankState(): [BankState, BankActions] {
     autoStackConfig,
     recurringDepositConfig,
     activeFlow,
-    pendingBuyAmount,
     showBtcScreen,
     showCashScreen,
   };
@@ -148,7 +137,6 @@ export default function useBankState(): [BankState, BankActions] {
   const actions: BankActions = {
     openFlow,
     closeFlow,
-    openBuyFlow,
     openBtcScreen,
     closeBtcScreen,
     openCashScreen,

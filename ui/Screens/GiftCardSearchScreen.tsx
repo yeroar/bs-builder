@@ -8,17 +8,14 @@ import { SearchHeader } from "../../components/DataDisplay/Headers";
 import SearchPill from "../../components/Selectors/SearchPill/SearchPill";
 import { ListItemGiftCard } from "../../components/DataDisplay/ListItem";
 import IconContainer from "../../components/Primitives/IconContainer/IconContainer";
-import ValidationGroup from "../../components/Primitives/ValidationItems/ValidationGroup";
-import Validation from "../../components/Primitives/ValidationItems/Validation";
 import { ChevronRightIcon } from "../../components/Icons/ChevronRightIcon";
-import { RocketIcon } from "../../components/Icons/RocketIcon";
-import { GlobeIcon } from "../../components/Icons/GlobeIcon";
 import { colorMaps, spacing } from "../../components/tokens";
 import GCRedemptionMethodModal from "../../components/Modals/GCRedemptionMethodModal";
 import GCCategoriesModal from "../../components/Modals/GCCategoriesModal";
 import { RedemptionMethod } from "../Slots/GiftCard/GCRedemptionMethodSlot";
 import { GCCategory } from "../Slots/GiftCard/GCCategoriesSlot";
 import GiftCardPurchaseFlow, { SelectedCard } from "./flows/GiftCard/GiftCardPurchaseFlow";
+import { buildSelectedCard } from "./flows/GiftCard/buildSelectedCard";
 
 export interface RecentSearch {
   label: string;
@@ -65,26 +62,7 @@ export default function GiftCardSearchScreen({ onBack }: GiftCardSearchScreenPro
 
   const handleCardPress = (card: RecommendedCard) => {
     Keyboard.dismiss();
-    setSelectedCard({
-      brand: card.brand,
-      title: card.title,
-      logo: <IconContainer brand={card.brand} size="lg" />,
-      offer: (
-        <ValidationGroup>
-          <Validation
-            label={card.cashback}
-            type="success"
-            leadingIcon={<RocketIcon width={16} height={16} color={colorMaps.face.accentBold} />}
-            labelColor={colorMaps.face.accentBold}
-          />
-          <Validation
-            label={card.availability}
-            type="success"
-            leadingIcon={<GlobeIcon width={16} height={16} color={colorMaps.face.primary} />}
-          />
-        </ValidationGroup>
-      ),
-    });
+    setSelectedCard(buildSelectedCard(card));
   };
 
   const handleRedemptionMethodPress = () => {

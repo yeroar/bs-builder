@@ -5,6 +5,7 @@ import { CurrencyInput, TopContext, BottomContext } from "../../../components/In
 import { Keypad } from "../../../components/Keypad";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { spacing } from "../../../components/tokens";
+import { formatSatsInput } from "../../../components/utils/formatWithCommas";
 
 export interface BtcSendEnterAmountProps {
   maxSats?: number;
@@ -26,12 +27,6 @@ export default function BtcSendEnterAmount({
   const satsToUsd = useCallback((sats: number): number => {
     return (sats / 100000000) * btcPriceUsd;
   }, [btcPriceUsd]);
-
-  const formatSatsDisplay = (value: string): string => {
-    if (!value || value === "0") return "0 sats";
-    const numValue = parseInt(value, 10);
-    return `${numValue.toLocaleString()} sats`;
-  };
 
   const formatUsdEquivalent = (sats: number): string => {
     if (sats === 0) return "";
@@ -79,7 +74,7 @@ export default function BtcSendEnterAmount({
     <EnterAmount>
       <View style={styles.content} testID={testID}>
         <CurrencyInput
-          value={formatSatsDisplay(satsAmount)}
+          value={formatSatsInput(satsAmount)}
           topContextSlot={
             usdEquivalent ? (
               <TopContext variant="btc" value={usdEquivalent} />

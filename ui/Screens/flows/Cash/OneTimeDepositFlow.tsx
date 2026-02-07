@@ -11,6 +11,7 @@ import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBankAccountSlot";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { spacing } from "../../../../components/tokens";
+import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
 
@@ -35,13 +36,6 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
   const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
   const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
   const [tempSelectedBankLabel, setTempSelectedBankLabel] = useState<string | undefined>();
-
-  const formatWithCommas = (num: number, decimals = 2): string => {
-    const fixed = num.toFixed(decimals);
-    const [intPart, decPart] = fixed.split(".");
-    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return `${formattedInt}.${decPart}`;
-  };
 
   // Modal handlers
   const handleCloseModal = () => {
