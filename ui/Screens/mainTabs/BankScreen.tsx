@@ -29,7 +29,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress, on
   const [isBuyModalVisible, setIsBuyModalVisible] = useState(false);
 
   const handleBuyPress = () => {
-    onBuySellFlow("buy", { onComplete: () => actions.openBtcScreen() });
+    setIsBuyModalVisible(true);
   };
 
   const handleSellPress = () => {

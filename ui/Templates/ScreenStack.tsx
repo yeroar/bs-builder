@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { View, StyleSheet, Animated, Dimensions } from "react-native";
+import { View, StyleSheet, Animated, Dimensions, Keyboard } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -59,6 +59,9 @@ export default function ScreenStack({
     const prevStack = prevStackRef.current;
 
     if (stack.length > prevStack.length) {
+      // Dismiss keyboard from previous screen
+      Keyboard.dismiss();
+
       // Push (forward) - new screen comes from RIGHT, moves to center
       const newKey = stack[stack.length - 1];
       const newAnimValue = new Animated.Value(screenWidth);
@@ -77,6 +80,9 @@ export default function ScreenStack({
       }).start();
 
     } else if (stack.length < prevStack.length && screens.length > 0) {
+      // Dismiss keyboard from current screen
+      Keyboard.dismiss();
+
       // Pop (back) - current screen goes to RIGHT
       const topScreen = screens[screens.length - 1];
 

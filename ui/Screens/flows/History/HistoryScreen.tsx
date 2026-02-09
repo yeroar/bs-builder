@@ -1,6 +1,6 @@
 import React from "react";
-import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import TransactionsSlot, { TransactionCategory } from "../Slots/Transactions/TransactionsSlot";
+import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
+import TransactionsSlot, { TransactionCategory } from "../../../Slots/Transactions/TransactionsSlot";
 
 interface HistoryScreenProps {
   onBack: () => void;

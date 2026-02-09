@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import RecurringDepositEnterAmount from "../../../Slots/Cash/RecurringDepositEnterAmount";
@@ -7,10 +7,9 @@ import RecurringDepositConfirmation from "../../../Slots/Cash/RecurringDepositCo
 import RecurringDepositDetailsSlot from "../../../Slots/Cash/RecurringDepositDetailsSlot";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import Divider from "../../../../components/Primitives/Divider/Divider";
-import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBankAccountSlot";
+import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
@@ -50,9 +49,6 @@ export default function RecurringDepositFlow({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
-  const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
-  const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
-  const [tempSelectedBankLabel, setTempSelectedBankLabel] = useState<string | undefined>();
 
   // Get day of week for frequency label
   const getDayOfWeek = () => {
@@ -78,14 +74,12 @@ export default function RecurringDepositFlow({
     onClose();
   };
 
-  const handleConfirmBankSelection = () => {
-    if (tempSelectedBankId) {
-      setSelectedPaymentMethod("bankAccount");
-      setSelectedBrand(tempSelectedBankBrand);
-      setSelectedLabel(tempSelectedBankLabel);
-      setIsModalVisible(false);
-      setFlowStack(["enterAmount"]);
-    }
+  const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
+    setSelectedPaymentMethod(selection.variant);
+    setSelectedBrand(selection.brand);
+    setSelectedLabel(selection.label);
+    setIsModalVisible(false);
+    setFlowStack(["enterAmount"]);
   };
 
   // Flow handlers
@@ -112,11 +106,6 @@ export default function RecurringDepositFlow({
   const handleSuccessDone = () => {
     setShowSuccess(false);
     onComplete();
-  };
-
-  // Re-open payment method modal
-  const handleOpenPaymentModal = () => {
-    setIsModalVisible(true);
   };
 
   // Detail screen handlers
@@ -166,7 +155,7 @@ export default function RecurringDepositFlow({
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
-              onPaymentMethodPress={handleOpenPaymentModal}
+              onPaymentMethodPress={() => setIsModalVisible(true)}
               onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
@@ -214,7 +203,7 @@ export default function RecurringDepositFlow({
                   frequency={`${frequency} on ${getDayOfWeek()}`}
                   started={getStartingDate()}
                   bankLabel={selectedLabel || "bankAccount 1234"}
-                  onBankPress={handleOpenPaymentModal}
+                  onBankPress={() => setIsModalVisible(true)}
                 />
               </View>
             </View>
@@ -284,43 +273,12 @@ export default function RecurringDepositFlow({
         </View>
       )}
 
-      {/* Modal */}
-      <Modal
+      <ChoosePaymentMethodModal
         visible={isModalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={handleCloseModal}
-      >
-        <MiniModal
-          variant="default"
-          onClose={handleCloseModal}
-          showHeader={false}
-          footer={
-            <ModalFooter
-              type="default"
-              primaryButton={
-                <Button
-                  label="Continue"
-                  hierarchy="primary"
-                  size="md"
-                  disabled={!tempSelectedBankId}
-                  onPress={handleConfirmBankSelection}
-                />
-              }
-            />
-          }
-        >
-          <ChooseBankAccountSlot
-            selectedAccountId={tempSelectedBankId}
-            onSelectAccount={(account) => {
-              setTempSelectedBankId(account.id);
-              setTempSelectedBankBrand(account.brand);
-              setTempSelectedBankLabel(`${account.name} •••• ${account.lastFour}`);
-            }}
-            onAddBankAccount={handleCloseModal}
-          />
-        </MiniModal>
-      </Modal>
+        onClose={handleCloseModal}
+        onSelect={handlePaymentMethodSelect}
+        type="bankAccount"
+      />
     </>
   );
 }

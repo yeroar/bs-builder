@@ -1,14 +1,14 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import TransactionHeader from "../../components/DataDisplay/Headers/TransactionHeader";
-import BtcTxDetails from "../../components/Transactions/BtcTxDetails";
-import Divider from "../../components/Primitives/Divider/Divider";
-import Chip from "../../components/Primitives/Chip/Chip";
-import { CheckCircleIcon } from "../../components/Icons/CheckCircleIcon";
-import { ClockIcon } from "../../components/Icons/ClockIcon";
-import { colorMaps, spacing } from "../../components/tokens";
-import { TransactionData } from "../../components/Transactions/TransactionList";
+import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
+import TransactionHeader from "../../../../components/DataDisplay/Headers/TransactionHeader";
+import BtcTxDetails from "../../../../components/Transactions/BtcTxDetails";
+import Divider from "../../../../components/Primitives/Divider/Divider";
+import Chip from "../../../../components/Primitives/Chip/Chip";
+import { CheckCircleIcon } from "../../../../components/Icons/CheckCircleIcon";
+import { ClockIcon } from "../../../../components/Icons/ClockIcon";
+import { colorMaps, spacing } from "../../../../components/tokens";
+import { TransactionData } from "../../../../components/Transactions/TransactionList";
 
 export interface TransactionDetailScreenProps {
   transaction: TransactionData;

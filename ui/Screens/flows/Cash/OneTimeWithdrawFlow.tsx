@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import TxConfirmation from "../../../Templates/TxConfirmation/TxConfirmation";
@@ -10,11 +10,10 @@ import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/P
 import { Keypad } from "../../../../components/Keypad";
 import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../../components/Primitives/FoldText";
-import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBankAccountSlot";
+import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { colorMaps, spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
@@ -38,9 +37,6 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
-  const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
-  const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
-  const [tempSelectedBankLabel, setTempSelectedBankLabel] = useState<string | undefined>();
 
   // Modal handlers
   const handleCloseModal = () => {
@@ -48,14 +44,12 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
     onClose();
   };
 
-  const handleConfirmBankSelection = () => {
-    if (tempSelectedBankId) {
-      setSelectedPaymentMethod("bankAccount");
-      setSelectedBrand(tempSelectedBankBrand);
-      setSelectedLabel(tempSelectedBankLabel);
-      setIsModalVisible(false);
-      setFlowStack(["enterAmount"]);
-    }
+  const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
+    setSelectedPaymentMethod(selection.variant);
+    setSelectedBrand(selection.brand);
+    setSelectedLabel(selection.label);
+    setIsModalVisible(false);
+    setFlowStack(["enterAmount"]);
   };
 
   // Flow handlers
@@ -82,11 +76,6 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
   const handleSuccessDone = () => {
     setShowSuccess(false);
     onComplete();
-  };
-
-  // Re-open payment method modal
-  const handleOpenPaymentModal = () => {
-    setIsModalVisible(true);
   };
 
   const renderScreen = (step: string) => {
@@ -126,7 +115,7 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
                   paymentMethodVariant={selectedPaymentMethod}
                   paymentMethodBrand={selectedBrand}
                   paymentMethodLabel={selectedLabel}
-                  onPaymentMethodPress={handleOpenPaymentModal}
+                  onPaymentMethodPress={() => setIsModalVisible(true)}
                 />
               }
               receiptDetails={
@@ -212,43 +201,12 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
         </View>
       )}
 
-      {/* Modal */}
-      <Modal
+      <ChoosePaymentMethodModal
         visible={isModalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={handleCloseModal}
-      >
-        <MiniModal
-          variant="default"
-          onClose={handleCloseModal}
-          showHeader={false}
-          footer={
-            <ModalFooter
-              type="default"
-              primaryButton={
-                <Button
-                  label="Continue"
-                  hierarchy="primary"
-                  size="md"
-                  disabled={!tempSelectedBankId}
-                  onPress={handleConfirmBankSelection}
-                />
-              }
-            />
-          }
-        >
-          <ChooseBankAccountSlot
-            selectedAccountId={tempSelectedBankId}
-            onSelectAccount={(account) => {
-              setTempSelectedBankId(account.id);
-              setTempSelectedBankBrand(account.brand);
-              setTempSelectedBankLabel(`${account.name} \u2022\u2022\u2022\u2022 ${account.lastFour}`);
-            }}
-            onAddBankAccount={handleCloseModal}
-          />
-        </MiniModal>
-      </Modal>
+        onClose={handleCloseModal}
+        onSelect={handlePaymentMethodSelect}
+        type="bankAccount"
+      />
     </>
   );
 }

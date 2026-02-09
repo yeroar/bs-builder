@@ -8,10 +8,10 @@ import FullscreenTemplate from './ui/Templates/FullscreenTemplate';
 import BankScreen from './ui/Screens/mainTabs/BankScreen';
 import ExchangeScreen from './ui/Screens/mainTabs/ExchangeScreen';
 import TagScreen from './ui/Screens/mainTabs/TagScreen';
-import HistoryScreen from './ui/Screens/HistoryScreen';
+import HistoryScreen from './ui/Screens/flows/History/HistoryScreen';
 import { TransactionCategory } from './ui/Slots/Transactions/TransactionsSlot';
 import { ComponentLibraryScreen } from './components/ComponentLibrary';
-import GiftCardSearchScreen from './ui/Screens/GiftCardSearchScreen';
+import GiftCardSearchScreen from './ui/Screens/flows/GiftCard/GiftCardSearchScreen';
 import { BtcBuyFlow, BtcSellFlow } from './ui/Screens/flows';
 import { useOverlays } from './hooks/useOverlays';
 

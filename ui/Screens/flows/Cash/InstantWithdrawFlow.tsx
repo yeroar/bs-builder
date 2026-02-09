@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import TxConfirmation from "../../../Templates/TxConfirmation/TxConfirmation";
@@ -10,11 +10,10 @@ import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/P
 import { Keypad } from "../../../../components/Keypad";
 import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../../components/Primitives/FoldText";
-import ChooseDebitCardSlot from "../../../Slots/Shared/PaymentMethods/ChooseDebitCardSlot";
+import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { colorMaps, spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
@@ -38,9 +37,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
-  const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
-  const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
-  const [tempSelectedCardLabel, setTempSelectedCardLabel] = useState<string | undefined>();
 
   // Modal handlers
   const handleCloseModal = () => {
@@ -48,14 +44,12 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
     onClose();
   };
 
-  const handleConfirmCardSelection = () => {
-    if (tempSelectedCardId) {
-      setSelectedPaymentMethod("cardAccount");
-      setSelectedBrand(tempSelectedCardBrand);
-      setSelectedLabel(tempSelectedCardLabel);
-      setIsModalVisible(false);
-      setFlowStack(["enterAmount"]);
-    }
+  const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
+    setSelectedPaymentMethod(selection.variant);
+    setSelectedBrand(selection.brand);
+    setSelectedLabel(selection.label);
+    setIsModalVisible(false);
+    setFlowStack(["enterAmount"]);
   };
 
   // Flow handlers
@@ -82,11 +76,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
   const handleSuccessDone = () => {
     setShowSuccess(false);
     onComplete();
-  };
-
-  // Re-open payment method modal
-  const handleOpenPaymentModal = () => {
-    setIsModalVisible(true);
   };
 
   const renderScreen = (step: string) => {
@@ -130,13 +119,13 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
                   paymentMethodVariant={selectedPaymentMethod}
                   paymentMethodBrand={selectedBrand}
                   paymentMethodLabel={selectedLabel}
-                  onPaymentMethodPress={handleOpenPaymentModal}
+                  onPaymentMethodPress={() => setIsModalVisible(true)}
                 />
               }
               receiptDetails={
                 <ReceiptDetails>
                   <ListItemReceipt label="Transfer" value={`$${formatWithCommas(numAmount)}`} />
-                  <ListItemReceipt label="Fees \u00B7 1.5%" value={`+ $${formatWithCommas(feeAmount)}`} />
+                  <ListItemReceipt label="Fees · 1.5%" value={`+ $${formatWithCommas(feeAmount)}`} />
                   <ListItemReceipt label="Total" value={`$${formatWithCommas(totalAmount)}`} />
                 </ReceiptDetails>
               }
@@ -217,43 +206,12 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
         </View>
       )}
 
-      {/* Modal */}
-      <Modal
+      <ChoosePaymentMethodModal
         visible={isModalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={handleCloseModal}
-      >
-        <MiniModal
-          variant="default"
-          onClose={handleCloseModal}
-          showHeader={false}
-          footer={
-            <ModalFooter
-              type="default"
-              primaryButton={
-                <Button
-                  label="Continue"
-                  hierarchy="primary"
-                  size="md"
-                  disabled={!tempSelectedCardId}
-                  onPress={handleConfirmCardSelection}
-                />
-              }
-            />
-          }
-        >
-          <ChooseDebitCardSlot
-            selectedCardId={tempSelectedCardId}
-            onSelectCard={(card) => {
-              setTempSelectedCardId(card.id);
-              setTempSelectedCardBrand(card.brand);
-              setTempSelectedCardLabel(`${card.name} \u2022\u2022\u2022\u2022 ${card.lastFour}`);
-            }}
-            onAddDebitCard={handleCloseModal}
-          />
-        </MiniModal>
-      </Modal>
+        onClose={handleCloseModal}
+        onSelect={handlePaymentMethodSelect}
+        type="debitCard"
+      />
     </>
   );
 }

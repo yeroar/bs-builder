@@ -1,17 +1,16 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, ScrollView, Animated, Dimensions, Modal } from "react-native";
-import FullscreenTemplate from "../Templates/FullscreenTemplate";
-import GiftCardConfirmation from "../Slots/GiftCard/GiftCardConfirmation";
-import SendAsAGiftSlot from "../Slots/GiftCard/SendAsAGiftSlot";
-import GiftCardSuccess from "../Slots/GiftCard/GiftCardSuccess";
-import ModalFooter from "../../components/Modals/ModalFooter";
-import MiniModal from "../../components/Modals/MiniModal";
-import Button from "../../components/Primitives/Buttons/Button/Button";
-import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Slots/Shared/PaymentMethods/ChoosePaymentMethodFoldSlot";
-import { StarIcon } from "../../components/Icons/StarIcon";
-import FoldPressable from "../../components/Primitives/FoldPressable";
-import { PmSelectorVariant } from "../../components/Inputs/CurrencyInput/PmSelector";
-import { colorMaps, spacing } from "../../components/tokens";
+import { View, StyleSheet, ScrollView, Animated, Dimensions } from "react-native";
+import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
+import GiftCardConfirmation from "../../../Slots/GiftCard/GiftCardConfirmation";
+import SendAsAGiftSlot from "../../../Slots/GiftCard/SendAsAGiftSlot";
+import GiftCardSuccess from "../../../Slots/GiftCard/GiftCardSuccess";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
+import { StarIcon } from "../../../../components/Icons/StarIcon";
+import FoldPressable from "../../../../components/Primitives/FoldPressable";
+import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
+import { colorMaps, spacing } from "../../../../components/tokens";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -59,7 +58,6 @@ export default function GiftCardConfirmationScreen({
   // Payment method state
   const [isPaymentMethodModalVisible, setIsPaymentMethodModalVisible] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("foldAccount");
-  const [tempSelectedOption, setTempSelectedOption] = useState<FoldPaymentOption | undefined>();
 
   // Animation for yellow fill transition
   const fillAnimation = useRef(new Animated.Value(0)).current;
@@ -87,21 +85,8 @@ export default function GiftCardConfirmationScreen({
   };
 
   // Payment method modal handlers
-  const handleOpenPaymentMethodModal = () => {
-    setTempSelectedOption(undefined);
-    setIsPaymentMethodModalVisible(true);
-  };
-
-  const handleClosePaymentMethodModal = () => {
-    setIsPaymentMethodModalVisible(false);
-  };
-
-  const handleConfirmPaymentMethod = () => {
-    if (tempSelectedOption === "cashBalance") {
-      setSelectedPaymentMethod("foldAccount");
-    } else if (tempSelectedOption === "creditCard") {
-      setSelectedPaymentMethod("cardAccount");
-    }
+  const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
+    setSelectedPaymentMethod(selection.variant);
     setIsPaymentMethodModalVisible(false);
   };
 
@@ -174,7 +159,7 @@ export default function GiftCardConfirmationScreen({
               feeSatsEquivalent={feeSatsEquivalent}
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodLabel={getPaymentMethodLabel()}
-              onPaymentMethodPress={handleOpenPaymentMethodModal}
+              onPaymentMethodPress={() => setIsPaymentMethodModalVisible(true)}
               onSendAsGiftPress={handleSendAsGiftPress}
               recipientName={recipientName}
               recipientPhone={recipientPhone}
@@ -246,38 +231,12 @@ export default function GiftCardConfirmationScreen({
         />
       )}
 
-      {/* Payment Method Modal */}
-      <Modal
+      <ChoosePaymentMethodModal
         visible={isPaymentMethodModalVisible}
-        transparent={true}
-        animationType="none"
-        onRequestClose={handleClosePaymentMethodModal}
-      >
-        <MiniModal
-          variant="default"
-          onClose={handleClosePaymentMethodModal}
-          showHeader={false}
-          footer={
-            <ModalFooter
-              type="default"
-              primaryButton={
-                <Button
-                  label="Continue"
-                  hierarchy="primary"
-                  size="md"
-                  disabled={!tempSelectedOption}
-                  onPress={handleConfirmPaymentMethod}
-                />
-              }
-            />
-          }
-        >
-          <ChoosePaymentMethodFoldSlot
-            selectedOption={tempSelectedOption}
-            onSelectOption={setTempSelectedOption}
-          />
-        </MiniModal>
-      </Modal>
+        onClose={() => setIsPaymentMethodModalVisible(false)}
+        onSelect={handlePaymentMethodSelect}
+        type="foldPayment"
+      />
     </>
   );
 }

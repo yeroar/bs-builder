@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { View, StyleSheet, ScrollView, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SearchBar from "../../components/Inputs/SearchBar/SearchBar";
-import DropDown from "../../components/Selectors/DropDown/DropDown";
-import Divider from "../../components/Primitives/Divider/Divider";
-import { SearchHeader } from "../../components/DataDisplay/Headers";
-import SearchPill from "../../components/Selectors/SearchPill/SearchPill";
-import { ListItemGiftCard } from "../../components/DataDisplay/ListItem";
-import IconContainer from "../../components/Primitives/IconContainer/IconContainer";
-import { ChevronRightIcon } from "../../components/Icons/ChevronRightIcon";
-import { colorMaps, spacing } from "../../components/tokens";
-import GCRedemptionMethodModal from "../../components/Modals/GCRedemptionMethodModal";
-import GCCategoriesModal from "../../components/Modals/GCCategoriesModal";
-import { RedemptionMethod } from "../Slots/GiftCard/GCRedemptionMethodSlot";
-import { GCCategory } from "../Slots/GiftCard/GCCategoriesSlot";
-import GiftCardPurchaseFlow, { SelectedCard } from "./flows/GiftCard/GiftCardPurchaseFlow";
-import { buildSelectedCard } from "./flows/GiftCard/buildSelectedCard";
+import SearchBar from "../../../../components/Inputs/SearchBar/SearchBar";
+import DropDown from "../../../../components/Selectors/DropDown/DropDown";
+import Divider from "../../../../components/Primitives/Divider/Divider";
+import { SearchHeader } from "../../../../components/DataDisplay/Headers";
+import SearchPill from "../../../../components/Selectors/SearchPill/SearchPill";
+import { ListItemGiftCard } from "../../../../components/DataDisplay/ListItem";
+import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
+import { ChevronRightIcon } from "../../../../components/Icons/ChevronRightIcon";
+import { colorMaps, spacing } from "../../../../components/tokens";
+import GCRedemptionMethodModal from "../../../../components/Modals/GCRedemptionMethodModal";
+import GCCategoriesModal from "../../../../components/Modals/GCCategoriesModal";
+import { RedemptionMethod } from "../../../Slots/GiftCard/GCRedemptionMethodSlot";
+import { GCCategory } from "../../../Slots/GiftCard/GCCategoriesSlot";
+import GiftCardPurchaseFlow, { SelectedCard } from "./GiftCardPurchaseFlow";
+import { buildSelectedCard } from "./buildSelectedCard";
 
 export interface RecentSearch {
   label: string;

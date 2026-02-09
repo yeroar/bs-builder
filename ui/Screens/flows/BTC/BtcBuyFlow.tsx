@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import BtcBuyEnterAmount from "../../../Slots/BTC/BtcBuyEnterAmount";
 import BtcBuyConfirmation from "../../../Slots/BTC/BtcBuyConfirmation";
 import { CurrencyInput } from "../../../../components/Inputs/CurrencyInput";
-import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../../components/Primitives/FoldText";
-import AddPaymentSlot from "../../../Slots/Shared/PaymentMethods/AddPaymentSlot";
-import ChooseBankAccountSlot from "../../../Slots/Shared/PaymentMethods/ChooseBankAccountSlot";
-import ChooseDebitCardSlot from "../../../Slots/Shared/PaymentMethods/ChooseDebitCardSlot";
+import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { colorMaps, spacing } from "../../../../components/tokens";
 import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
-type ModalStep = "initial" | "bankAccount" | "debitCard";
 
 export interface BtcBuyFlowProps {
   /** Initial amount if pre-selected (e.g., "$50") */
@@ -49,11 +45,6 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
-  const [modalStep, setModalStep] = useState<ModalStep>("initial");
-  const [tempSelectedBankId, setTempSelectedBankId] = useState<string | undefined>();
-  const [tempSelectedBankBrand, setTempSelectedBankBrand] = useState<string | undefined>();
-  const [tempSelectedCardId, setTempSelectedCardId] = useState<string | undefined>();
-  const [tempSelectedCardBrand, setTempSelectedCardBrand] = useState<string | undefined>();
 
   // Flow handlers
   const handleEnterAmountContinue = (amount: string) => {
@@ -82,95 +73,10 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
   };
 
   // Payment method modal handlers
-  const handleOpenPaymentModal = () => {
-    setModalStep("initial");
-    setTempSelectedBankId(undefined);
-    setTempSelectedCardId(undefined);
-    setIsPaymentModalVisible(true);
-  };
-
-  const handleClosePaymentModal = () => {
+  const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
+    setSelectedPaymentMethod(selection.variant);
+    setSelectedBrand(selection.brand);
     setIsPaymentModalVisible(false);
-  };
-
-  const handleSelectBankAccountType = () => {
-    setModalStep("bankAccount");
-  };
-
-  const handleSelectDebitCardType = () => {
-    setModalStep("debitCard");
-  };
-
-  const handleConfirmPaymentSelection = () => {
-    if (modalStep === "bankAccount" && tempSelectedBankId) {
-      setSelectedPaymentMethod("bankAccount");
-      setSelectedBrand(tempSelectedBankBrand);
-      setIsPaymentModalVisible(false);
-    } else if (modalStep === "debitCard" && tempSelectedCardId) {
-      setSelectedPaymentMethod("cardAccount");
-      setSelectedBrand(tempSelectedCardBrand);
-      setIsPaymentModalVisible(false);
-    }
-  };
-
-  const hasPaymentSelection = () => {
-    if (modalStep === "bankAccount") return !!tempSelectedBankId;
-    if (modalStep === "debitCard") return !!tempSelectedCardId;
-    return false;
-  };
-
-  const renderPaymentModalContent = () => {
-    switch (modalStep) {
-      case "bankAccount":
-        return (
-          <ChooseBankAccountSlot
-            selectedAccountId={tempSelectedBankId}
-            onSelectAccount={(account) => {
-              setTempSelectedBankId(account.id);
-              setTempSelectedBankBrand(account.brand);
-            }}
-            onAddBankAccount={handleClosePaymentModal}
-          />
-        );
-      case "debitCard":
-        return (
-          <ChooseDebitCardSlot
-            selectedCardId={tempSelectedCardId}
-            onSelectCard={(card) => {
-              setTempSelectedCardId(card.id);
-              setTempSelectedCardBrand(card.brand);
-            }}
-            onAddDebitCard={handleClosePaymentModal}
-          />
-        );
-      default:
-        return (
-          <AddPaymentSlot
-            onBankAccountPress={handleSelectBankAccountType}
-            onDebitCardPress={handleSelectDebitCardType}
-          />
-        );
-    }
-  };
-
-  const renderPaymentModalFooter = () => {
-    if (modalStep === "initial") {
-      return <ModalFooter type="clean" />;
-    }
-    return (
-      <ModalFooter
-        type="default"
-        primaryButton={
-          <Button
-            label="Continue"
-            hierarchy="primary"
-            size="md"
-            disabled={!hasPaymentSelection()}
-            onPress={handleConfirmPaymentSelection}
-          />
-        }
-      />
-    );
   };
 
   const renderScreen = (step: string) => {
@@ -215,7 +121,7 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
               actionLabel="Confirm purchase"
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodBrand={selectedBrand}
-              onPaymentMethodPress={handleOpenPaymentModal}
+              onPaymentMethodPress={() => setIsPaymentModalVisible(true)}
               onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
@@ -281,21 +187,12 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
         />
       </View>
 
-      <Modal
+      <ChoosePaymentMethodModal
         visible={isPaymentModalVisible}
-        transparent
-        animationType="none"
-        onRequestClose={handleClosePaymentModal}
-      >
-        <MiniModal
-          variant="default"
-          onClose={handleClosePaymentModal}
-          showHeader={false}
-          footer={renderPaymentModalFooter()}
-        >
-          {renderPaymentModalContent()}
-        </MiniModal>
-      </Modal>
+        onClose={() => setIsPaymentModalVisible(false)}
+        onSelect={handlePaymentMethodSelect}
+        type="multiStep"
+      />
     </>
   );
 }
