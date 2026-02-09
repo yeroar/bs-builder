@@ -5,6 +5,7 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import RecurringDepositEnterAmount from "../../../Slots/Cash/RecurringDepositEnterAmount";
 import RecurringDepositConfirmation from "../../../Slots/Cash/RecurringDepositConfirmation";
 import RecurringDepositDetailsSlot from "../../../Slots/Cash/RecurringDepositDetailsSlot";
+import RecurringDepositSuccess from "../../../Slots/Cash/RecurringDepositSuccess";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import Divider from "../../../../components/Primitives/Divider/Divider";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
@@ -228,32 +229,10 @@ export default function RecurringDepositFlow({
         variant="yellow"
         enterAnimation="fill"
       >
-        <View style={styles.successContent}>
-          <CurrencyInput
-            value={`$${formatWithCommas(numAmount)}`}
-            topContextSlot={<TopContext variant="frequency" value={frequency} />}
-            bottomContextSlot={
-              <BottomContext variant="maxButton">
-                <Button
-                  label="View details"
-                  hierarchy="secondary"
-                  size="xs"
-                  onPress={handleSuccessDone}
-                />
-              </BottomContext>
-            }
-          />
-        </View>
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
+        <RecurringDepositSuccess
+          amount={`$${formatWithCommas(numAmount)}`}
+          frequency={frequency}
+          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );
@@ -291,11 +270,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  successContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: spacing["400"],
   },
   detailContent: {
     flex: 1,

@@ -13,7 +13,7 @@ figma.connect(
       leadingSlot: figma.instance("leadingSlot") as unknown as React.ReactNode,
       trailingSlot: figma.instance("trailingSlot") as unknown as React.ReactNode,
       boosted: figma.boolean("isBoosted"),
-      favorite: figma.boolean("Favorite"),
+      favorite: figma.boolean("isFavorite"),
     },
     example: (props) => (
       <ListItemGiftCard

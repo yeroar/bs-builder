@@ -4,12 +4,9 @@ import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import InstantDepositEnterAmount from "../../../Slots/Cash/InstantDepositEnterAmount";
 import InstantDepositConfirmation from "../../../Slots/Cash/InstantDepositConfirmation";
-import { CurrencyInput } from "../../../../components/Inputs/CurrencyInput";
-import ModalFooter from "../../../../components/Modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import InstantDepositSuccess from "../../../Slots/Cash/InstantDepositSuccess";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
-import { spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -137,23 +134,9 @@ export default function InstantDepositFlow({ onComplete, onClose }: InstantDepos
         variant="yellow"
         enterAnimation="fill"
       >
-        <View style={styles.successContent}>
-          <CurrencyInput
-            value={`$${formatWithCommas(numAmount)}`}
-            topContextVariant="empty"
-            bottomContextVariant="empty"
-          />
-        </View>
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
+        <InstantDepositSuccess
+          amount={`$${formatWithCommas(numAmount)}`}
+          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );
@@ -191,10 +174,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  successContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: spacing["400"],
   },
 });

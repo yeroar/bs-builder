@@ -5,6 +5,7 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import TxConfirmation from "../../../Templates/TxConfirmation/TxConfirmation";
 import EnterAmount from "../../../Templates/EnterAmount/EnterAmount";
 import useAmountInput from "../../../Templates/EnterAmount/useAmountInput";
+import OneTimeWithdrawSuccess from "../../../Slots/Cash/OneTimeWithdrawSuccess";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { Keypad } from "../../../../components/Keypad";
@@ -165,23 +166,9 @@ export default function OneTimeWithdrawFlow({ onComplete, onClose }: OneTimeWith
         variant="yellow"
         enterAnimation="fill"
       >
-        <View style={styles.successContent}>
-          <CurrencyInput
-            value={`$${formatWithCommas(numAmount)}`}
-            topContextVariant="empty"
-            bottomContextVariant="empty"
-          />
-        </View>
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
+        <OneTimeWithdrawSuccess
+          amount={`$${formatWithCommas(numAmount)}`}
+          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );
@@ -271,11 +258,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  successContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: spacing["400"],
   },
   enterAmountContent: {
     flex: 1,
