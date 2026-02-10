@@ -14,17 +14,17 @@ export interface AuthorizedUser {
   status: string;
 }
 
-interface AuthUserManagerSlotProps {
+interface AuthUserManagerProps {
   authorizedUsers: AuthorizedUser[];
   onAddUser: () => void;
   onSelectUser?: (user: AuthorizedUser) => void;
 }
 
-export default function AuthUserManagerSlot({
+export default function AuthUserManager({
   authorizedUsers,
   onAddUser,
   onSelectUser,
-}: AuthUserManagerSlotProps) {
+}: AuthUserManagerProps) {
   return (
     <>
       <PrimaryHeader header="Authorized users" />

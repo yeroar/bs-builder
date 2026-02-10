@@ -8,7 +8,7 @@ export interface FrequencyOption {
   value: string;
 }
 
-export interface FrequencySelectorSlotProps {
+export interface FrequencySelectorProps {
   options?: FrequencyOption[];
   selectedValue?: string;
   onSelect?: (value: string) => void;
@@ -20,11 +20,11 @@ const defaultOptions: FrequencyOption[] = [
   { label: "Monthly", value: "Monthly" },
 ];
 
-export default function FrequencySelectorSlot({
+export default function FrequencySelector({
   options = defaultOptions,
   selectedValue = "Daily",
   onSelect,
-}: FrequencySelectorSlotProps) {
+}: FrequencySelectorProps) {
   return (
     <View style={styles.container}>
       {options.map((option) => (

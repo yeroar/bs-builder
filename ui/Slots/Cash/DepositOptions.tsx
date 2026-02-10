@@ -12,19 +12,19 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 export type DepositOption = "instant" | "oneTime" | "recurring";
 
-export interface DepositOptionsSlotProps {
+export interface DepositOptionsProps {
   onInstantPress?: () => void;
   onOneTimePress?: () => void;
   onRecurringPress?: () => void;
   testID?: string;
 }
 
-export default function DepositOptionsSlot({
+export default function DepositOptions({
   onInstantPress,
   onOneTimePress,
   onRecurringPress,
   testID,
-}: DepositOptionsSlotProps) {
+}: DepositOptionsProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

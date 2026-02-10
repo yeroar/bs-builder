@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { View, StyleSheet, ScrollView, Animated, Dimensions } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import GiftCardConfirmation from "../../../Slots/GiftCard/GiftCardConfirmation";
-import SendAsAGiftSlot from "../../../Slots/GiftCard/SendAsAGiftSlot";
+import SendAsAGift from "../../../Slots/GiftCard/SendAsAGift";
 import GiftCardSuccess from "../../../Slots/GiftCard/GiftCardSuccess";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
@@ -187,8 +187,22 @@ export default function GiftCardConfirmationScreen({
           leftIcon="x"
           onLeftPress={handleCloseSendAsGift}
           scrollable={false}
+          footer={
+            <ModalFooter
+              type="default"
+              primaryButton={
+                <Button
+                  label="Send gift"
+                  hierarchy="primary"
+                  size="lg"
+                  onPress={handleSendGift}
+                  disabled={!(senderName.trim() !== "" && recipientPhone.trim() !== "" && recipientName.trim() !== "")}
+                />
+              }
+            />
+          }
         >
-          <SendAsAGiftSlot
+          <SendAsAGift
             senderName={senderName}
             onSenderNameChange={setSenderName}
             recipientPhone={recipientPhone}
@@ -197,7 +211,6 @@ export default function GiftCardConfirmationScreen({
             onRecipientNameChange={setRecipientName}
             giftMessage={giftMessage}
             onGiftMessageChange={setGiftMessage}
-            onSendGift={handleSendGift}
           />
         </FullscreenTemplate>
       )}
@@ -225,9 +238,28 @@ export default function GiftCardConfirmationScreen({
           onClose={handleDone}
           onFavorite={onFavorite}
           onViewDetails={onViewDetails}
-          onRedeem={onRedeem}
-          onDone={handleDone}
           animated={false}
+          footer={
+            <ModalFooter
+              type="inverse"
+              primaryButton={
+                <Button
+                  label="Redeem"
+                  hierarchy="inverse"
+                  size="md"
+                  onPress={onRedeem}
+                />
+              }
+              secondaryButton={
+                <Button
+                  label="Done"
+                  hierarchy="secondary"
+                  size="md"
+                  onPress={handleDone}
+                />
+              }
+            />
+          }
         />
       )}
 

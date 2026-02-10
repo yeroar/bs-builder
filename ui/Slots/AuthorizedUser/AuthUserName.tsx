@@ -10,15 +10,15 @@ export interface AuthUserNameFormData {
   lastName: string;
 }
 
-interface AuthUserNameSlotProps {
+interface AuthUserNameProps {
   formData: AuthUserNameFormData;
   onChangeField: (field: keyof AuthUserNameFormData, value: string) => void;
 }
 
-export default function AuthUserNameSlot({
+export default function AuthUserName({
   formData,
   onChangeField,
-}: AuthUserNameSlotProps) {
+}: AuthUserNameProps) {
   return (
     <>
       <PrimaryHeader

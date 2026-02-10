@@ -1,8 +1,8 @@
 import figma from "@figma/code-connect";
-import RoundUpsSlot, { Multiplier } from "./RoundUpsSlot";
+import RoundUps, { Multiplier } from "./RoundUps";
 
 figma.connect(
-  RoundUpsSlot,
+  RoundUps,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=157-4127",
   {
     props: {
@@ -14,7 +14,7 @@ figma.connect(
       }) as Multiplier,
     },
     example: (props) => (
-      <RoundUpsSlot
+      <RoundUps
         selectedMultiplier={props.selectedMultiplier}
         onMultiplierSelect={() => {}}
         currentAmount={0}

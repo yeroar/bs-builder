@@ -6,7 +6,11 @@ import InstantDepositEnterAmount from "../../../Slots/Cash/InstantDepositEnterAm
 import InstantDepositConfirmation from "../../../Slots/Cash/InstantDepositConfirmation";
 import InstantDepositSuccess from "../../../Slots/Cash/InstantDepositSuccess";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../components/Primitives/FoldText";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
+import { colorMaps } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -101,6 +105,25 @@ export default function InstantDepositFlow({ onComplete, onClose }: InstantDepos
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                disclaimer={
+                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                    Transfers time vary by bank. All transfers are subject to review and could be delayed or stopped at our discretion.
+                  </FoldText>
+                }
+                primaryButton={
+                  <Button
+                    label="Confirm deposit"
+                    hierarchy="primary"
+                    size="md"
+                    disabled={selectedPaymentMethod === "null"}
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <InstantDepositConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -112,7 +135,6 @@ export default function InstantDepositFlow({ onComplete, onClose }: InstantDepos
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
               onPaymentMethodPress={() => setIsModalVisible(true)}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -133,10 +155,22 @@ export default function InstantDepositFlow({ onComplete, onClose }: InstantDepos
         scrollable={false}
         variant="yellow"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <InstantDepositSuccess
           amount={`$${formatWithCommas(numAmount)}`}
-          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );

@@ -1,9 +1,9 @@
 import React from "react";
-import RemoveModalSlot from "./RemoveModalSlot";
+import RemoveModal from "./RemoveModal";
 import figma from "@figma/code-connect";
 
 figma.connect(
-  RemoveModalSlot,
+  RemoveModal,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=158-45370&t=MBgGpdxPfYQe9lUU-4",
   {
     props: {
@@ -12,7 +12,7 @@ figma.connect(
       body: figma.textContent("Body"),
     },
     example: (props) => (
-      <RemoveModalSlot
+      <RemoveModal
         icon={props.icon}
         title={props.title}
         body={props.body}

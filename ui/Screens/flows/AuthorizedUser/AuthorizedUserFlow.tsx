@@ -8,7 +8,7 @@ import AuthUserDetailsScreen from "./screens/AuthUserDetailsScreen";
 import AuthUserReviewScreen from "./screens/AuthUserReviewScreen";
 import AuthUserSuccessScreen from "./screens/AuthUserSuccessScreen";
 import AuthUserManagerScreen from "./screens/AuthUserManagerScreen";
-import { AuthorizedUser } from "../../../Slots/AuthorizedUser/AuthUserManagerSlot";
+import { AuthorizedUser } from "../../../Slots/AuthorizedUser/AuthUserManager";
 
 type FlowStep = "intro" | "name" | "address" | "details" | "review";
 

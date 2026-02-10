@@ -1,16 +1,16 @@
 import React from "react";
 import figma from "@figma/code-connect";
-import FrequencySelectorSlot from "./FrequencySelectorSlot";
+import FrequencySelector from "./FrequencySelector";
 
 figma.connect(
-  FrequencySelectorSlot,
+  FrequencySelector,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=181-23545",
   {
     props: {
       children: figma.children("*"),
     },
     example: (props) => (
-      <FrequencySelectorSlot
+      <FrequencySelector
         options={[
           { label: "Daily", value: "Daily" },
           { label: "Weekly", value: "Weekly" },

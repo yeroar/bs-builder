@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import GCRedemptionMethodSlot from "./GCRedemptionMethodSlot";
+import GCRedemptionMethod from "./GCRedemptionMethod";
 
 figma.connect(
-  GCRedemptionMethodSlot,
+  GCRedemptionMethod,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=105-9911",
   {
-    example: () => <GCRedemptionMethodSlot />,
+    example: () => <GCRedemptionMethod />,
   }
 );

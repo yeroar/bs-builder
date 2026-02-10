@@ -11,7 +11,7 @@ import { RocketIcon } from "../../../components/Icons/RocketIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export default function AuthUserIntroSlot() {
+export default function AuthUserIntro() {
   return (
     <>
       <PrimaryHeader

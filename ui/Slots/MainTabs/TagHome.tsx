@@ -22,17 +22,17 @@ export interface GiftCardData {
   favorite?: boolean;
 }
 
-export interface TagHomeSlotProps {
+export interface TagHomeProps {
   onRedeemPress?: () => void;
   onSearchGiftCards?: () => void;
   onGiftCardPress?: (card: GiftCardData) => void;
 }
 
-export default function TagHomeSlot({
+export default function TagHome({
   onRedeemPress,
   onSearchGiftCards,
   onGiftCardPress,
-}: TagHomeSlotProps) {
+}: TagHomeProps) {
   const [searchValue, setSearchValue] = useState("");
 
   // Mock gift card data - replace with real data

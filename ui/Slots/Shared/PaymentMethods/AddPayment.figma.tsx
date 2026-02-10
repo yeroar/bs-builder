@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import AddPaymentSlot from "./AddPaymentSlot";
+import AddPayment from "./AddPayment";
 
 figma.connect(
-  AddPaymentSlot,
+  AddPayment,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=74-21107",
   {
-    example: () => <AddPaymentSlot />,
+    example: () => <AddPayment />,
   }
 );

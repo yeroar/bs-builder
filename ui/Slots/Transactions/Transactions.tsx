@@ -33,7 +33,7 @@ export interface TransactionItem {
   brand?: string;
 }
 
-export interface TransactionsSlotProps {
+export interface TransactionsProps {
   defaultCategory?: TransactionCategory;
   onCategoryChange?: (category: TransactionCategory) => void;
   bitcoinTransactions?: TransactionItem[];
@@ -222,7 +222,7 @@ const defaultFoldPlusTransactions: TransactionItem[] = [
   },
 ];
 
-export default function TransactionsSlot({
+export default function Transactions({
   defaultCategory = "bitcoin",
   onCategoryChange,
   bitcoinTransactions = defaultBitcoinTransactions,
@@ -231,7 +231,7 @@ export default function TransactionsSlot({
   rewardsTransactions = defaultRewardsTransactions,
   foldPlusTransactions = defaultFoldPlusTransactions,
   onTransactionPress,
-}: TransactionsSlotProps) {
+}: TransactionsProps) {
   const [activeCategory, setActiveCategory] = useState<TransactionCategory>(defaultCategory ?? "bitcoin");
 
   const handleCategoryPress = (category: TransactionCategory) => {

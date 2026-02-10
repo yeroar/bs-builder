@@ -6,7 +6,11 @@ import BtcBuyEnterAmount from "../../../Slots/BTC/BtcBuyEnterAmount";
 import BtcBuyConfirmation from "../../../Slots/BTC/BtcBuyConfirmation";
 import BtcBuySuccess from "../../../Slots/BTC/BtcBuySuccess";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../components/Primitives/FoldText";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
+import { colorMaps } from "../../../../components/tokens";
 import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -106,6 +110,29 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                modalVariant="default"
+                disclaimer={
+                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                    Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
+                    <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                      up to 14 days
+                    </FoldText>
+                    {" "}from purchase to unlock.
+                  </FoldText>
+                }
+                primaryButton={
+                  <Button
+                    label="Confirm purchase"
+                    hierarchy="primary"
+                    size="md"
+                    disabled={selectedPaymentMethod === "null"}
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <BtcBuyConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -114,11 +141,9 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
               purchaseAmount={`$${formatWithCommas(netAmount)}`}
               feePercentage="1%"
               feeAmount={`+$${formatWithCommas(feeAmount)}`}
-              actionLabel="Confirm purchase"
               paymentMethodVariant={selectedPaymentMethod}
               paymentMethodBrand={selectedBrand}
               onPaymentMethodPress={() => setIsPaymentModalVisible(true)}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -137,7 +162,28 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
         satsEquivalent={formatSats(satsEquivalent)}
         enterAnimation="fill"
         onClose={handleSuccessDone}
-        onActionPress={handleSuccessDone}
+        footer={
+          <ModalFooter
+            type="inverse"
+            disclaimer={
+              <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
+                <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                  up to 14 days
+                </FoldText>
+                {" "}from purchase to unlock.
+              </FoldText>
+            }
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       />
     );
   }

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { TransactionCategory } from "../ui/Slots/Transactions/TransactionsSlot";
+import { TransactionCategory } from "../ui/Slots/Transactions/Transactions";
 
 export type OverlayType =
   | { type: "history"; category?: TransactionCategory }

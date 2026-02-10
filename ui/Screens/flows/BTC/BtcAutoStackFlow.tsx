@@ -4,6 +4,8 @@ import FullscreenTemplate, { FullscreenTemplateRef } from "../../../Templates/Fu
 import ScreenStack from "../../../Templates/ScreenStack";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../components/Primitives/FoldText";
+import { colorMaps } from "../../../../components/tokens";
 import { ClockIcon } from "../../../../components/Icons/ClockIcon";
 import BtcAutoStackIntro from "../../../Slots/BTC/BtcAutoStackIntro";
 import BtcAutoStackEnterAmount from "../../../Slots/BTC/BtcAutoStackEnterAmount";
@@ -171,6 +173,28 @@ export default function BtcAutoStackFlow({
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                modalVariant="default"
+                disclaimer={
+                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                    You authorize recurring charges in the amount and interval shown above. Please see{" "}
+                    <FoldText type="body-sm" style={{ color: colorMaps.face.accentBold }}>
+                      terms
+                    </FoldText>
+                    {" "}for more details.
+                  </FoldText>
+                }
+                primaryButton={
+                  <Button
+                    label="Confirm auto-stack"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <BtcAutoStackConfirmation
               satsAmount={satsAmount}
@@ -178,7 +202,6 @@ export default function BtcAutoStackFlow({
               totalPurchase={`$${numAmount.toFixed(2)}`}
               totalPurchaseSats={`${satsAmount.toLocaleString()} sats`}
               totalCost={`$${numAmount.toFixed(2)}`}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -228,11 +251,32 @@ export default function BtcAutoStackFlow({
         variant="yellow"
         navVariant="start"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            disclaimer={
+              <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                Bitcoin purchases usually settle within a few minutes, but may take up to{" "}
+                <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
+                  1 business day
+                </FoldText>
+                . We will notify you once the transaction is complete and available for withdrawal
+              </FoldText>
+            }
+            secondaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <BtcAutoStackSuccess
           amount={`$${numAmount.toFixed(0)}`}
           frequency={selectedFrequency}
-          onDone={handleSuccessDone}
           onViewDetails={handleSuccessDone}
         />
       </FullscreenTemplate>

@@ -1,6 +1,6 @@
 import React from "react";
 import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
-import AuthUserIntroSlot from "../../../../Slots/AuthorizedUser/AuthUserIntroSlot";
+import AuthUserIntro from "../../../../Slots/AuthorizedUser/AuthUserIntro";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
 
@@ -26,7 +26,7 @@ export default function AuthUserIntroScreen({ onContinue, onClose }: AuthUserInt
         />
       }
     >
-      <AuthUserIntroSlot />
+      <AuthUserIntro />
     </FullscreenTemplate>
   );
 }

@@ -4,7 +4,7 @@ import { BellIcon } from "../../../components/Icons/BellIcon";
 import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import FoldPressable from "../../../components/Primitives/FoldPressable";
 import { colorMaps } from "../../../components/tokens";
-import TagHomeSlot, { GiftCardData } from "../../Slots/MainTabs/TagHomeSlot";
+import TagHome, { GiftCardData } from "../../Slots/MainTabs/TagHome";
 import { RedeemGiftCardFlow } from "../flows";
 import GiftCardPurchaseFlow, { SelectedCard } from "../flows/GiftCard/GiftCardPurchaseFlow";
 import { buildSelectedCard } from "../flows/GiftCard/buildSelectedCard";
@@ -44,7 +44,7 @@ export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onS
           </FoldPressable>,
         ]}
       >
-        <TagHomeSlot
+        <TagHome
           onRedeemPress={handleOpenRedeemFlow}
           onSearchGiftCards={onSearchGiftCards}
           onGiftCardPress={handleGiftCardPress}

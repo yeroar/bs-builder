@@ -1,13 +1,13 @@
 import figma from "@figma/code-connect";
-import DepositOptionsSlot from "./DepositOptionsSlot";
+import DepositOptions from "./DepositOptions";
 
 figma.connect(
-  DepositOptionsSlot,
+  DepositOptions,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=167-18041",
   {
     props: {},
     example: () => (
-      <DepositOptionsSlot
+      <DepositOptions
         onInstantPress={() => {}}
         onOneTimePress={() => {}}
         onRecurringPress={() => {}}

@@ -6,6 +6,8 @@ import OneTimeDepositEnterAmount from "../../../Slots/Cash/OneTimeDepositEnterAm
 import OneTimeDepositConfirmation from "../../../Slots/Cash/OneTimeDepositConfirmation";
 import OneTimeDepositSuccess from "../../../Slots/Cash/OneTimeDepositSuccess";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
@@ -97,6 +99,20 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Confirm deposit"
+                    hierarchy="primary"
+                    size="md"
+                    disabled={selectedPaymentMethod === "null"}
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <OneTimeDepositConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -106,7 +122,6 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
               onPaymentMethodPress={() => setIsModalVisible(true)}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -127,10 +142,22 @@ export default function OneTimeDepositFlow({ onComplete, onClose }: OneTimeDepos
         scrollable={false}
         variant="yellow"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <OneTimeDepositSuccess
           amount={`$${formatWithCommas(numAmount)}`}
-          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );

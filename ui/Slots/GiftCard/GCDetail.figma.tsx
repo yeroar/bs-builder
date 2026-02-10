@@ -1,8 +1,8 @@
 import figma from "@figma/code-connect";
-import GCDetailSlot from "./GCDetailSlot";
+import GCDetail from "./GCDetail";
 
 figma.connect(
-  GCDetailSlot,
+  GCDetail,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=139-22462&t=oAFcEQeQzXtt4Itn-4",
   {
     props: {
@@ -11,7 +11,7 @@ figma.connect(
       offer: figma.children("*"),
     },
     example: (props) => (
-      <GCDetailSlot
+      <GCDetail
         logo={props.logo}
         title={props.title}
         offer={props.offer}

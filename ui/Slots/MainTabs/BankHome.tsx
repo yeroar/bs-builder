@@ -28,7 +28,7 @@ export interface DirectToBitcoinConfig {
   bitcoinPercent: number;
 }
 
-export interface BankHomeSlotProps {
+export interface BankHomeProps {
   onActivateCard?: () => void;
   onBitcoinPress?: () => void;
   onCashPress?: () => void;
@@ -42,7 +42,7 @@ export interface BankHomeSlotProps {
   directToBitcoinConfig?: DirectToBitcoinConfig;
 }
 
-export default function BankHomeSlot({
+export default function BankHome({
   onActivateCard,
   onBitcoinPress,
   onCashPress,
@@ -53,7 +53,7 @@ export default function BankHomeSlot({
   onRedeemPress,
   onDirectToBitcoinPress,
   directToBitcoinConfig,
-}: BankHomeSlotProps) {
+}: BankHomeProps) {
   return (
     <View style={styles.container}>
       {/* Total Section */}

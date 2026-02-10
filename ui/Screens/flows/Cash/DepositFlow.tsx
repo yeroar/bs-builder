@@ -3,7 +3,7 @@ import { Modal } from "react-native";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import { FoldText } from "../../../../components/Primitives/FoldText";
-import DepositOptionsSlot from "../../../Slots/Cash/DepositOptionsSlot";
+import DepositOptions from "../../../Slots/Cash/DepositOptions";
 import InstantDepositFlow from "./InstantDepositFlow";
 import OneTimeDepositFlow from "./OneTimeDepositFlow";
 import RecurringDepositFlow from "./RecurringDepositFlow";
@@ -113,7 +113,7 @@ export default function DepositFlow({ onComplete, onRecurringDepositComplete, on
           />
         }
       >
-        <DepositOptionsSlot
+        <DepositOptions
           onInstantPress={handleInstantPress}
           onOneTimePress={handleOneTimePress}
           onRecurringPress={handleRecurringPress}

@@ -1,21 +1,23 @@
 import React from "react";
 import TransactionSuccess, { TransactionSuccessRef } from "../../Templates/Success/TransactionSuccess";
 import FoldPageViewHeader from "../../../components/Navigation/TopNav/FoldPageViewHeader";
-import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { CurrencyInput, BottomContext } from "../../../components/Inputs/CurrencyInput";
 
 export interface RedeemBtcGiftCardSuccessProps {
   amount?: string;
-  onDone?: () => void;
+  onClose?: () => void;
   onViewDetails?: () => void;
+  /** Footer content provided by the flow */
+  footer?: React.ReactNode;
   successRef?: React.RefObject<TransactionSuccessRef>;
 }
 
 export default function RedeemBtcGiftCardSuccess({
   amount = "$100",
-  onDone,
+  onClose,
   onViewDetails,
+  footer,
   successRef,
 }: RedeemBtcGiftCardSuccessProps) {
   return (
@@ -26,16 +28,10 @@ export default function RedeemBtcGiftCardSuccess({
           variant="fullscreen"
           title="Gift card redeemed"
           leftIcon="x"
-          onLeftPress={onDone}
+          onLeftPress={onClose}
         />
       }
-      footer={
-        <ModalFooter
-          primaryButton={
-            <Button label="Done" hierarchy="inverse" size="md" onPress={onDone} />
-          }
-        />
-      }
+      footer={footer}
     >
       <CurrencyInput
         value={amount}

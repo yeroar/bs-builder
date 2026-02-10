@@ -3,8 +3,6 @@ import TxConfirmation from "../../Templates/TxConfirmation/TxConfirmation";
 import { CurrencyInput, TopContext, BottomContext } from "../../../components/Inputs/CurrencyInput";
 import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { formatSats } from "../../../components/utils/formatWithCommas";
 
 export interface BtcSendConfirmationProps {
@@ -14,7 +12,6 @@ export interface BtcSendConfirmationProps {
   feeSats?: number;
   feeUsd?: string;
   estimatedTime?: string;
-  onConfirmPress?: () => void;
   testID?: string;
 }
 
@@ -25,7 +22,6 @@ export default function BtcSendConfirmation({
   feeSats = 1000,
   feeUsd = "~$1.03",
   estimatedTime = "Arrives within 24hrs",
-  onConfirmPress,
   testID,
 }: BtcSendConfirmationProps) {
   const totalSats = satsAmount + feeSats;
@@ -71,19 +67,6 @@ export default function BtcSendConfirmation({
             value={estimatedTime}
           />
         </ReceiptDetails>
-      }
-      footer={
-        <ModalFooter
-          modalVariant="default"
-          primaryButton={
-            <Button
-              label="Confirm send"
-              hierarchy="primary"
-              size="md"
-              onPress={onConfirmPress}
-            />
-          }
-        />
       }
     />
   );

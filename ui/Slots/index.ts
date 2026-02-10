@@ -1,6 +1,6 @@
 // ActivateCards
-export { default as ActivateDebitCardSlot } from "./ActivateCards/ActivateDebitCardSlot";
-export { default as ActivationSuccessSlot } from "./ActivateCards/ActivationSuccessSlot";
+export { default as ActivateDebitCard } from "./ActivateCards/ActivateDebitCard";
+export { default as ActivationSuccess } from "./ActivateCards/ActivationSuccess";
 
 // BTC
 export { default as Btc } from "./BTC/Btc";
@@ -8,17 +8,17 @@ export { default as BtcBuyModal } from "./BTC/BtcBuyModal";
 export { default as DirectToBitcoin } from "./BTC/DirectToBitcoin";
 
 // Cash
-export { default as CashSlot } from "./Cash/CashSlot";
-export { default as DepositOptionsSlot } from "./Cash/DepositOptionsSlot";
-export { default as RoundUpsSlot } from "./Cash/RoundUpsSlot";
+export { default as Cash } from "./Cash/Cash";
+export { default as DepositOptions } from "./Cash/DepositOptions";
+export { default as RoundUps } from "./Cash/RoundUps";
 
 // GiftCard
-export { default as GCCategoriesSlot } from "./GiftCard/GCCategoriesSlot";
-export { default as GCDetailSlot } from "./GiftCard/GCDetailSlot";
-export { default as GCRedemptionMethodSlot } from "./GiftCard/GCRedemptionMethodSlot";
-export { default as RedeemBtcGiftCardSlot } from "./GiftCard/RedeemBtcGiftCardSlot";
-export { default as SendAsAGiftSlot } from "./GiftCard/SendAsAGiftSlot";
+export { default as GCCategories } from "./GiftCard/GCCategories";
+export { default as GCDetail } from "./GiftCard/GCDetail";
+export { default as GCRedemptionMethod } from "./GiftCard/GCRedemptionMethod";
+export { default as RedeemBtcGiftCard } from "./GiftCard/RedeemBtcGiftCard";
+export { default as SendAsAGift } from "./GiftCard/SendAsAGift";
 
 // MainTabs
-export { default as BankHomeSlot } from "./MainTabs/BankHomeSlot";
-export { default as TagHomeSlot } from "./MainTabs/TagHomeSlot";
+export { default as BankHome } from "./MainTabs/BankHome";
+export { default as TagHome } from "./MainTabs/TagHome";

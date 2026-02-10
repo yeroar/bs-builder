@@ -1,6 +1,6 @@
 import figma from "@figma/code-connect";
-import WithdrawOptionsSlot from "./WithdrawOptionsSlot";
+import WithdrawOptions from "./WithdrawOptions";
 
-figma.connect(WithdrawOptionsSlot, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=171-24983", {
-  example: () => <WithdrawOptionsSlot />,
+figma.connect(WithdrawOptions, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=171-24983", {
+  example: () => <WithdrawOptions />,
 });

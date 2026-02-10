@@ -3,7 +3,7 @@ import { Modal } from "react-native";
 import MiniModal from "../../../components/Modals/MiniModal";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import RemoveModalSlot from "./RemoveModalSlot";
+import RemoveModal from "./RemoveModal";
 
 export interface RemoveConfirmModalProps {
   visible: boolean;
@@ -59,7 +59,7 @@ export default function RemoveConfirmModal({
           />
         }
       >
-        <RemoveModalSlot icon={icon} title={title} body={body} />
+        <RemoveModal icon={icon} title={title} body={body} />
       </MiniModal>
     </Modal>
   );

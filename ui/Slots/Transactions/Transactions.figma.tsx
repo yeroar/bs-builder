@@ -1,13 +1,13 @@
 import figma from "@figma/code-connect";
-import TransactionsSlot from "./TransactionsSlot";
+import Transactions from "./Transactions";
 
 figma.connect(
-  TransactionsSlot,
+  Transactions,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=50-17184",
   {
     props: {},
     example: () => (
-      <TransactionsSlot
+      <Transactions
         onTransactionPress={(transaction) => console.log("Transaction pressed", transaction.id)}
       />
     ),

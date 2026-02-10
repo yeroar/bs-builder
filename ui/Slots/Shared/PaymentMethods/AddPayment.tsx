@@ -7,17 +7,17 @@ import CreditCardRefreshIcon from "../../../../components/Icons/CreditCardRefres
 import { colorMaps, spacing } from "../../../../components/tokens";
 import CreditCardIcon from "../../../../components/Icons/CreditCardIcon";
 
-export interface AddPaymentSlotProps {
+export interface AddPaymentProps {
   onBankAccountPress?: () => void;
   onDebitCardPress?: () => void;
   testID?: string;
 }
 
-export default function AddPaymentSlot({
+export default function AddPayment({
   onBankAccountPress,
   onDebitCardPress,
   testID,
-}: AddPaymentSlotProps) {
+}: AddPaymentProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

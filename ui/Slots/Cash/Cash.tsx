@@ -33,7 +33,7 @@ export interface RecurringDepositConfig {
   status?: "active" | "paused";
 }
 
-export interface CashSlotProps {
+export interface CashProps {
   cashAmount?: string;
   onAddCashPress?: () => void;
   onWithdrawPress?: () => void;
@@ -56,7 +56,7 @@ export interface CashSlotProps {
   }>;
 }
 
-export default function CashSlot({
+export default function Cash({
   cashAmount = "$4,900.00",
   onAddCashPress,
   onWithdrawPress,
@@ -95,7 +95,7 @@ export default function CashSlot({
     },
   ],
   roundUpsConfig,
-}: CashSlotProps) {
+}: CashProps) {
   return (
     <View style={styles.container}>
       {/* Cash Balance Section */}

@@ -4,8 +4,6 @@ import { CurrencyInput, TopContext } from "../../../components/Inputs/CurrencyIn
 import { PmSelectorVariant } from "../../../components/Inputs/CurrencyInput/PmSelector";
 import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
 
 export interface RecurringDepositConfirmationProps {
   amount: string;
@@ -16,7 +14,6 @@ export interface RecurringDepositConfirmationProps {
   paymentMethodBrand?: string;
   paymentMethodLabel?: string;
   onPaymentMethodPress?: () => void;
-  onConfirmPress?: () => void;
   testID?: string;
 }
 
@@ -29,7 +26,6 @@ export default function RecurringDepositConfirmation({
   paymentMethodBrand,
   paymentMethodLabel,
   onPaymentMethodPress,
-  onConfirmPress,
   testID,
 }: RecurringDepositConfirmationProps) {
   return (
@@ -53,20 +49,6 @@ export default function RecurringDepositConfirmation({
         </ReceiptDetails>
       }
       disclaimer={"Deposits are limited to $15,000 per transfer, $15,000 per day, $40,000 per month, and a maximum total balance of $30,000.\nDeposits are limited to $15,000 per transfer, $15,000 per day, $40,000 per month, and a maximum total balance of $30,000.\nDeposits will initiate on the date chosen and require at least two business days to complete. Please schedule recurring deposits accordingly."}
-      footer={
-        <ModalFooter
-          type="default"
-          primaryButton={
-            <Button
-              label="Confirm recurring deposit"
-              hierarchy="primary"
-              size="md"
-              disabled={paymentMethodVariant === "null"}
-              onPress={onConfirmPress}
-            />
-          }
-        />
-      }
     />
   );
 }

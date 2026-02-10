@@ -1,13 +1,13 @@
 import figma from "@figma/code-connect";
-import RecurringDepositSlot from "./RecurringDepositSlot";
+import RecurringDeposit from "./RecurringDeposit";
 
 figma.connect(
-  RecurringDepositSlot,
+  RecurringDeposit,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=180-24681",
   {
     props: {
       hasActive: figma.boolean("hasActive"),
     },
-    example: (props) => <RecurringDepositSlot hasActive={props.hasActive} />,
+    example: (props) => <RecurringDeposit hasActive={props.hasActive} />,
   }
 );

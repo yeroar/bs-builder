@@ -3,8 +3,6 @@ import TxConfirmation from "../../Templates/TxConfirmation/TxConfirmation";
 import { CurrencyInput, TopContext, BottomContext } from "../../../components/Inputs/CurrencyInput";
 import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
 
 export interface BtcSellConfirmationProps {
   amount: string;
@@ -13,8 +11,6 @@ export interface BtcSellConfirmationProps {
   saleAmount?: string;
   feePercentage?: string;
   feeAmount?: string;
-  actionLabel?: string;
-  onConfirmPress?: () => void;
   testID?: string;
 }
 
@@ -25,8 +21,6 @@ export default function BtcSellConfirmation({
   saleAmount = "$99.00",
   feePercentage = "1%",
   feeAmount = "+$1.00",
-  actionLabel = "Confirm sell",
-  onConfirmPress,
   testID,
 }: BtcSellConfirmationProps) {
   return (
@@ -45,19 +39,6 @@ export default function BtcSellConfirmation({
           <ListItemReceipt label="Amount" value={saleAmount} />
           <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
         </ReceiptDetails>
-      }
-      footer={
-        <ModalFooter
-          modalVariant="default"
-          primaryButton={
-            <Button
-              label={actionLabel}
-              hierarchy="primary"
-              size="md"
-              onPress={onConfirmPress}
-            />
-          }
-        />
       }
     />
   );

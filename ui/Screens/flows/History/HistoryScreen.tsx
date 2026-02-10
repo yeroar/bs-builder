@@ -1,6 +1,6 @@
 import React from "react";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
-import TransactionsSlot, { TransactionCategory } from "../../../Slots/Transactions/TransactionsSlot";
+import Transactions, { TransactionCategory } from "../../../Slots/Transactions/Transactions";
 
 interface HistoryScreenProps {
   onBack: () => void;
@@ -14,7 +14,7 @@ export default function HistoryScreen({ onBack, defaultCategory }: HistoryScreen
       onLeftPress={onBack}
       scrollable
     >
-      <TransactionsSlot defaultCategory={defaultCategory} />
+      <Transactions defaultCategory={defaultCategory} />
     </FullscreenTemplate>
   );
 }

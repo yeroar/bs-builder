@@ -5,15 +5,15 @@ import { IconContainer } from "../../../components/Primitives/IconContainer";
 import CheckCircleIcon from "../../../components/Icons/CheckCircleIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface ActivationSuccessSlotProps {
+export interface ActivationSuccessProps {
   title?: string;
   message?: string;
 }
 
-export default function ActivationSuccessSlot({
+export default function ActivationSuccess({
   title = "Your card is active",
   message = "You can now enjoy all the features and benefits of your Fold Debit Card.",
-}: ActivationSuccessSlotProps) {
+}: ActivationSuccessProps) {
   return (
     <View style={styles.container}>
       <IconContainer

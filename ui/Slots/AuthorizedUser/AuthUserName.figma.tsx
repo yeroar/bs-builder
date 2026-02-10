@@ -1,9 +1,9 @@
 import figma from "@figma/code-connect";
-import AuthUserNameSlot from "./AuthUserNameSlot";
+import AuthUserName from "./AuthUserName";
 
-figma.connect(AuthUserNameSlot, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20190", {
+figma.connect(AuthUserName, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20190", {
   example: () => (
-    <AuthUserNameSlot
+    <AuthUserName
       formData={{ firstName: "", middleName: "", lastName: "" }}
       onChangeField={(field, value) => console.log(field, value)}
     />

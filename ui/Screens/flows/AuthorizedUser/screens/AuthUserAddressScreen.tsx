@@ -1,6 +1,6 @@
 import React from "react";
 import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
-import AuthUserAddressSlot, { AuthUserAddressFormData } from "../../../../Slots/AuthorizedUser/AuthUserAddressSlot";
+import AuthUserAddress, { AuthUserAddressFormData } from "../../../../Slots/AuthorizedUser/AuthUserAddress";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
 
@@ -35,7 +35,7 @@ export default function AuthUserAddressScreen({ formData, onChangeField, onConti
         />
       }
     >
-      <AuthUserAddressSlot formData={formData} onChangeField={onChangeField} />
+      <AuthUserAddress formData={formData} onChangeField={onChangeField} />
     </FullscreenTemplate>
   );
 }

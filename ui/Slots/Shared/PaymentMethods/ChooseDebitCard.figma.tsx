@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import ChooseDebitCardSlot from "./ChooseDebitCardSlot";
+import ChooseDebitCard from "./ChooseDebitCard";
 
 figma.connect(
-  ChooseDebitCardSlot,
+  ChooseDebitCard,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=77-20812",
   {
-    example: () => <ChooseDebitCardSlot />,
+    example: () => <ChooseDebitCard />,
   }
 );

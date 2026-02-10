@@ -3,13 +3,11 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import PillSelector from "../../../components/Selectors/PillSelector/PillSelector";
 import TextField from "../../../components/Inputs/TextContainer/TextField";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { colorMaps, spacing } from "../../../components/tokens";
 
 export type DeliveryMethod = "text" | "email";
 
-export interface SendAsAGiftSlotProps {
+export interface SendAsAGiftProps {
   /** Selected delivery method */
   deliveryMethod?: DeliveryMethod;
   /** Callback when delivery method changes */
@@ -30,12 +28,10 @@ export interface SendAsAGiftSlotProps {
   giftMessage?: string;
   /** Callback when gift message changes */
   onGiftMessageChange?: (value: string) => void;
-  /** Callback when send gift button is pressed */
-  onSendGift?: () => void;
   testID?: string;
 }
 
-export default function SendAsAGiftSlot({
+export default function SendAsAGift({
   deliveryMethod = "text",
   onDeliveryMethodChange,
   senderName = "",
@@ -46,9 +42,8 @@ export default function SendAsAGiftSlot({
   onRecipientNameChange,
   giftMessage = "",
   onGiftMessageChange,
-  onSendGift,
   testID,
-}: SendAsAGiftSlotProps) {
+}: SendAsAGiftProps) {
   const [internalMethod, setInternalMethod] = useState<DeliveryMethod>(deliveryMethod);
 
   const currentMethod = onDeliveryMethodChange ? deliveryMethod : internalMethod;
@@ -60,12 +55,6 @@ export default function SendAsAGiftSlot({
       setInternalMethod(method);
     }
   };
-
-  // Check if all required fields are filled
-  const isFormValid =
-    senderName.trim() !== "" &&
-    recipientPhone.trim() !== "" &&
-    recipientName.trim() !== "";
 
   return (
     <View style={styles.container} testID={testID}>
@@ -139,20 +128,6 @@ export default function SendAsAGiftSlot({
           />
         </View>
       </ScrollView>
-
-      {/* Sticky Footer */}
-      <ModalFooter
-        type="default"
-        primaryButton={
-          <Button
-            label="Send gift"
-            hierarchy="primary"
-            size="lg"
-            onPress={onSendGift}
-            disabled={!isFormValid}
-          />
-        }
-      />
     </View>
   );
 }

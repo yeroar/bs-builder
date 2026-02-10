@@ -18,7 +18,7 @@ export type GCCategory =
   | "entertainment"
   | "food-delivery";
 
-export interface GCCategoriesSlotProps {
+export interface GCCategoriesProps {
   selectedCategories?: GCCategory[];
   onCategoryToggle?: (category: GCCategory) => void;
   maxHeight?: number;
@@ -40,11 +40,11 @@ const CATEGORY_OPTIONS: { value: GCCategory; label: string }[] = [
   { value: "food-delivery", label: "Food Delivery" },
 ];
 
-export default function GCCategoriesSlot({
+export default function GCCategories({
   selectedCategories = [],
   onCategoryToggle,
   maxHeight = 400,
-}: GCCategoriesSlotProps) {
+}: GCCategoriesProps) {
   return (
     <View style={styles.container}>
       <ScrollView

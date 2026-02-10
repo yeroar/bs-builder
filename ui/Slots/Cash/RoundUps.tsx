@@ -8,7 +8,7 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 export type Multiplier = "1x" | "2x" | "5x" | "10x";
 
-export interface RoundUpsSlotProps {
+export interface RoundUpsProps {
   selectedMultiplier?: Multiplier;
   onMultiplierSelect?: (multiplier: Multiplier) => void;
   currentAmount?: number;
@@ -22,12 +22,12 @@ const MULTIPLIER_EXAMPLES: Record<Multiplier, { roundUp: string; purchase: strin
   "10x": { purchase: "$1.80", roundUp: "$2.00" },
 };
 
-export default function RoundUpsSlot({
+export default function RoundUps({
   selectedMultiplier = "2x",
   onMultiplierSelect,
   currentAmount = 0,
   threshold = 10,
-}: RoundUpsSlotProps) {
+}: RoundUpsProps) {
   const multipliers: Multiplier[] = ["1x", "2x", "5x", "10x"];
   const example = MULTIPLIER_EXAMPLES[selectedMultiplier];
   const progress = (currentAmount / threshold) * 100;

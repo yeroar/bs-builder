@@ -1,6 +1,6 @@
 import React from "react";
 import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
-import AuthUserReviewSlot, { AuthUserReviewFormData } from "../../../../Slots/AuthorizedUser/AuthUserReviewSlot";
+import AuthUserReview, { AuthUserReviewFormData } from "../../../../Slots/AuthorizedUser/AuthUserReview";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
 
@@ -26,7 +26,7 @@ export default function AuthUserReviewScreen({ formData, onConfirm, onBack }: Au
         />
       }
     >
-      <AuthUserReviewSlot formData={formData} />
+      <AuthUserReview formData={formData} />
     </FullscreenTemplate>
   );
 }

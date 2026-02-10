@@ -6,7 +6,7 @@ import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { RoundUpsIcon } from "../../../../components/Icons/RoundUpsIcon";
 import RoundUpsIntro from "../../../Slots/Cash/RoundUpsIntro";
-import RoundUpsSlot, { Multiplier } from "../../../Slots/Cash/RoundUpsSlot";
+import RoundUps, { Multiplier } from "../../../Slots/Cash/RoundUps";
 import RoundUpsSuccess from "../../../Slots/Cash/RoundUpsSuccess";
 import RemoveConfirmModal from "../../../Slots/Modals/RemoveConfirmModal";
 
@@ -121,7 +121,7 @@ export default function RoundUpsFlow({
               />
             }
           >
-            <RoundUpsSlot
+            <RoundUps
               selectedMultiplier={selectedMultiplier}
               onMultiplierSelect={setSelectedMultiplier}
               currentAmount={currentAmount}
@@ -157,7 +157,7 @@ export default function RoundUpsFlow({
               />
             }
           >
-            <RoundUpsSlot
+            <RoundUps
               selectedMultiplier={selectedMultiplier}
               onMultiplierSelect={setSelectedMultiplier}
               currentAmount={currentAmount}
@@ -176,11 +176,23 @@ export default function RoundUpsFlow({
         onLeftPress={handleSuccessClose}
         scrollable={false}
         navVariant="start"
+        footer={
+          <ModalFooter
+            type="default"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="primary"
+                size="md"
+                onPress={handleDone}
+              />
+            }
+          />
+        }
       >
         <RoundUpsSuccess
           multiplier={selectedMultiplier}
           isUpdate={isFeatureActive}
-          onDone={handleDone}
         />
       </FullscreenTemplate>
     );

@@ -1,8 +1,8 @@
 import figma from "@figma/code-connect";
-import RecurringDepositDetailsSlot from "./RecurringDepositDetailsSlot";
+import RecurringDepositDetails from "./RecurringDepositDetails";
 
 figma.connect(
-  RecurringDepositDetailsSlot,
+  RecurringDepositDetails,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=181-25590",
   {
     props: {
@@ -11,6 +11,6 @@ figma.connect(
         paused: "paused",
       }),
     },
-    example: (props) => <RecurringDepositDetailsSlot state={props.state} />,
+    example: (props) => <RecurringDepositDetails state={props.state} />,
   }
 );

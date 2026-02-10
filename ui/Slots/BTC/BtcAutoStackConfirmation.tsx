@@ -5,10 +5,6 @@ import { PmSelectorVariant } from "../../../components/Inputs/CurrencyInput/PmSe
 import ReceiptDetails from "../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import Divider from "../../../components/Primitives/Divider/Divider";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../components/Primitives/FoldText";
-import { colorMaps } from "../../../components/tokens";
 import { formatSats } from "../../../components/utils/formatWithCommas";
 
 export interface BtcAutoStackConfirmationProps {
@@ -39,7 +35,6 @@ export interface BtcAutoStackConfirmationProps {
   feeAmount?: string;
   /** Total cost */
   totalCost?: string;
-  onConfirmPress?: () => void;
   testID?: string;
 }
 
@@ -58,7 +53,6 @@ export default function BtcAutoStackConfirmation({
   feePercentage = "0%",
   feeAmount = "$0.00",
   totalCost = "$100.00",
-  onConfirmPress,
   testID,
 }: BtcAutoStackConfirmationProps) {
   return (
@@ -91,28 +85,6 @@ export default function BtcAutoStackConfirmation({
           <ListItemReceipt label={`Fees • ${feePercentage}`} value={feeAmount} />
           <ListItemReceipt label="Total cost" value={totalCost} />
         </ReceiptDetails>
-      }
-      footer={
-        <ModalFooter
-          modalVariant="default"
-          disclaimer={
-            <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-              You authorize recurring charges in the amount and interval shown above. Please see{" "}
-              <FoldText type="body-sm" style={{ color: colorMaps.face.accentBold }}>
-                terms
-              </FoldText>
-              {" "}for more details.
-            </FoldText>
-          }
-          primaryButton={
-            <Button
-              label="Confirm auto-stack"
-              hierarchy="primary"
-              size="md"
-              onPress={onConfirmPress}
-            />
-          }
-        />
       }
     />
   );

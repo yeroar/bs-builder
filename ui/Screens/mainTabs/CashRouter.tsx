@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import FullscreenTemplate from "../../Templates/FullscreenTemplate";
-import CashSlot from "../../Slots/Cash/CashSlot";
-import DirectDepositSlot from "../../Slots/Cash/DirectDepositSlot";
+import Cash from "../../Slots/Cash/Cash";
+import DirectDeposit from "../../Slots/Cash/DirectDeposit";
 import { DepositFlow, WithdrawFlow, RoundUpsFlow, AuthorizedUserFlow } from "../flows";
 import { RecurringDepositFlow } from "../flows/Cash";
-import { RoundUpsConfig, RecurringDepositConfig } from "../../Slots/Cash/CashSlot";
-import { Multiplier } from "../../Slots/Cash/RoundUpsSlot";
-import { TransactionCategory } from "../../Slots/Transactions/TransactionsSlot";
+import { RoundUpsConfig, RecurringDepositConfig } from "../../Slots/Cash/Cash";
+import { Multiplier } from "../../Slots/Cash/RoundUps";
+import { TransactionCategory } from "../../Slots/Transactions/Transactions";
 import { FlowType, BankActions } from "./hooks/useBankState";
 
 export interface CashRouterProps {
@@ -37,7 +37,7 @@ export default function CashRouter({
       {/* Cash Screen */}
       {visible && (
         <FullscreenTemplate onLeftPress={onClose} scrollable>
-          <CashSlot
+          <Cash
             onAddCashPress={() => actions.openFlow("deposit")}
             onWithdrawPress={() => actions.openFlow("withdraw")}
             onAuthorizedUsersPress={() => actions.openFlow("authorizedUser")}
@@ -57,7 +57,7 @@ export default function CashRouter({
           onLeftPress={() => setShowDirectDepositScreen(false)}
           scrollable
         >
-          <DirectDepositSlot
+          <DirectDeposit
             onDirectToBitcoinPress={() => {
               setShowDirectDepositScreen(false);
               actions.openFlow("directToBitcoin");

@@ -1,11 +1,11 @@
 import React from "react";
-import ActivationSuccessSlot from "./ActivationSuccessSlot";
+import ActivationSuccess from "./ActivationSuccess";
 import figma from "@figma/code-connect";
 
 figma.connect(
-  ActivationSuccessSlot,
+  ActivationSuccess,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=65-10526",
   {
-    example: () => <ActivationSuccessSlot />,
+    example: () => <ActivationSuccess />,
   }
 );

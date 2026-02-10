@@ -5,7 +5,7 @@ import { IconContainer } from "../../../components/Primitives/IconContainer";
 import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface RemoveModalSlotProps {
+export interface RemoveModalProps {
   /** Icon element. Defaults to InfoCircleIcon */
   icon?: React.ReactNode;
   /** Title text */
@@ -14,11 +14,11 @@ export interface RemoveModalSlotProps {
   body: string;
 }
 
-export default function RemoveModalSlot({
+export default function RemoveModal({
   icon = <InfoCircleIcon />,
   title,
   body,
-}: RemoveModalSlotProps) {
+}: RemoveModalProps) {
   return (
     <View style={styles.container}>
       <IconContainer variant="default-fill" size="lg" icon={icon} />

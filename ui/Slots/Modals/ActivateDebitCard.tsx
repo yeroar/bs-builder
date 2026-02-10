@@ -4,19 +4,19 @@ import { FoldText } from "../../../components/Primitives/FoldText";
 import TextField from "../../../components/Inputs/TextContainer/TextField";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface ActivateDebitCardSlotProps {
+export interface ActivateDebitCardProps {
   cardNumber?: string;
   cvv?: string;
   onCardNumberChange?: (text: string) => void;
   onCVVChange?: (text: string) => void;
 }
 
-export default function ActivateDebitCardSlot({
+export default function ActivateDebitCard({
   cardNumber = "",
   cvv = "",
   onCardNumberChange,
   onCVVChange,
-}: ActivateDebitCardSlotProps) {
+}: ActivateDebitCardProps) {
   return (
     <View style={styles.container}>
       <FoldText type="header-md" style={styles.title}>

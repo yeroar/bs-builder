@@ -12,7 +12,7 @@ import { colorMaps, spacing } from "../../../../components/tokens";
 
 export type PaymentCardOption = "debitCard" | "cashBalance" | "bankAccount";
 
-export interface ChoosePaymentCardSlotProps {
+export interface ChoosePaymentCardProps {
   cashBalance?: string;
   bankName?: string;
   bankLastFour?: string;
@@ -23,7 +23,7 @@ export interface ChoosePaymentCardSlotProps {
   testID?: string;
 }
 
-export default function ChoosePaymentCardSlot({
+export default function ChoosePaymentCard({
   cashBalance = "$n.nn",
   bankName = "Wells Fargo",
   bankLastFour = "0823",
@@ -32,7 +32,7 @@ export default function ChoosePaymentCardSlot({
   onSelectOption,
   onAddBankAccount,
   testID,
-}: ChoosePaymentCardSlotProps) {
+}: ChoosePaymentCardProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

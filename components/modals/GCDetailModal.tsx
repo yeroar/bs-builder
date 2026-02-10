@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
 import Button from "../Primitives/Buttons/Button/Button";
-import GCDetailSlot from "../../ui/Slots/GiftCard/GCDetailSlot";
+import GCDetail from "../../ui/Slots/GiftCard/GCDetail";
 import { spacing } from "../tokens";
 
 export interface GCDetailModalProps {
@@ -65,7 +65,7 @@ export default function GCDetailModal({
       }
     >
       <View style={styles.content}>
-        <GCDetailSlot
+        <GCDetail
           logo={logo}
           title={title}
           offer={offer}

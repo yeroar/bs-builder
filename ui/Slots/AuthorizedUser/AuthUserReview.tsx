@@ -21,7 +21,7 @@ export interface AuthUserReviewFormData {
   zip: string;
 }
 
-interface AuthUserReviewSlotProps {
+interface AuthUserReviewProps {
   formData: AuthUserReviewFormData;
 }
 
@@ -54,7 +54,7 @@ function formatAddress(address: string, apt: string, city: string, state: string
   return `${line1}\n${city}, ${state} ${zip}`;
 }
 
-export default function AuthUserReviewSlot({ formData }: AuthUserReviewSlotProps) {
+export default function AuthUserReview({ formData }: AuthUserReviewProps) {
   return (
     <>
       <PrimaryHeader

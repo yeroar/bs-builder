@@ -5,6 +5,8 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import BtcSellEnterAmount from "../../../Slots/BTC/BtcSellEnterAmount";
 import BtcSellConfirmation from "../../../Slots/BTC/BtcSellConfirmation";
 import BtcSellSuccess from "../../../Slots/BTC/BtcSellSuccess";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -82,6 +84,19 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                modalVariant="default"
+                primaryButton={
+                  <Button
+                    label="Confirm sell"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <BtcSellConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -90,8 +105,6 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
               saleAmount={`$${formatWithCommas(netAmount)}`}
               feePercentage="1%"
               feeAmount={`-$${formatWithCommas(feeAmount)}`}
-              actionLabel="Confirm sell"
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -110,6 +123,19 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
         satsEquivalent={formatSats(satsEquivalent)}
         enterAnimation="fill"
         onClose={handleSuccessDone}
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       />
     );
   }

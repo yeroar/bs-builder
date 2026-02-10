@@ -9,15 +9,15 @@ import { BankIcon } from "../../../components/Icons/BankIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface WithdrawOptionsSlotProps {
+export interface WithdrawOptionsProps {
   onInstantPress?: () => void;
   onOneTimePress?: () => void;
 }
 
-export default function WithdrawOptionsSlot({
+export default function WithdrawOptions({
   onInstantPress,
   onOneTimePress,
-}: WithdrawOptionsSlotProps) {
+}: WithdrawOptionsProps) {
   return (
     <View style={styles.container}>
       <FoldText type="header-md" style={styles.title}>

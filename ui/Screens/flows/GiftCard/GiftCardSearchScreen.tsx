@@ -12,8 +12,8 @@ import { ChevronRightIcon } from "../../../../components/Icons/ChevronRightIcon"
 import { colorMaps, spacing } from "../../../../components/tokens";
 import GCRedemptionMethodModal from "../../../../components/Modals/GCRedemptionMethodModal";
 import GCCategoriesModal from "../../../../components/Modals/GCCategoriesModal";
-import { RedemptionMethod } from "../../../Slots/GiftCard/GCRedemptionMethodSlot";
-import { GCCategory } from "../../../Slots/GiftCard/GCCategoriesSlot";
+import { RedemptionMethod } from "../../../Slots/GiftCard/GCRedemptionMethod";
+import { GCCategory } from "../../../Slots/GiftCard/GCCategories";
 import GiftCardPurchaseFlow, { SelectedCard } from "./GiftCardPurchaseFlow";
 import { buildSelectedCard } from "./buildSelectedCard";
 

@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import TagHomeSlot from "./TagHomeSlot";
+import TagHome from "./TagHome";
 
 figma.connect(
-  TagHomeSlot,
+  TagHome,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=73-8599",
   {
-    example: () => <TagHomeSlot />,
+    example: () => <TagHome />,
   }
 );

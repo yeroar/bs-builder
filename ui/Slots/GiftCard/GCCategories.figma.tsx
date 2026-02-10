@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import GCCategoriesSlot from "./GCCategoriesSlot";
+import GCCategories from "./GCCategories";
 
 figma.connect(
-  GCCategoriesSlot,
+  GCCategories,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=105-10401",
   {
-    example: () => <GCCategoriesSlot />,
+    example: () => <GCCategories />,
   }
 );

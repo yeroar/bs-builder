@@ -1,8 +1,8 @@
 import figma from "@figma/code-connect";
-import CashSlot from "./CashSlot";
+import Cash from "./Cash";
 
 figma.connect(
-  CashSlot,
+  Cash,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=167-17984&t=oAFcEQeQzXtt4Itn-4",
   {
     props: {
@@ -12,7 +12,7 @@ figma.connect(
       hasRecurringDeposit: figma.boolean("hasRecurringDeposit"),
     },
     example: (props) => (
-      <CashSlot
+      <Cash
         cashAmount={props.cashAmount.amount}
         recurringDepositConfig={props.hasRecurringDeposit ? { title: "Weekly deposit", secondaryText: "$100 every week" } : undefined}
       />

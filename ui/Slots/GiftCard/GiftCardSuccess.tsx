@@ -4,7 +4,6 @@ import TransactionSuccess from "../../Templates/Success/TransactionSuccess";
 import FoldPageViewHeader from "../../../components/Navigation/TopNav/FoldPageViewHeader";
 import CurrencyInput from "../../../components/Inputs/CurrencyInput/CurrencyInput";
 import IconContainer from "../../../components/Primitives/IconContainer/IconContainer";
-import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import FoldPressable from "../../../components/Primitives/FoldPressable";
 import { StarIcon } from "../../../components/Icons/StarIcon";
@@ -23,10 +22,8 @@ export interface GiftCardSuccessProps {
   onFavorite?: () => void;
   /** Called when View details button is pressed */
   onViewDetails?: () => void;
-  /** Called when Redeem button is pressed */
-  onRedeem?: () => void;
-  /** Called when Done button is pressed */
-  onDone?: () => void;
+  /** Footer content provided by the flow */
+  footer?: React.ReactNode;
   /** Disable built-in animation when using external transition */
   animated?: boolean;
   testID?: string;
@@ -39,8 +36,7 @@ export default function GiftCardSuccess({
   onClose,
   onFavorite,
   onViewDetails,
-  onRedeem,
-  onDone,
+  footer,
   animated = true,
   testID,
 }: GiftCardSuccessProps) {
@@ -61,27 +57,7 @@ export default function GiftCardSuccess({
           marginBottom={0}
         />
       }
-      footer={
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Redeem"
-              hierarchy="inverse"
-              size="md"
-              onPress={onRedeem}
-            />
-          }
-          secondaryButton={
-            <Button
-              label="Done"
-              hierarchy="secondary"
-              size="md"
-              onPress={onDone}
-            />
-          }
-        />
-      }
+      footer={footer}
       testID={testID}
     >
       <CurrencyInput

@@ -17,7 +17,7 @@ export interface BankAccount {
   brand?: string;
 }
 
-export interface ChooseBankAccountSlotProps {
+export interface ChooseBankAccountProps {
   bankAccounts?: BankAccount[];
   selectedAccountId?: string;
   onSelectAccount?: (account: BankAccount) => void;
@@ -25,7 +25,7 @@ export interface ChooseBankAccountSlotProps {
   testID?: string;
 }
 
-export default function ChooseBankAccountSlot({
+export default function ChooseBankAccount({
   bankAccounts = [
     { id: "1", name: "Chase", lastFour: "0823", brand: "chase" },
     { id: "2", name: "Amex", lastFour: "1234", brand: "amex" },
@@ -34,7 +34,7 @@ export default function ChooseBankAccountSlot({
   onSelectAccount,
   onAddBankAccount,
   testID,
-}: ChooseBankAccountSlotProps) {
+}: ChooseBankAccountProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

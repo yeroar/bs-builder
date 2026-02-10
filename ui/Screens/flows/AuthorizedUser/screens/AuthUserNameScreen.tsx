@@ -1,6 +1,6 @@
 import React from "react";
 import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
-import AuthUserNameSlot, { AuthUserNameFormData } from "../../../../Slots/AuthorizedUser/AuthUserNameSlot";
+import AuthUserName, { AuthUserNameFormData } from "../../../../Slots/AuthorizedUser/AuthUserName";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
 
@@ -31,7 +31,7 @@ export default function AuthUserNameScreen({ formData, onChangeField, onContinue
         />
       }
     >
-      <AuthUserNameSlot formData={formData} onChangeField={onChangeField} />
+      <AuthUserName formData={formData} onChangeField={onChangeField} />
     </FullscreenTemplate>
   );
 }

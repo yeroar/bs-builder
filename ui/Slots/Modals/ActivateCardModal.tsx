@@ -4,8 +4,8 @@ import MiniModal from "../../../components/Modals/MiniModal";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { FoldText } from "../../../components/Primitives/FoldText";
-import ActivateDebitCardSlot from "./ActivateDebitCardSlot";
-import ActivationSuccessSlot from "../ActivateCards/ActivationSuccessSlot";
+import ActivateDebitCard from "./ActivateDebitCard";
+import ActivationSuccess from "../ActivateCards/ActivationSuccess";
 import { colorMaps } from "../../../components/tokens";
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -75,9 +75,9 @@ export default function ActivateCardModal({ visible, onClose }: ActivateCardModa
         }
       >
         {isSuccess ? (
-          <ActivationSuccessSlot />
+          <ActivationSuccess />
         ) : (
-          <ActivateDebitCardSlot
+          <ActivateDebitCard
             cardNumber={cardNumber}
             cvv={cvv}
             onCardNumberChange={setCardNumber}

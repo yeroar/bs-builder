@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { DirectToBitcoinConfig, AutoStackConfig } from "../../../Slots/BTC/Btc";
-import { RoundUpsConfig, RecurringDepositConfig } from "../../../Slots/Cash/CashSlot";
-import { Multiplier } from "../../../Slots/Cash/RoundUpsSlot";
+import { RoundUpsConfig, RecurringDepositConfig } from "../../../Slots/Cash/Cash";
+import { Multiplier } from "../../../Slots/Cash/RoundUps";
 
 export type FlowType = "send" | "autoStack" | "deposit" | "withdraw" | "directToBitcoin" | "roundUps" | "redeem" | "authorizedUser" | "recurringDeposit" | "manageRecurringDeposit";
 

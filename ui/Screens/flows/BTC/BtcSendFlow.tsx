@@ -7,6 +7,8 @@ import Scan from "../../../Slots/BTC/Scan";
 import BtcSendEnterAmount from "../../../Slots/BTC/BtcSendEnterAmount";
 import BtcSendConfirmation from "../../../Slots/BTC/BtcSendConfirmation";
 import BtcSendSuccess from "../../../Slots/BTC/BtcSendSuccess";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
 import { spacing } from "../../../../components/tokens";
 
 type FlowStep = "walletSearch" | "scan" | "enterAmount" | "confirm";
@@ -127,6 +129,19 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                modalVariant="default"
+                primaryButton={
+                  <Button
+                    label="Confirm send"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <BtcSendConfirmation
               satsAmount={satsAmount}
@@ -135,7 +150,6 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
               feeSats={feeSats}
               feeUsd={feeUsd}
               estimatedTime="Arrives within 24hrs"
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -153,11 +167,23 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
         scrollable={false}
         variant="yellow"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <BtcSendSuccess
           satsAmount={satsAmount}
           usdEquivalent={formatUsdFromSats(satsAmount)}
-          onDone={handleSuccessDone}
           onViewDetails={handleSuccessDone}
         />
       </FullscreenTemplate>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import RedeemBtcGiftCardSlot from "../../../Slots/GiftCard/RedeemBtcGiftCardSlot";
+import RedeemBtcGiftCard from "../../../Slots/GiftCard/RedeemBtcGiftCard";
 import RedeemBtcGiftCardConfirmation from "../../../Slots/GiftCard/RedeemBtcGiftCardConfirmation";
 import RedeemBtcGiftCardSuccess from "../../../Slots/GiftCard/RedeemBtcGiftCardSuccess";
 
@@ -48,7 +48,7 @@ export default function RedeemGiftCardFlow({ onComplete, onClose }: RedeemGiftCa
           />
         }
       >
-        <RedeemBtcGiftCardSlot
+        <RedeemBtcGiftCard
           cardNumber={cardNumber}
           pin={pin}
           onCardNumberChange={setCardNumber}
@@ -85,5 +85,16 @@ export default function RedeemGiftCardFlow({ onComplete, onClose }: RedeemGiftCa
   }
 
   // success
-  return <RedeemBtcGiftCardSuccess onDone={handleDone} />;
+  return (
+    <RedeemBtcGiftCardSuccess
+      onClose={handleDone}
+      footer={
+        <ModalFooter
+          primaryButton={
+            <Button label="Done" hierarchy="inverse" size="md" onPress={handleDone} />
+          }
+        />
+      }
+    />
+  );
 }

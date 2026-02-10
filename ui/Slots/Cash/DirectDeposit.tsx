@@ -10,7 +10,7 @@ import DirectToBitcoinIcon from "../../../components/Icons/DirectToBitcoinIcon";
 import { ChevronRightIcon } from "../../../components/Icons/ChevronRightIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface DirectDepositSlotProps {
+export interface DirectDepositProps {
   routingNumber?: string;
   accountNumber?: string;
   bankName?: string;
@@ -21,7 +21,7 @@ export interface DirectDepositSlotProps {
   onTermsPress?: () => void;
 }
 
-export default function DirectDepositSlot({
+export default function DirectDeposit({
   routingNumber = "000 000 000",
   accountNumber = "0000 0000 0000",
   bankName = "Sutton bank",
@@ -30,7 +30,7 @@ export default function DirectDepositSlot({
   onAccountPress,
   onBankNamePress,
   onTermsPress,
-}: DirectDepositSlotProps) {
+}: DirectDepositProps) {
   return (
     <View style={styles.container}>
       {/* Header + Direct to bitcoin */}

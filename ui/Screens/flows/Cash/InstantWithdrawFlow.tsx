@@ -5,7 +5,11 @@ import ScreenStack from "../../../Templates/ScreenStack";
 import InstantWithdrawEnterAmount from "../../../Slots/Cash/InstantWithdrawEnterAmount";
 import InstantWithdrawConfirmation from "../../../Slots/Cash/InstantWithdrawConfirmation";
 import InstantWithdrawSuccess from "../../../Slots/Cash/InstantWithdrawSuccess";
+import ModalFooter from "../../../../components/Modals/ModalFooter";
+import Button from "../../../../components/Primitives/Buttons/Button/Button";
+import { FoldText } from "../../../../components/Primitives/FoldText";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
+import { colorMaps } from "../../../../components/tokens";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
@@ -101,6 +105,25 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                disclaimer={
+                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                    Your withdrawal may take 1-5 business days to complete.
+                  </FoldText>
+                }
+                primaryButton={
+                  <Button
+                    label="Confirm withdrawal"
+                    hierarchy="primary"
+                    size="md"
+                    disabled={selectedPaymentMethod === "null"}
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <InstantWithdrawConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -111,7 +134,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
               onPaymentMethodPress={() => setIsModalVisible(true)}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -132,10 +154,22 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
         scrollable={false}
         variant="yellow"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <InstantWithdrawSuccess
           amount={`$${formatWithCommas(numAmount)}`}
-          onDone={handleSuccessDone}
         />
       </FullscreenTemplate>
     );

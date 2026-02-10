@@ -15,15 +15,15 @@ export interface AuthUserDetailsFormData {
   email: string;
 }
 
-interface AuthUserDetailsSlotProps {
+interface AuthUserDetailsProps {
   formData: AuthUserDetailsFormData;
   onChangeField: (field: keyof AuthUserDetailsFormData, value: string) => void;
 }
 
-export default function AuthUserDetailsSlot({
+export default function AuthUserDetails({
   formData,
   onChangeField,
-}: AuthUserDetailsSlotProps) {
+}: AuthUserDetailsProps) {
   const [showSSN, setShowSSN] = useState(false);
 
   return (

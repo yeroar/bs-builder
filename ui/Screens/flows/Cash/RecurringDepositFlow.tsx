@@ -6,9 +6,9 @@ import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import RecurringDepositEnterAmount from "../../../Slots/Cash/RecurringDepositEnterAmount";
 import RecurringDepositConfirmation from "../../../Slots/Cash/RecurringDepositConfirmation";
-import RecurringDepositDetailsSlot from "../../../Slots/Cash/RecurringDepositDetailsSlot";
-import RecurringDepositSlot, { ScheduledDeposit } from "../../../Slots/Cash/RecurringDepositSlot";
-import FrequencySelectorSlot from "../../../Slots/Shared/FrequencySelectorSlot";
+import RecurringDepositDetails from "../../../Slots/Cash/RecurringDepositDetails";
+import RecurringDeposit, { ScheduledDeposit } from "../../../Slots/Cash/RecurringDeposit";
+import FrequencySelector from "../../../Slots/Shared/FrequencySelector";
 import RecurringDepositSuccess from "../../../Slots/Cash/RecurringDepositSuccess";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import Divider from "../../../../components/Primitives/Divider/Divider";
@@ -205,7 +205,7 @@ export default function RecurringDepositFlow({
               />
             }
           >
-            <RecurringDepositSlot
+            <RecurringDeposit
               hasActive={deposits.length > 0}
               onSchedulePress={handleSchedulePress}
               scheduledDeposits={deposits.map((dep, i) => ({
@@ -237,7 +237,7 @@ export default function RecurringDepositFlow({
               />
             }
           >
-            <FrequencySelectorSlot
+            <FrequencySelector
               options={frequencyOptions}
               selectedValue={frequency}
               onSelect={setFrequency}
@@ -268,6 +268,20 @@ export default function RecurringDepositFlow({
             scrollable={false}
             navVariant="step"
             disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Confirm recurring deposit"
+                    hierarchy="primary"
+                    size="md"
+                    disabled={selectedPaymentMethod === "null"}
+                    onPress={handleConfirm}
+                  />
+                }
+              />
+            }
           >
             <RecurringDepositConfirmation
               amount={`$${formatWithCommas(numAmount)}`}
@@ -278,7 +292,6 @@ export default function RecurringDepositFlow({
               paymentMethodBrand={selectedBrand}
               paymentMethodLabel={selectedLabel}
               onPaymentMethodPress={() => setIsModalVisible(true)}
-              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -322,7 +335,7 @@ export default function RecurringDepositFlow({
               />
               <View style={styles.detailReceipt}>
                 <Divider />
-                <RecurringDepositDetailsSlot
+                <RecurringDepositDetails
                   state={depositPaused ? "paused" : "active"}
                   frequency={`${frequency} on ${getDayOfWeek()}`}
                   started={getStartingDate()}
@@ -351,11 +364,24 @@ export default function RecurringDepositFlow({
         scrollable={false}
         variant="yellow"
         enterAnimation="fill"
+        footer={
+          <ModalFooter
+            type="inverse"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+          />
+        }
       >
         <RecurringDepositSuccess
           amount={`$${formatWithCommas(numAmount)}`}
           frequency={frequency}
-          onDone={handleSuccessDone}
+          onViewDetails={handleSuccessDone}
         />
       </FullscreenTemplate>
     );

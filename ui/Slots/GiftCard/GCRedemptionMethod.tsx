@@ -5,7 +5,7 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 export type RedemptionMethod = "in-store" | "online" | "both";
 
-export interface GCRedemptionMethodSlotProps {
+export interface GCRedemptionMethodProps {
   selectedMethod?: RedemptionMethod | null;
   onMethodSelect?: (method: RedemptionMethod) => void;
 }
@@ -16,10 +16,10 @@ const REDEMPTION_OPTIONS: { value: RedemptionMethod; label: string }[] = [
   { value: "both", label: "In-store and online" },
 ];
 
-export default function GCRedemptionMethodSlot({
+export default function GCRedemptionMethod({
   selectedMethod,
   onMethodSelect,
-}: GCRedemptionMethodSlotProps) {
+}: GCRedemptionMethodProps) {
   return (
     <View style={styles.container}>
       <View style={styles.list}>

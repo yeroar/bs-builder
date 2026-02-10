@@ -15,15 +15,15 @@ export interface AuthUserAddressFormData {
   useDefaultAddress: boolean;
 }
 
-interface AuthUserAddressSlotProps {
+interface AuthUserAddressProps {
   formData: AuthUserAddressFormData;
   onChangeField: (field: keyof AuthUserAddressFormData, value: string | boolean) => void;
 }
 
-export default function AuthUserAddressSlot({
+export default function AuthUserAddress({
   formData,
   onChangeField,
-}: AuthUserAddressSlotProps) {
+}: AuthUserAddressProps) {
   return (
     <>
       <PrimaryHeader

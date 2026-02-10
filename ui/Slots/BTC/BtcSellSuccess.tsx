@@ -2,8 +2,6 @@ import React, { forwardRef } from "react";
 import TransactionSuccess, { TransactionSuccessRef, EnterAnimation } from "../../Templates/Success/TransactionSuccess";
 import FoldPageViewHeader from "../../../components/Navigation/TopNav/FoldPageViewHeader";
 import { CurrencyInput, TopContext } from "../../../components/Inputs/CurrencyInput";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
-import ModalFooter from "../../../components/Modals/ModalFooter";
 
 export interface BtcSellSuccessProps {
   amount?: string;
@@ -11,6 +9,8 @@ export interface BtcSellSuccessProps {
   onClose?: () => void;
   /** Animation type for entering */
   enterAnimation?: EnterAnimation;
+  /** Footer content provided by the flow */
+  footer?: React.ReactNode;
   testID?: string;
 }
 
@@ -19,6 +19,7 @@ const BtcSellSuccess = forwardRef<TransactionSuccessRef, BtcSellSuccessProps>(({
   satsEquivalent = "~10,000 sats",
   onClose,
   enterAnimation = "slide",
+  footer,
   testID,
 }, ref) => {
   return (
@@ -34,19 +35,7 @@ const BtcSellSuccess = forwardRef<TransactionSuccessRef, BtcSellSuccessProps>(({
           marginBottom={0}
         />
       }
-      footer={
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={onClose}
-            />
-          }
-        />
-      }
+      footer={footer}
       testID={testID}
     >
       <CurrencyInput

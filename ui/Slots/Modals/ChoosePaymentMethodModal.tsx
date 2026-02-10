@@ -3,10 +3,10 @@ import { Modal } from "react-native";
 import MiniModal from "../../../components/Modals/MiniModal";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import AddPaymentSlot from "../Shared/PaymentMethods/AddPaymentSlot";
-import ChooseBankAccountSlot from "../Shared/PaymentMethods/ChooseBankAccountSlot";
-import ChooseDebitCardSlot from "../Shared/PaymentMethods/ChooseDebitCardSlot";
-import ChoosePaymentMethodFoldSlot, { FoldPaymentOption } from "../Shared/PaymentMethods/ChoosePaymentMethodFoldSlot";
+import AddPayment from "../Shared/PaymentMethods/AddPayment";
+import ChooseBankAccount from "../Shared/PaymentMethods/ChooseBankAccount";
+import ChooseDebitCard from "../Shared/PaymentMethods/ChooseDebitCard";
+import ChoosePaymentMethodFold, { FoldPaymentOption } from "../Shared/PaymentMethods/ChoosePaymentMethodFold";
 import { PmSelectorVariant } from "../../../components/Inputs/CurrencyInput/PmSelector";
 
 export type PaymentMethodModalType = "bankAccount" | "debitCard" | "multiStep" | "foldPayment";
@@ -92,7 +92,7 @@ export default function ChoosePaymentMethodModal({
   const renderContent = () => {
     if (type === "multiStep" && multiStepPhase === "initial") {
       return (
-        <AddPaymentSlot
+        <AddPayment
           onBankAccountPress={() => setMultiStepPhase("bankAccount")}
           onDebitCardPress={() => setMultiStepPhase("debitCard")}
         />
@@ -101,7 +101,7 @@ export default function ChoosePaymentMethodModal({
 
     if (type === "bankAccount" || (type === "multiStep" && multiStepPhase === "bankAccount")) {
       return (
-        <ChooseBankAccountSlot
+        <ChooseBankAccount
           selectedAccountId={tempBankId}
           onSelectAccount={(account) => {
             setTempBankId(account.id);
@@ -115,7 +115,7 @@ export default function ChoosePaymentMethodModal({
 
     if (type === "debitCard" || (type === "multiStep" && multiStepPhase === "debitCard")) {
       return (
-        <ChooseDebitCardSlot
+        <ChooseDebitCard
           selectedCardId={tempCardId}
           onSelectCard={(card) => {
             setTempCardId(card.id);
@@ -129,7 +129,7 @@ export default function ChoosePaymentMethodModal({
 
     if (type === "foldPayment") {
       return (
-        <ChoosePaymentMethodFoldSlot
+        <ChoosePaymentMethodFold
           selectedOption={tempFoldOption}
           onSelectOption={setTempFoldOption}
         />

@@ -18,19 +18,19 @@ export interface ScheduledDeposit {
   onPress?: () => void;
 }
 
-export interface RecurringDepositSlotProps {
+export interface RecurringDepositProps {
   hasActive?: boolean;
   onSchedulePress?: () => void;
   scheduledDeposits?: ScheduledDeposit[];
 }
 
-export default function RecurringDepositSlot({
+export default function RecurringDeposit({
   hasActive = true,
   onSchedulePress,
   scheduledDeposits = [
     { title: "Weekly deposit", secondaryText: "$100 every week" },
   ],
-}: RecurringDepositSlotProps) {
+}: RecurringDepositProps) {
   return (
     <View style={styles.container}>
       <PrimaryHeader

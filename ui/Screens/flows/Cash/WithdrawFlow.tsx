@@ -3,7 +3,7 @@ import { Modal } from "react-native";
 import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import { FoldText } from "../../../../components/Primitives/FoldText";
-import WithdrawOptionsSlot from "../../../Slots/Cash/WithdrawOptionsSlot";
+import WithdrawOptions from "../../../Slots/Cash/WithdrawOptions";
 import InstantWithdrawFlow from "./InstantWithdrawFlow";
 import OneTimeWithdrawFlow from "./OneTimeWithdrawFlow";
 import { colorMaps } from "../../../../components/tokens";
@@ -89,7 +89,7 @@ export default function WithdrawFlow({ onComplete, onClose }: WithdrawFlowProps)
           />
         }
       >
-        <WithdrawOptionsSlot
+        <WithdrawOptions
           onInstantPress={handleInstantPress}
           onOneTimePress={handleOneTimePress}
         />

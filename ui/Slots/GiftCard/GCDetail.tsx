@@ -5,7 +5,7 @@ import Divider from "../../../components/Primitives/Divider/Divider";
 import QuickBuyInput from "../../../components/Inputs/QuickBuyInput/QuickBuyInput";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface GCDetailSlotProps {
+export interface GCDetailProps {
   logo: React.ReactNode;
   title: string;
   offer: React.ReactNode;
@@ -16,14 +16,14 @@ export interface GCDetailSlotProps {
 
 const DEFAULT_AMOUNTS = [10, 20, 250, 500];
 
-export default function GCDetailSlot({
+export default function GCDetail({
   logo,
   title,
   offer,
   amounts = DEFAULT_AMOUNTS,
   selectedAmount: controlledSelectedAmount,
   onAmountSelect,
-}: GCDetailSlotProps) {
+}: GCDetailProps) {
   const [internalSelectedAmount, setInternalSelectedAmount] = useState<number | null>(null);
 
   const selectedAmount = controlledSelectedAmount ?? internalSelectedAmount;

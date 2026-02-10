@@ -16,7 +16,7 @@ export interface DebitCard {
   brand?: string;
 }
 
-export interface ChooseDebitCardSlotProps {
+export interface ChooseDebitCardProps {
   debitCards?: DebitCard[];
   selectedCardId?: string;
   onSelectCard?: (card: DebitCard) => void;
@@ -24,7 +24,7 @@ export interface ChooseDebitCardSlotProps {
   testID?: string;
 }
 
-export default function ChooseDebitCardSlot({
+export default function ChooseDebitCard({
   debitCards = [
     { id: "1", name: "Visa", lastFour: "1234", brand: "visa" },
     { id: "2", name: "Mastercard", lastFour: "5678", brand: "mastercard" },
@@ -33,7 +33,7 @@ export default function ChooseDebitCardSlot({
   onSelectCard,
   onAddDebitCard,
   testID,
-}: ChooseDebitCardSlotProps) {
+}: ChooseDebitCardProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

@@ -4,9 +4,9 @@ import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
 import Button from "../Primitives/Buttons/Button/Button";
 import { FoldText } from "../Primitives/FoldText";
-import GCRedemptionMethodSlot, {
+import GCRedemptionMethod, {
   RedemptionMethod,
-} from "../../ui/Slots/GiftCard/GCRedemptionMethodSlot";
+} from "../../ui/Slots/GiftCard/GCRedemptionMethod";
 import { spacing, colorMaps } from "../tokens";
 
 export interface GCRedemptionMethodModalProps {
@@ -70,7 +70,7 @@ export default function GCRedemptionMethodModal({
       }
     >
       <View style={styles.content}>
-        <GCRedemptionMethodSlot
+        <GCRedemptionMethod
           selectedMethod={selectedMethod}
           onMethodSelect={setSelectedMethod}
         />

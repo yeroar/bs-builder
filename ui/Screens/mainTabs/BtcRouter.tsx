@@ -15,7 +15,7 @@ import ReceiveBitcoin from "../../Slots/BTC/ReceiveBitcoin";
 import BitcoinAddress from "../../Slots/BTC/BitcoinAddress";
 import { BtcSendFlow, BtcAutoStackFlow, DirectToBitcoinFlow, RedeemGiftCardFlow } from "../flows";
 import { AutoStackConfig, DirectToBitcoinConfig } from "../../Slots/BTC/Btc";
-import { TransactionCategory } from "../../Slots/Transactions/TransactionsSlot";
+import { TransactionCategory } from "../../Slots/Transactions/Transactions";
 import { FlowType, BankActions } from "./hooks/useBankState";
 
 export interface BtcRouterProps {

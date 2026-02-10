@@ -1,9 +1,9 @@
 import figma from "@figma/code-connect";
-import AuthUserReviewSlot from "./AuthUserReviewSlot";
+import AuthUserReview from "./AuthUserReview";
 
-figma.connect(AuthUserReviewSlot, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20187", {
+figma.connect(AuthUserReview, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20187", {
   example: () => (
-    <AuthUserReviewSlot
+    <AuthUserReview
       formData={{
         firstName: "John",
         middleName: "",

@@ -4,7 +4,7 @@ import MiniModal from "./MiniModal";
 import ModalFooter from "./ModalFooter";
 import Button from "../Primitives/Buttons/Button/Button";
 import { FoldText } from "../Primitives/FoldText";
-import GCCategoriesSlot, { GCCategory } from "../../ui/Slots/GiftCard/GCCategoriesSlot";
+import GCCategories, { GCCategory } from "../../ui/Slots/GiftCard/GCCategories";
 import { spacing, colorMaps } from "../tokens";
 
 export interface GCCategoriesModalProps {
@@ -76,7 +76,7 @@ export default function GCCategoriesModal({
       }
     >
       <View style={styles.content}>
-        <GCCategoriesSlot
+        <GCCategories
           selectedCategories={selectedCategories}
           onCategoryToggle={handleCategoryToggle}
           maxHeight={400}

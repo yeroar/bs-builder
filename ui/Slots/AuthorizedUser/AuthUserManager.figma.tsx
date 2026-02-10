@@ -1,9 +1,9 @@
 import figma from "@figma/code-connect";
-import AuthUserManagerSlot from "./AuthUserManagerSlot";
+import AuthUserManager from "./AuthUserManager";
 
-figma.connect(AuthUserManagerSlot, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20191", {
+figma.connect(AuthUserManager, "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=170-20191", {
   example: () => (
-    <AuthUserManagerSlot
+    <AuthUserManager
       authorizedUsers={[]}
       onAddUser={() => console.log("Add user")}
     />

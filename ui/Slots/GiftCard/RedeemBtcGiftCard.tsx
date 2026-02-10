@@ -8,19 +8,19 @@ import { colorMaps, spacing } from "../../../components/tokens";
 // Bitcoin gift card image
 const btcGiftCardImage = require("../../../assets/btcGiftCard.png");
 
-export interface RedeemBtcGiftCardSlotProps {
+export interface RedeemBtcGiftCardProps {
   cardNumber?: string;
   pin?: string;
   onCardNumberChange?: (value: string) => void;
   onPinChange?: (value: string) => void;
 }
 
-export default function RedeemBtcGiftCardSlot({
+export default function RedeemBtcGiftCard({
   cardNumber = "",
   pin = "",
   onCardNumberChange,
   onPinChange,
-}: RedeemBtcGiftCardSlotProps) {
+}: RedeemBtcGiftCardProps) {
   return (
     <View style={styles.container}>
       {/* Gift Card Image */}

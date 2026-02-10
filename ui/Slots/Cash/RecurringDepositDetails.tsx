@@ -6,7 +6,7 @@ import Chip from "../../../components/Primitives/Chip/Chip";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface RecurringDepositDetailsSlotProps {
+export interface RecurringDepositDetailsProps {
   state?: "active" | "paused";
   started?: string;
   frequency?: string;
@@ -15,14 +15,14 @@ export interface RecurringDepositDetailsSlotProps {
   onBankPress?: () => void;
 }
 
-export default function RecurringDepositDetailsSlot({
+export default function RecurringDepositDetails({
   state = "active",
   started = "H:MM AM Day, Mon DD",
   frequency = "Weekly on Day",
   nextDeposit = "Friday, Oct 10",
   bankLabel = "bankAccount 1234",
   onBankPress,
-}: RecurringDepositDetailsSlotProps) {
+}: RecurringDepositDetailsProps) {
   const isPaused = state === "paused";
 
   return (

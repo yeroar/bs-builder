@@ -7,7 +7,7 @@ import { colorMaps, spacing } from "../../../../components/tokens";
 
 export type FoldPaymentOption = "cashBalance" | "creditCard";
 
-export interface ChoosePaymentMethodFoldSlotProps {
+export interface ChoosePaymentMethodFoldProps {
   cashBalance?: string;
   cashBalanceSats?: string;
   creditCardLastFour?: string;
@@ -16,14 +16,14 @@ export interface ChoosePaymentMethodFoldSlotProps {
   testID?: string;
 }
 
-export default function ChoosePaymentMethodFoldSlot({
+export default function ChoosePaymentMethodFold({
   cashBalance = "$500.00",
   cashBalanceSats = "nn sats",
   creditCardLastFour = "0823",
   selectedOption,
   onSelectOption,
   testID,
-}: ChoosePaymentMethodFoldSlotProps) {
+}: ChoosePaymentMethodFoldProps) {
   return (
     <View style={styles.container} testID={testID}>
       <FoldText type="header-md" style={styles.title}>

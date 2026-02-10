@@ -6,9 +6,9 @@ import { BellIcon } from "../../../components/Icons/BellIcon";
 import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import ActivateCardModal from "../../Slots/Modals/ActivateCardModal";
 import BtcBuyAmountModal from "../../Slots/Modals/BtcBuyAmountModal";
-import BankHomeSlot from "../../Slots/MainTabs/BankHomeSlot";
+import BankHome from "../../Slots/MainTabs/BankHome";
 import { BuyAmount } from "../../Slots/BTC/BtcBuyModal";
-import { TransactionCategory } from "../../Slots/Transactions/TransactionsSlot";
+import { TransactionCategory } from "../../Slots/Transactions/Transactions";
 import useBankState from "./hooks/useBankState";
 import BtcRouter from "./BtcRouter";
 import CashRouter from "./CashRouter";
@@ -51,7 +51,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress, on
         onLeftPress={onMenuPress}
         scrollable={true}
         homeSlot={
-          <BankHomeSlot
+          <BankHome
             onActivateCard={() => setIsActivateModalVisible(true)}
             onBitcoinPress={actions.openBtcScreen}
             onCashPress={actions.openCashScreen}

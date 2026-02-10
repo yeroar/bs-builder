@@ -219,11 +219,23 @@ export default function DirectToBitcoinFlow({
         onLeftPress={handleSuccessClose}
         scrollable={false}
         navVariant="start"
+        footer={
+          <ModalFooter
+            type="default"
+            primaryButton={
+              <Button
+                label="Done"
+                hierarchy="primary"
+                size="md"
+                onPress={handleDone}
+              />
+            }
+          />
+        }
       >
         <DirectToBitcoinSuccess
           percentage={selectedPercentage}
           isUpdate={isFeatureActive}
-          onDone={handleDone}
         />
       </FullscreenTemplate>
     );

@@ -111,9 +111,28 @@ export default function GiftCardPurchaseFlow({
       brandLabel={card.title}
       amount={`$${selectedAmount}`}
       onClose={handleDone}
-      onDone={handleDone}
-      onRedeem={() => console.log("Redeem")}
       onViewDetails={() => console.log("View details")}
+      footer={
+        <ModalFooter
+          type="inverse"
+          primaryButton={
+            <Button
+              label="Redeem"
+              hierarchy="inverse"
+              size="md"
+              onPress={() => console.log("Redeem")}
+            />
+          }
+          secondaryButton={
+            <Button
+              label="Done"
+              hierarchy="secondary"
+              size="md"
+              onPress={handleDone}
+            />
+          }
+        />
+      }
     />
   );
 }

@@ -1,37 +1,21 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { CurrencyInput } from "../../../components/Inputs/CurrencyInput";
-import ModalFooter from "../../../components/Modals/ModalFooter";
-import Button from "../../../components/Primitives/Buttons/Button/Button";
 import { spacing } from "../../../components/tokens";
 
 export interface InstantDepositSuccessProps {
   amount: string;
-  onDone: () => void;
 }
 
-export default function InstantDepositSuccess({ amount, onDone }: InstantDepositSuccessProps) {
+export default function InstantDepositSuccess({ amount }: InstantDepositSuccessProps) {
   return (
-    <>
-      <View style={styles.content}>
-        <CurrencyInput
-          value={amount}
-          topContextVariant="empty"
-          bottomContextVariant="empty"
-        />
-      </View>
-      <ModalFooter
-        type="inverse"
-        primaryButton={
-          <Button
-            label="Done"
-            hierarchy="inverse"
-            size="md"
-            onPress={onDone}
-          />
-        }
+    <View style={styles.content}>
+      <CurrencyInput
+        value={amount}
+        topContextVariant="empty"
+        bottomContextVariant="empty"
       />
-    </>
+    </View>
   );
 }
 
