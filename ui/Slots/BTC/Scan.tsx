@@ -3,15 +3,15 @@ import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing, radius } from "../../../components/tokens";
 
-export interface ScanSlotProps {
+export interface ScanProps {
   message?: string;
   cameraSlot?: React.ReactNode;
 }
 
-export default function ScanSlot({
+export default function Scan({
   message = "Scan any bitcoin QR code",
   cameraSlot,
-}: ScanSlotProps) {
+}: ScanProps) {
   return (
     <View style={styles.container}>
       <View style={styles.scanner}>

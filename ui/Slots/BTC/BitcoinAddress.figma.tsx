@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import BitcoinAddressSlot from "./BitcoinAddressSlot";
+import BitcoinAddress from "./BitcoinAddress";
 
 figma.connect(
-  BitcoinAddressSlot,
+  BitcoinAddress,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=174-24570",
   {
-    example: () => <BitcoinAddressSlot />,
+    example: () => <BitcoinAddress />,
   }
 );

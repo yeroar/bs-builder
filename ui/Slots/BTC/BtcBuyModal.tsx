@@ -6,7 +6,7 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 export type BuyAmount = "$10" | "$20" | "$50" | "$100" | "$200" | "custom" | null;
 
-export interface BtcBuyModalSlotProps {
+export interface BtcBuyModalProps {
   selectedAmount: BuyAmount;
   onSelectAmount: (amount: BuyAmount) => void;
 }
@@ -20,10 +20,10 @@ const items = [
   { label: "...", value: "custom" as BuyAmount },
 ];
 
-export default function BtcBuyModalSlot({
+export default function BtcBuyModal({
   selectedAmount,
   onSelectAmount,
-}: BtcBuyModalSlotProps) {
+}: BtcBuyModalProps) {
   return (
     <View style={styles.container}>
       <FoldText type="header-md" style={styles.title}>

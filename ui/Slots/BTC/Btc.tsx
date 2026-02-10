@@ -30,7 +30,7 @@ export interface DirectToBitcoinConfig {
   bitcoinPercent: number;
 }
 
-export interface BtcSlotProps {
+export interface BtcProps {
   bitcoinAmount?: string;
   bitcoinAvailable?: string;
   rewardsAmount?: string;
@@ -56,7 +56,7 @@ export interface BtcSlotProps {
   }>;
 }
 
-export default function BtcSlot({
+export default function Btc({
   bitcoinAmount = "฿0.08",
   bitcoinAvailable = "฿0.07 available",
   rewardsAmount = "$21.00",
@@ -93,7 +93,7 @@ export default function BtcSlot({
       date: "100,000 sats",
     },
   ],
-}: BtcSlotProps) {
+}: BtcProps) {
   const getTransactionIcon = (iconType: string) => {
     switch (iconType) {
       case "spot-buy":

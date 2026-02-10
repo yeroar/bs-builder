@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import TransactionSuccess, { TransactionSuccessRef, EnterAnimation } from "../../Templates/Success/TransactionSuccess";
 import FoldPageViewHeader from "../../../components/Navigation/TopNav/FoldPageViewHeader";
-import { CurrencyInput, TopContext, BottomContext } from "../../../components/Inputs/CurrencyInput";
+import { CurrencyInput, TopContext } from "../../../components/Inputs/CurrencyInput";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 
@@ -9,7 +9,6 @@ export interface BtcSellSuccessProps {
   amount?: string;
   satsEquivalent?: string;
   onClose?: () => void;
-  onActionPress?: () => void;
   /** Animation type for entering */
   enterAnimation?: EnterAnimation;
   testID?: string;
@@ -19,7 +18,6 @@ const BtcSellSuccess = forwardRef<TransactionSuccessRef, BtcSellSuccessProps>(({
   amount = "$100",
   satsEquivalent = "~10,000 sats",
   onClose,
-  onActionPress,
   enterAnimation = "slide",
   testID,
 }, ref) => {
@@ -54,16 +52,6 @@ const BtcSellSuccess = forwardRef<TransactionSuccessRef, BtcSellSuccessProps>(({
       <CurrencyInput
         value={amount}
         topContextSlot={<TopContext variant="btc" value={satsEquivalent} />}
-        bottomContextSlot={
-          <BottomContext variant="maxButton">
-            <Button
-              label="View details"
-              hierarchy="secondary"
-              size="xs"
-              onPress={onActionPress}
-            />
-          </BottomContext>
-        }
       />
     </TransactionSuccess>
   );

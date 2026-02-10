@@ -3,9 +3,9 @@ export { default as ActivateDebitCardSlot } from "./ActivateCards/ActivateDebitC
 export { default as ActivationSuccessSlot } from "./ActivateCards/ActivationSuccessSlot";
 
 // BTC
-export { default as BtcSlot } from "./BTC/BtcSlot";
-export { default as BtcBuyModalSlot } from "./BTC/BtcBuyModalSlot";
-export { default as DirectToBitcoinSlot } from "./BTC/DirectToBitcoinSlot";
+export { default as Btc } from "./BTC/Btc";
+export { default as BtcBuyModal } from "./BTC/BtcBuyModal";
+export { default as DirectToBitcoin } from "./BTC/DirectToBitcoin";
 
 // Cash
 export { default as CashSlot } from "./Cash/CashSlot";

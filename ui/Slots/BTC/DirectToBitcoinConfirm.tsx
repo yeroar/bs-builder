@@ -7,17 +7,17 @@ import Divider from "../../../components/Primitives/Divider/Divider";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface DirectToBitcoinConfirmSlotProps {
+export interface DirectToBitcoinConfirmProps {
   bitcoinPercentage?: number;
   cashPercentage?: number;
   processingFee?: string;
 }
 
-export default function DirectToBitcoinConfirmSlot({
+export default function DirectToBitcoinConfirm({
   bitcoinPercentage = 50,
   cashPercentage = 50,
   processingFee = "4%",
-}: DirectToBitcoinConfirmSlotProps) {
+}: DirectToBitcoinConfirmProps) {
   return (
     <View style={styles.container}>
       <PrimaryHeader

@@ -1,12 +1,12 @@
 import figma from "@figma/code-connect";
-import RewardsSlot from "./RewardsSlot";
+import Rewards from "./Rewards";
 
 figma.connect(
-  RewardsSlot,
+  Rewards,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=174-19298",
   {
     example: () => (
-      <RewardsSlot
+      <Rewards
         rewardsAmount="$n.nn"
         rewardsSats="n,nnn sats"
         pendingText="Pending: ~15.10 of BTC"

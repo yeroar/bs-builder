@@ -3,7 +3,7 @@ import { Modal } from "react-native";
 import MiniModal from "../../../components/Modals/MiniModal";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import BtcBuyModalSlot, { BuyAmount } from "../BTC/BtcBuyModalSlot";
+import BtcBuyModal, { BuyAmount } from "../BTC/BtcBuyModal";
 
 export interface BtcBuyAmountModalProps {
   visible: boolean;
@@ -48,7 +48,7 @@ export default function BtcBuyAmountModal({ visible, onClose, onContinue }: BtcB
           />
         }
       >
-        <BtcBuyModalSlot
+        <BtcBuyModal
           selectedAmount={selectedAmount}
           onSelectAmount={setSelectedAmount}
         />

@@ -5,7 +5,7 @@ import ButtonSelector from "../../../components/Primitives/Buttons/ButtonSelecto
 import Ring from "../../../components/Selectors/Ring/Ring";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface DirectToBitcoinSlotProps {
+export interface DirectToBitcoinProps {
   selectedPercentage?: number;
   onPercentageSelect?: (percentage: number) => void;
   onCustomPress?: () => void;
@@ -14,11 +14,11 @@ export interface DirectToBitcoinSlotProps {
 const ROW_1_PERCENTAGES = [1, 5, 10];
 const ROW_2_PERCENTAGES = [15, 20];
 
-export default function DirectToBitcoinSlot({
+export default function DirectToBitcoin({
   selectedPercentage = 0,
   onPercentageSelect,
   onCustomPress,
-}: DirectToBitcoinSlotProps) {
+}: DirectToBitcoinProps) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>

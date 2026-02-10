@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import BtcBuyModalSlot from "./BtcBuyModalSlot";
+import BtcBuyModal from "./BtcBuyModal";
 
 figma.connect(
-  BtcBuyModalSlot,
+  BtcBuyModal,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=74-18340",
   {
-    example: () => <BtcBuyModalSlot selectedAmount={null} onSelectAmount={() => {}} />,
+    example: () => <BtcBuyModal selectedAmount={null} onSelectAmount={() => {}} />,
   }
 );

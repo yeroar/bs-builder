@@ -3,13 +3,13 @@ import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing, radius } from "../../../components/tokens";
 
-export interface BitcoinAddressSlotProps {
+export interface BitcoinAddressProps {
   address?: string;
 }
 
-export default function BitcoinAddressSlot({
+export default function BitcoinAddress({
   address = "bc1qmv2 nzxla2s 2hfa06l\nm0s9gq7 wycfqtv rvlx6gj",
-}: BitcoinAddressSlotProps) {
+}: BitcoinAddressProps) {
   // Split address into parts for styling: first chunk bold, middle dim, last chunk bold
   const parts = address.replace(/\n/g, " ").split(" ");
   const first = parts[0];

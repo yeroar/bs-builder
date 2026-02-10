@@ -13,6 +13,7 @@ export interface CashRouterProps {
   visible: boolean;
   onClose: () => void;
   activeFlow: FlowType | null;
+  flowKey: number;
   roundUpsConfig?: RoundUpsConfig;
   recurringDepositConfig?: RecurringDepositConfig;
   actions: BankActions;
@@ -23,6 +24,7 @@ export default function CashRouter({
   visible,
   onClose,
   activeFlow,
+  flowKey,
   roundUpsConfig,
   recurringDepositConfig,
   actions,
@@ -67,6 +69,7 @@ export default function CashRouter({
       {/* Cash Flows */}
       {activeFlow === "deposit" && (
         <DepositFlow
+          key={flowKey}
           onComplete={actions.handleFlowComplete}
           onRecurringDepositComplete={actions.handleRecurringDepositComplete}
           onClose={actions.closeFlow}
@@ -74,18 +77,21 @@ export default function CashRouter({
       )}
       {activeFlow === "withdraw" && (
         <WithdrawFlow
+          key={flowKey}
           onComplete={actions.handleFlowComplete}
           onClose={actions.closeFlow}
         />
       )}
       {activeFlow === "authorizedUser" && (
         <AuthorizedUserFlow
+          key={flowKey}
           onComplete={actions.handleFlowComplete}
           onClose={actions.closeFlow}
         />
       )}
       {activeFlow === "roundUps" && (
         <RoundUpsFlow
+          key={flowKey}
           isFeatureActive={!!roundUpsConfig}
           initialMultiplier={roundUpsConfig?.multiplier as Multiplier}
           currentAmount={0}
@@ -96,6 +102,7 @@ export default function CashRouter({
       )}
       {activeFlow === "recurringDeposit" && (
         <RecurringDepositFlow
+          key={flowKey}
           mode="create"
           onComplete={actions.handleRecurringDepositComplete}
           onClose={actions.closeFlow}
@@ -103,7 +110,9 @@ export default function CashRouter({
       )}
       {activeFlow === "manageRecurringDeposit" && (
         <RecurringDepositFlow
+          key={flowKey}
           mode="manage"
+          startAtDetails
           onComplete={actions.handleRecurringDepositComplete}
           onClose={actions.closeFlow}
         />

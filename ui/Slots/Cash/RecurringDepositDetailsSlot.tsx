@@ -30,7 +30,7 @@ export default function RecurringDepositDetailsSlot({
       <ListItemReceipt label="Started" value={started} />
 
       {isPaused ? (
-        <View style={styles.row}>
+        <View style={[styles.row, styles.frequencyRow]}>
           <FoldText type="body-md" style={styles.label}>Frequency</FoldText>
           <Chip label="Paused" type="accent" bold />
         </View>
@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: spacing["400"],
+  },
+  frequencyRow: {
+    minHeight: 52,
   },
   label: {
     color: colorMaps.face.secondary,

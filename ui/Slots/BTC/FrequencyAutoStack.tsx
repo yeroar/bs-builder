@@ -5,15 +5,15 @@ import { colorMaps, spacing } from "../../../components/tokens";
 
 export type Frequency = "Daily" | "Weekly" | "Monthly";
 
-export interface FrequencyAutoStackSlotProps {
+export interface FrequencyAutoStackProps {
   selectedFrequency?: Frequency;
   onFrequencySelect?: (frequency: Frequency) => void;
 }
 
-export default function FrequencyAutoStackSlot({
+export default function FrequencyAutoStack({
   selectedFrequency = "Daily",
   onFrequencySelect,
-}: FrequencyAutoStackSlotProps) {
+}: FrequencyAutoStackProps) {
   return (
     <View style={styles.container}>
       <TileSelector

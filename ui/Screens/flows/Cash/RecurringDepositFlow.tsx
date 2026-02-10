@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, Modal, StyleSheet } from "react-native";
+import RemoveConfirmModal from "../../../Slots/Modals/RemoveConfirmModal";
+import { CalendarIcon } from "../../../../components/Icons/CalendarIcon";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import RecurringDepositEnterAmount from "../../../Slots/Cash/RecurringDepositEnterAmount";
 import RecurringDepositConfirmation from "../../../Slots/Cash/RecurringDepositConfirmation";
 import RecurringDepositDetailsSlot from "../../../Slots/Cash/RecurringDepositDetailsSlot";
+import RecurringDepositSlot, { ScheduledDeposit } from "../../../Slots/Cash/RecurringDepositSlot";
+import FrequencySelectorSlot from "../../../Slots/Shared/FrequencySelectorSlot";
 import RecurringDepositSuccess from "../../../Slots/Cash/RecurringDepositSuccess";
 import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import Divider from "../../../../components/Primitives/Divider/Divider";
@@ -15,36 +19,58 @@ import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/P
 import { spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
-type FlowStep = "enterAmount" | "confirm" | "details";
+import { FoldText } from "../../../../components/Primitives/FoldText";
+import { colorMaps } from "../../../../components/tokens";
+
+type FlowStep = "intro" | "selectFrequency" | "enterAmount" | "confirm" | "details";
+
+const frequencyOptions = [
+  { label: "Weekly", value: "Weekly" },
+  { label: "Every two weeks", value: "Every two weeks" },
+  { label: "Monthly", value: "Monthly" },
+];
 
 export interface RecurringDepositFlowProps {
-  /** "create" opens bank modal to schedule new; "manage" opens detail view */
+  /** "create" starts empty; "manage" shows existing deposits */
   mode?: "create" | "manage";
   frequency?: string;
-  /** Amount for manage mode */
-  amount?: string;
-  /** Initial paused state for manage mode */
-  initialPaused?: boolean;
+  /** Initial deposits for manage mode */
+  initialDeposits?: ScheduledDeposit[];
+  /** Start directly on details screen for a specific deposit */
+  startAtDetails?: boolean;
   onComplete: () => void;
   onClose: () => void;
 }
 
 export default function RecurringDepositFlow({
   mode = "create",
-  frequency = "Weekly",
-  amount = "100",
-  initialPaused = false,
+  frequency: initialFrequency = "Weekly",
+  initialDeposits,
+  startAtDetails = false,
   onComplete,
   onClose
 }: RecurringDepositFlowProps) {
+  // Frequency state
+  const [frequency, setFrequency] = useState(initialFrequency);
+
+  // Deposits list state
+  const [deposits, setDeposits] = useState<ScheduledDeposit[]>(
+    initialDeposits ?? (mode === "manage"
+      ? [{ title: "Weekly deposit", secondaryText: "$100 every week" }]
+      : [])
+  );
+  const [selectedDepositIndex, setSelectedDepositIndex] = useState(0);
+
   // Modal state
-  const [isModalVisible, setIsModalVisible] = useState(mode === "create");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   // Flow state
-  const [flowStack, setFlowStack] = useState<FlowStep[]>(mode === "manage" ? ["details"] : []);
-  const [flowAmount, setFlowAmount] = useState(mode === "manage" ? amount : "0");
+  const [flowStack, setFlowStack] = useState<FlowStep[]>(
+    startAtDetails ? ["intro", "details"] : ["intro"]
+  );
+  const [flowAmount, setFlowAmount] = useState("0");
   const [showSuccess, setShowSuccess] = useState(false);
-  const [depositPaused, setDepositPaused] = useState(initialPaused);
+  const [depositPaused, setDepositPaused] = useState(false);
 
   // Payment method state
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
@@ -72,7 +98,6 @@ export default function RecurringDepositFlow({
   // Modal handlers
   const handleCloseModal = () => {
     setIsModalVisible(false);
-    onClose();
   };
 
   const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
@@ -80,7 +105,17 @@ export default function RecurringDepositFlow({
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(["enterAmount"]);
+  };
+
+  // Intro handlers
+  const handleSchedulePress = () => {
+    setFlowStack(prev => [...prev, "selectFrequency"]);
+  };
+
+  const handleDepositPress = (index: number) => {
+    setSelectedDepositIndex(index);
+    setDepositPaused(deposits[index]?.status === "paused");
+    setFlowStack(prev => [...prev, "details"]);
   };
 
   // Flow handlers
@@ -94,6 +129,12 @@ export default function RecurringDepositFlow({
   };
 
   const handleConfirm = () => {
+    // Add the new deposit to the list
+    const numAmount = parseFloat(flowAmount) || 0;
+    setDeposits(prev => [...prev, {
+      title: `${frequency} deposit`,
+      secondaryText: `$${formatWithCommas(numAmount)} every week`,
+    }]);
     setFlowStack([]);
     setShowSuccess(true);
   };
@@ -109,25 +150,105 @@ export default function RecurringDepositFlow({
     onComplete();
   };
 
+  // Remove confirmation
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+
   // Detail screen handlers
   const handleTogglePause = () => {
-    setDepositPaused(prev => !prev);
+    setDepositPaused(prev => {
+      const newPaused = !prev;
+      setDeposits(d => d.map((dep, i) =>
+        i === selectedDepositIndex ? { ...dep, status: newPaused ? "paused" : "active" } : dep
+      ));
+      return newPaused;
+    });
   };
 
-  const handleRemoveDeposit = () => {
-    setFlowStack([]);
-    onComplete();
+  const handleRemovePress = () => {
+    setShowRemoveModal(true);
+  };
+
+  const handleConfirmRemove = () => {
+    setShowRemoveModal(false);
+    setDeposits(prev => prev.filter((_, i) => i !== selectedDepositIndex));
+    // Pop back to intro
+    setFlowStack(prev => prev.filter(s => s !== "details"));
   };
 
   const renderScreen = (step: string) => {
     const numAmount = parseFloat(flowAmount) || 0;
 
     switch (step) {
-      case "enterAmount":
+      case "intro":
         return (
           <FullscreenTemplate
             title="Recurring deposit"
             onLeftPress={() => setFlowStack([])}
+            navVariant="start"
+            disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                disclaimer={
+                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
+                    Deposits start on your chosen date and are usually available within 2 business days.
+                  </FoldText>
+                }
+                primaryButton={
+                  <Button
+                    label="Schedule a recurring deposit"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={handleSchedulePress}
+                  />
+                }
+              />
+            }
+          >
+            <RecurringDepositSlot
+              hasActive={deposits.length > 0}
+              onSchedulePress={handleSchedulePress}
+              scheduledDeposits={deposits.map((dep, i) => ({
+                ...dep,
+                onPress: () => handleDepositPress(i),
+              }))}
+            />
+          </FullscreenTemplate>
+        );
+      case "selectFrequency":
+        return (
+          <FullscreenTemplate
+            title="Recurring deposit"
+            onLeftPress={handleConfirmBack}
+            scrollable={false}
+            navVariant="start"
+            disableAnimation
+            footer={
+              <ModalFooter
+                type="default"
+                primaryButton={
+                  <Button
+                    label="Continue"
+                    hierarchy="primary"
+                    size="md"
+                    onPress={() => setFlowStack(prev => [...prev, "enterAmount"])}
+                  />
+                }
+              />
+            }
+          >
+            <FrequencySelectorSlot
+              options={frequencyOptions}
+              selectedValue={frequency}
+              onSelect={setFrequency}
+            />
+          </FullscreenTemplate>
+        );
+      case "enterAmount":
+        return (
+          <FullscreenTemplate
+            title="Recurring deposit"
+            onLeftPress={handleConfirmBack}
             scrollable={false}
             navVariant="step"
             disableAnimation
@@ -162,13 +283,15 @@ export default function RecurringDepositFlow({
           </FullscreenTemplate>
         );
       case "details": {
-        const detailAmount = parseFloat(flowAmount) || 100;
+        const deposit = deposits[selectedDepositIndex];
+        const detailAmount = 100;
         return (
           <FullscreenTemplate
             title="Scheduled deposit"
-            onLeftPress={() => setFlowStack([])}
+            onLeftPress={() => setFlowStack(prev => prev.filter(s => s !== "details"))}
             scrollable={false}
-            navVariant="start"
+            navVariant="step"
+            disableAnimation
             footer={
               <ModalFooter
                 type="default"
@@ -185,7 +308,7 @@ export default function RecurringDepositFlow({
                     label="Remove"
                     hierarchy="tertiary"
                     size="md"
-                    onPress={handleRemoveDeposit}
+                    onPress={handleRemovePress}
                   />
                 }
               />
@@ -246,7 +369,6 @@ export default function RecurringDepositFlow({
           <ScreenStack
             stack={flowStack}
             renderScreen={renderScreen}
-            animateInitial
             onEmpty={handleFlowEmpty}
           />
         </View>
@@ -257,6 +379,15 @@ export default function RecurringDepositFlow({
         onClose={handleCloseModal}
         onSelect={handlePaymentMethodSelect}
         type="bankAccount"
+      />
+
+      <RemoveConfirmModal
+        visible={showRemoveModal}
+        icon={<CalendarIcon />}
+        title="Remove recurring deposits"
+        body="Recurring transfers will no longer be made."
+        onRemove={handleConfirmRemove}
+        onDismiss={() => setShowRemoveModal(false)}
       />
     </>
   );

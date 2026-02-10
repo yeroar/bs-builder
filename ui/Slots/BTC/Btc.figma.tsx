@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import BtcSlot from "./BtcSlot";
+import Btc from "./Btc";
 
 figma.connect(
-  BtcSlot,
+  Btc,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=74-17996",
   {
-    example: () => <BtcSlot />,
+    example: () => <Btc />,
   }
 );

@@ -3,15 +3,15 @@ import { View, StyleSheet } from "react-native";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface SendOrReceiveSlotProps {
+export interface SendOrReceiveProps {
   title?: string;
   subtitle?: string;
 }
 
-export default function SendOrReceiveSlot({
+export default function SendOrReceive({
   title = "Send or receive",
   subtitle = "Transact with any bitcoin wallet",
-}: SendOrReceiveSlotProps) {
+}: SendOrReceiveProps) {
   return (
     <View style={styles.container}>
       <FoldText type="header-md" style={styles.title}>

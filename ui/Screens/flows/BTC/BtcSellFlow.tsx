@@ -4,10 +4,7 @@ import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import BtcSellEnterAmount from "../../../Slots/BTC/BtcSellEnterAmount";
 import BtcSellConfirmation from "../../../Slots/BTC/BtcSellConfirmation";
-import { CurrencyInput, BottomContext } from "../../../../components/Inputs/CurrencyInput";
-import ModalFooter from "../../../../components/Modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { spacing } from "../../../../components/tokens";
+import BtcSellSuccess from "../../../Slots/BTC/BtcSellSuccess";
 import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -108,43 +105,12 @@ export default function BtcSellFlow({ onComplete, onClose }: BtcSellFlowProps) {
     const satsEquivalent = Math.round((numAmount / BTC_PRICE_USD) * 100000000);
 
     return (
-      <FullscreenTemplate
-        title="Bitcoin sold"
-        leftIcon="x"
-        onLeftPress={handleSuccessDone}
-        scrollable={false}
-        variant="yellow"
+      <BtcSellSuccess
+        amount={`$${numAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        satsEquivalent={formatSats(satsEquivalent)}
         enterAnimation="fill"
-      >
-        <View style={styles.successContent}>
-          <CurrencyInput
-            value={`$${parseFloat(flowAmount).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-            topContextVariant="btc"
-            topContextValue={formatSats(satsEquivalent)}
-            bottomContextSlot={
-              <BottomContext variant="maxButton">
-                <Button
-                  label="View details"
-                  hierarchy="secondary"
-                  size="xs"
-                  onPress={handleSuccessDone}
-                />
-              </BottomContext>
-            }
-          />
-        </View>
-        <ModalFooter
-          type="inverse"
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
-        />
-      </FullscreenTemplate>
+        onClose={handleSuccessDone}
+      />
     );
   }
 
@@ -167,10 +133,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  successContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: spacing["400"],
   },
 });

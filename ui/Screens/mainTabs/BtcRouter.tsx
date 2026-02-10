@@ -7,14 +7,14 @@ import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
 import MiniModal from "../../../components/Modals/MiniModal";
 import ModalFooter from "../../../components/Modals/ModalFooter";
 import Button from "../../../components/Primitives/Buttons/Button/Button";
-import BtcSlot from "../../Slots/BTC/BtcSlot";
-import RewardsSlot from "../../Slots/BTC/RewardsSlot";
-import BitcoinRewardsSlot from "../../Slots/BTC/BitcoinRewardsSlot";
-import SendOrReceiveSlot from "../../Slots/BTC/SendOrReceiveSlot";
-import ReceiveBitcoinSlot from "../../Slots/BTC/ReceiveBitcoinSlot";
-import BitcoinAddressSlot from "../../Slots/BTC/BitcoinAddressSlot";
+import Btc from "../../Slots/BTC/Btc";
+import Rewards from "../../Slots/BTC/Rewards";
+import BitcoinRewards from "../../Slots/BTC/BitcoinRewards";
+import SendOrReceive from "../../Slots/BTC/SendOrReceive";
+import ReceiveBitcoin from "../../Slots/BTC/ReceiveBitcoin";
+import BitcoinAddress from "../../Slots/BTC/BitcoinAddress";
 import { BtcSendFlow, BtcAutoStackFlow, DirectToBitcoinFlow, RedeemGiftCardFlow } from "../flows";
-import { AutoStackConfig, DirectToBitcoinConfig } from "../../Slots/BTC/BtcSlot";
+import { AutoStackConfig, DirectToBitcoinConfig } from "../../Slots/BTC/Btc";
 import { TransactionCategory } from "../../Slots/Transactions/TransactionsSlot";
 import { FlowType, BankActions } from "./hooks/useBankState";
 
@@ -22,6 +22,7 @@ export interface BtcRouterProps {
   visible: boolean;
   onClose: () => void;
   activeFlow: FlowType | null;
+  flowKey: number;
   autoStackConfig?: AutoStackConfig;
   directToBitcoinConfig?: DirectToBitcoinConfig;
   actions: BankActions;
@@ -33,6 +34,7 @@ export default function BtcRouter({
   visible,
   onClose,
   activeFlow,
+  flowKey,
   autoStackConfig,
   directToBitcoinConfig,
   actions,
@@ -50,7 +52,7 @@ export default function BtcRouter({
       {/* Bitcoin Screen */}
       {visible && (
         <FullscreenTemplate onLeftPress={onClose}>
-          <BtcSlot
+          <Btc
             onBuyPress={() => onBuySellFlow("buy", { onComplete: actions.openBtcScreen })}
             onSellPress={() => onBuySellFlow("sell", { onComplete: actions.openBtcScreen })}
             onSendPress={() => setShowSendReceiveModal(true)}
@@ -75,7 +77,7 @@ export default function BtcRouter({
             </FoldPressable>
           }
         >
-          <RewardsSlot
+          <Rewards
             onSendPress={() => console.log("Send rewards pressed")}
             onSeeAllPress={() => console.log("See all rewards pressed")}
           />
@@ -107,7 +109,7 @@ export default function BtcRouter({
             />
           }
         >
-          <BitcoinRewardsSlot />
+          <BitcoinRewards />
         </MiniModal>
       </Modal>
 
@@ -150,7 +152,7 @@ export default function BtcRouter({
             />
           }
         >
-          <SendOrReceiveSlot />
+          <SendOrReceive />
         </MiniModal>
       </Modal>
 
@@ -160,7 +162,7 @@ export default function BtcRouter({
           onLeftPress={() => setShowReceiveScreen(false)}
           scrollable
         >
-          <ReceiveBitcoinSlot
+          <ReceiveBitcoin
             onCopyPress={() => console.log("Copy address pressed")}
             onViewDetailsPress={() => setShowAddressModal(true)}
           />
@@ -200,25 +202,28 @@ export default function BtcRouter({
             />
           }
         >
-          <BitcoinAddressSlot />
+          <BitcoinAddress />
         </MiniModal>
       </Modal>
 
       {/* BTC Flows */}
       {activeFlow === "redeem" && (
         <RedeemGiftCardFlow
+          key={flowKey}
           onComplete={actions.handleFlowComplete}
           onClose={actions.closeFlow}
         />
       )}
       {activeFlow === "send" && (
         <BtcSendFlow
+          key={flowKey}
           onComplete={actions.handleFlowComplete}
           onClose={actions.closeFlow}
         />
       )}
       {activeFlow === "autoStack" && (
         <BtcAutoStackFlow
+          key={flowKey}
           isFeatureActive={!!autoStackConfig}
           initialConfig={autoStackConfig}
           onComplete={actions.handleAutoStackComplete}
@@ -228,6 +233,7 @@ export default function BtcRouter({
       )}
       {activeFlow === "directToBitcoin" && (
         <DirectToBitcoinFlow
+          key={flowKey}
           isFeatureActive={!!directToBitcoinConfig}
           initialPercentage={directToBitcoinConfig?.bitcoinPercent}
           onSetUpDeposit={() => actions.openFlow("deposit")}

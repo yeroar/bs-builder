@@ -7,7 +7,7 @@ import { ClockIcon } from "../../../components/Icons/ClockIcon";
 import ActivateCardModal from "../../Slots/Modals/ActivateCardModal";
 import BtcBuyAmountModal from "../../Slots/Modals/BtcBuyAmountModal";
 import BankHomeSlot from "../../Slots/MainTabs/BankHomeSlot";
-import { BuyAmount } from "../../Slots/BTC/BtcBuyModalSlot";
+import { BuyAmount } from "../../Slots/BTC/BtcBuyModal";
 import { TransactionCategory } from "../../Slots/Transactions/TransactionsSlot";
 import useBankState from "./hooks/useBankState";
 import BtcRouter from "./BtcRouter";
@@ -22,7 +22,7 @@ interface BankScreenProps {
 
 export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress, onBuySellFlow }: BankScreenProps) {
   const [state, actions] = useBankState();
-  const { activeFlow, showBtcScreen, showCashScreen, directToBitcoinConfig, roundUpsConfig, autoStackConfig, recurringDepositConfig } = state;
+  const { activeFlow, flowKey, showBtcScreen, showCashScreen, directToBitcoinConfig, roundUpsConfig, autoStackConfig, recurringDepositConfig } = state;
 
   // Local modal state (UI-only concerns)
   const [isActivateModalVisible, setIsActivateModalVisible] = useState(false);
@@ -90,6 +90,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress, on
         visible={showBtcScreen}
         onClose={actions.closeBtcScreen}
         activeFlow={activeFlow}
+        flowKey={flowKey}
         autoStackConfig={autoStackConfig}
         directToBitcoinConfig={directToBitcoinConfig}
         actions={actions}
@@ -101,6 +102,7 @@ export default function BankScreen({ onTabPress, onHistoryPress, onMenuPress, on
         visible={showCashScreen}
         onClose={actions.closeCashScreen}
         activeFlow={activeFlow}
+        flowKey={flowKey}
         roundUpsConfig={roundUpsConfig}
         recurringDepositConfig={recurringDepositConfig}
         actions={actions}

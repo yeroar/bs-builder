@@ -43,7 +43,7 @@ export interface BtcAutoStackConfirmationProps {
   testID?: string;
 }
 
-export default function BtcAutoStackConfirmationSlot({
+export default function BtcAutoStackConfirmation({
   satsAmount = 10000000,
   usdEquivalent = "~$10,250.00",
   paymentMethodVariant = "foldAccount",

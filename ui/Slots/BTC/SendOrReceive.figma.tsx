@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import SendOrReceiveSlot from "./SendOrReceiveSlot";
+import SendOrReceive from "./SendOrReceive";
 
 figma.connect(
-  SendOrReceiveSlot,
+  SendOrReceive,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=174-23795",
   {
-    example: () => <SendOrReceiveSlot />,
+    example: () => <SendOrReceive />,
   }
 );

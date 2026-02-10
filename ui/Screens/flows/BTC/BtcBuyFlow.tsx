@@ -4,13 +4,9 @@ import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
 import BtcBuyEnterAmount from "../../../Slots/BTC/BtcBuyEnterAmount";
 import BtcBuyConfirmation from "../../../Slots/BTC/BtcBuyConfirmation";
-import { CurrencyInput } from "../../../../components/Inputs/CurrencyInput";
-import ModalFooter from "../../../../components/Modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../../components/Primitives/FoldText";
+import BtcBuySuccess from "../../../Slots/BTC/BtcBuySuccess";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
-import { colorMaps, spacing } from "../../../../components/tokens";
 import { formatWithCommas, formatSats } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -136,43 +132,13 @@ export default function BtcBuyFlow({ initialAmount, onComplete, onClose }: BtcBu
     const satsEquivalent = Math.round(numAmount * 100);
 
     return (
-      <FullscreenTemplate
-        title="Purchase submitted"
-        leftIcon="x"
-        onLeftPress={handleSuccessDone}
-        scrollable={false}
-        variant="yellow"
+      <BtcBuySuccess
+        amount={`$${numAmount.toFixed(2)}`}
+        satsEquivalent={formatSats(satsEquivalent)}
         enterAnimation="fill"
-      >
-        <View style={styles.successContent}>
-          <CurrencyInput
-            value={`$${parseFloat(flowAmount).toFixed(2)}`}
-            topContextVariant="btc"
-            topContextValue={formatSats(satsEquivalent)}
-            bottomContextVariant="none"
-          />
-        </View>
-        <ModalFooter
-          type="inverse"
-          disclaimer={
-            <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-              Funds must clear before your bitcoin is available. Your bitcoin may take{" "}
-              <FoldText type="body-sm-bold" style={{ color: colorMaps.face.primary }}>
-                up to 14 days
-              </FoldText>
-              {" "}from purchase to unlock.
-            </FoldText>
-          }
-          primaryButton={
-            <Button
-              label="Done"
-              hierarchy="inverse"
-              size="md"
-              onPress={handleSuccessDone}
-            />
-          }
-        />
-      </FullscreenTemplate>
+        onClose={handleSuccessDone}
+        onActionPress={handleSuccessDone}
+      />
     );
   }
 
@@ -205,10 +171,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  successContent: {
-    flex: 1,
-    justifyContent: "flex-start",
-    paddingTop: spacing["400"],
   },
 });

@@ -34,7 +34,6 @@ export default function RecurringDepositSlot({
   return (
     <View style={styles.container}>
       <PrimaryHeader
-        noPaddings
         header="Recurring deposit"
         body="Set up automatic transfers to your Fold Card on a schedule that works for you."
       />

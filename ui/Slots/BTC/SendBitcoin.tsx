@@ -1,13 +1,13 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import BtcWalletSearchSlot, { WalletAddress } from "./BtcWalletSearchSlot";
+import BtcWalletSearch, { WalletAddress } from "./BtcWalletSearch";
 import Divider from "../../../components/Primitives/Divider/Divider";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import InfoCircleIcon from "../../../components/Icons/InfoCircleIcon";
 import SettingsIcon from "../../../components/Icons/SettingsIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface SendBitcoinSlotProps {
+export interface SendBitcoinProps {
   searchValue?: string;
   onSearchChange?: (text: string) => void;
   onClearPress?: () => void;
@@ -16,7 +16,7 @@ export interface SendBitcoinSlotProps {
   walletAddresses?: WalletAddress[];
 }
 
-export default function SendBitcoinSlot({
+export default function SendBitcoin({
   searchValue = "",
   onSearchChange,
   onClearPress,
@@ -28,7 +28,7 @@ export default function SendBitcoinSlot({
       displayAddress: "3NC53Da...9wff5IY",
     },
   ],
-}: SendBitcoinSlotProps) {
+}: SendBitcoinProps) {
   const addressesWithHandlers = walletAddresses.map((w) => ({
     ...w,
     onPress: () => onAddressSelect?.(w.address),
@@ -36,7 +36,7 @@ export default function SendBitcoinSlot({
 
   return (
     <View style={styles.container}>
-      <BtcWalletSearchSlot
+      <BtcWalletSearch
         value={searchValue}
         onChangeText={onSearchChange}
         onClearPress={onClearPress}

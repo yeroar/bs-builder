@@ -6,7 +6,7 @@ import Divider from "../../../components/Primitives/Divider/Divider";
 import ListItemReceipt from "../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface BitcoinRewardsSlotProps {
+export interface BitcoinRewardsProps {
   amount?: string;
   sats?: string;
   lifetimeRewardsValue?: string;
@@ -15,14 +15,14 @@ export interface BitcoinRewardsSlotProps {
   performanceValue?: string;
 }
 
-export default function BitcoinRewardsSlot({
+export default function BitcoinRewards({
   amount = "$364.17",
   sats = "400,240 sats",
   lifetimeRewardsValue = "$720.42",
   lifetimeRewardsDenominator = "576,479 sats",
   appreciationValue = "$12,482.13 (+12%)",
   performanceValue = "$45.23 (+9.43%)",
-}: BitcoinRewardsSlotProps) {
+}: BitcoinRewardsProps) {
   return (
     <View style={styles.container}>
       <TransactionHeader

@@ -1,25 +1,16 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import FullscreenTemplate, { FullscreenTemplateRef } from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
-import IntroTemplate from "../../../Templates/IntroTemplate";
-import EnterAmount from "../../../Templates/EnterAmount/EnterAmount";
-import MiniModal from "../../../../components/Modals/MiniModal";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
-import RemoveModalSlot from "../../../Slots/Modals/RemoveModalSlot";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import ListItem from "../../../../components/DataDisplay/ListItem/ListItem";
-import IconContainer from "../../../../components/Primitives/IconContainer/IconContainer";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
-import { Keypad } from "../../../../components/Keypad";
-import { ClockIcon } from "../../../../components/Icons/ClockIcon";
-import { CalendarIcon } from "../../../../components/Icons/CalendarIcon";
-import { RocketIcon } from "../../../../components/Icons/RocketIcon";
 import DirectToBitcoinIcon from "../../../../components/Icons/DirectToBitcoinIcon";
-import AutomationSuccess from "../../../Templates/Success/AutomationSuccess";
-import DirectToBitcoinSlot from "../../../Slots/BTC/DirectToBitcoinSlot";
-import DirectToBitcoinConfirmSlot from "../../../Slots/BTC/DirectToBitcoinConfirmSlot";
-import { spacing } from "../../../../components/tokens";
+import RemoveConfirmModal from "../../../Slots/Modals/RemoveConfirmModal";
+import DirectToBitcoinIntro from "../../../Slots/BTC/DirectToBitcoinIntro";
+import DirectToBitcoin from "../../../Slots/BTC/DirectToBitcoin";
+import DirectToBitcoinEnterCustom from "../../../Slots/BTC/DirectToBitcoinEnterCustom";
+import DirectToBitcoinConfirm from "../../../Slots/BTC/DirectToBitcoinConfirm";
+import DirectToBitcoinSuccess from "../../../Slots/BTC/DirectToBitcoinSuccess";
 
 type FlowStep = "intro" | "configure" | "enterCustom" | "confirm";
 
@@ -49,7 +40,6 @@ export default function DirectToBitcoinFlow({
   const [selectedPercentage, setSelectedPercentage] = useState<number>(
     isFeatureActive ? initialPercentage : 75
   );
-  const [customPercentageInput, setCustomPercentageInput] = useState<string>("0");
   const [showSuccess, setShowSuccess] = useState(false);
   const [showTurnOffModal, setShowTurnOffModal] = useState(false);
   const successRef = useRef<FullscreenTemplateRef>(null);
@@ -63,18 +53,10 @@ export default function DirectToBitcoinFlow({
   };
 
   const handleCustomPress = () => {
-    setCustomPercentageInput(selectedPercentage.toString());
     setFlowStack(prev => [...prev, "enterCustom"]);
   };
 
   const handleCustomBack = () => {
-    setFlowStack(prev => prev.slice(0, -1));
-  };
-
-  const handleCustomConfirm = () => {
-    const value = parseInt(customPercentageInput, 10) || 0;
-    const clampedValue = Math.max(0, Math.min(100, value));
-    setSelectedPercentage(clampedValue);
     setFlowStack(prev => prev.slice(0, -1));
   };
 
@@ -110,21 +92,6 @@ export default function DirectToBitcoinFlow({
     }
   };
 
-  const handleNumberPress = (num: string) => {
-    setCustomPercentageInput(prev => {
-      if (prev === "0") return num;
-      if (prev.length >= 3) return prev;
-      return prev + num;
-    });
-  };
-
-  const handleBackspacePress = () => {
-    setCustomPercentageInput(prev => {
-      if (prev.length <= 1) return "0";
-      return prev.slice(0, -1);
-    });
-  };
-
   const cashPercentage = 100 - selectedPercentage;
 
   const renderScreen = (step: string) => {
@@ -157,29 +124,7 @@ export default function DirectToBitcoinFlow({
               />
             }
           >
-            <IntroTemplate
-              header="Direct to bitcoin"
-              body="Get paid in bitcoin, effortlessly. Choose a percentage of your direct deposit to convert automatically."
-            >
-              <ListItem
-                variant="feature"
-                title="Passive stacking"
-                secondaryText="Convert a percentage of each direct deposit."
-                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<ClockIcon />} />}
-              />
-              <ListItem
-                variant="feature"
-                title="Flexible anytime"
-                secondaryText="Start with as little as you like and change as you go."
-                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<CalendarIcon />} />}
-              />
-              <ListItem
-                variant="feature"
-                title="No fees for Fold+"
-                secondaryText="Fold+ members enjoy fee-free conversions."
-                leadingSlot={<IconContainer variant="default-fill" size="lg" icon={<RocketIcon />} />}
-              />
-            </IntroTemplate>
+            <DirectToBitcoinIntro />
           </FullscreenTemplate>
         );
       case "configure":
@@ -212,7 +157,7 @@ export default function DirectToBitcoinFlow({
               />
             }
           >
-            <DirectToBitcoinSlot
+            <DirectToBitcoin
               selectedPercentage={selectedPercentage}
               onPercentageSelect={setSelectedPercentage}
               onCustomPress={handleCustomPress}
@@ -220,8 +165,6 @@ export default function DirectToBitcoinFlow({
           </FullscreenTemplate>
         );
       case "enterCustom":
-        const displayValue = `${customPercentageInput}%`;
-        const isValid = parseInt(customPercentageInput, 10) > 0 && parseInt(customPercentageInput, 10) <= 100;
         return (
           <FullscreenTemplate
             title="Direct to bitcoin"
@@ -229,29 +172,13 @@ export default function DirectToBitcoinFlow({
             scrollable={false}
             navVariant="step"
           >
-            <EnterAmount>
-              <View style={styles.customContent}>
-                <CurrencyInput
-                  value={displayValue}
-                  topContextSlot={
-                    <TopContext variant="btc" value="How much do you want to convert?" />
-                  }
-                  bottomContextSlot={
-                    <BottomContext variant="empty" />
-                  }
-                />
-              </View>
-
-              <Keypad
-                onNumberPress={handleNumberPress}
-                onBackspacePress={handleBackspacePress}
-                disableDecimal={true}
-                actionBar
-                actionLabel="Confirm"
-                actionDisabled={!isValid}
-                onActionPress={handleCustomConfirm}
-              />
-            </EnterAmount>
+            <DirectToBitcoinEnterCustom
+              initialValue={selectedPercentage}
+              onConfirm={(value) => {
+                setSelectedPercentage(value);
+                setFlowStack(prev => prev.slice(0, -1));
+              }}
+            />
           </FullscreenTemplate>
         );
       case "confirm":
@@ -274,7 +201,7 @@ export default function DirectToBitcoinFlow({
               />
             }
           >
-            <DirectToBitcoinConfirmSlot
+            <DirectToBitcoinConfirm
               bitcoinPercentage={selectedPercentage}
               cashPercentage={cashPercentage}
             />
@@ -292,26 +219,11 @@ export default function DirectToBitcoinFlow({
         onLeftPress={handleSuccessClose}
         scrollable={false}
         navVariant="start"
-        footer={
-          <ModalFooter
-            type="default"
-            primaryButton={
-              <Button
-                label="Done"
-                hierarchy="primary"
-                size="md"
-                onPress={handleDone}
-              />
-            }
-          />
-        }
       >
-        <AutomationSuccess
-          header={isFeatureActive
-            ? `Direct to bitcoin updated to ${selectedPercentage}%`
-            : `You're investing ${selectedPercentage}% of direct deposits in bitcoin`
-          }
-          body="Funds will be made available in your bitcoin balance."
+        <DirectToBitcoinSuccess
+          percentage={selectedPercentage}
+          isUpdate={isFeatureActive}
+          onDone={handleDone}
         />
       </FullscreenTemplate>
     );
@@ -325,49 +237,18 @@ export default function DirectToBitcoinFlow({
         onEmpty={handleFlowEmpty}
       />
 
-      {/* Turn Off Confirmation Modal */}
-      <Modal
+      <RemoveConfirmModal
         visible={showTurnOffModal}
-        transparent
-        animationType="none"
-        onRequestClose={() => setShowTurnOffModal(false)}
-      >
-        <MiniModal
-          variant="destructive"
-          showHeader={false}
-          onClose={() => setShowTurnOffModal(false)}
-          footer={
-            <ModalFooter
-              type="dualButton"
-              primaryButton={
-                <Button
-                  label="Turn off"
-                  hierarchy="destructive"
-                  size="md"
-                  onPress={() => {
-                    setShowTurnOffModal(false);
-                    onTurnOff?.();
-                  }}
-                />
-              }
-              secondaryButton={
-                <Button
-                  label="Dismiss"
-                  hierarchy="secondary"
-                  size="md"
-                  onPress={() => setShowTurnOffModal(false)}
-                />
-              }
-            />
-          }
-        >
-          <RemoveModalSlot
-            icon={<DirectToBitcoinIcon />}
-            title="Turn off Direct to bitcoin"
-            body="Any incoming deposits that have not settled yet will no longer converted to bitcoin."
-          />
-        </MiniModal>
-      </Modal>
+        icon={<DirectToBitcoinIcon />}
+        title="Turn off Direct to bitcoin"
+        body="Any incoming deposits that have not settled yet will no longer converted to bitcoin."
+        removeLabel="Turn off"
+        onRemove={() => {
+          setShowTurnOffModal(false);
+          onTurnOff?.();
+        }}
+        onDismiss={() => setShowTurnOffModal(false)}
+      />
     </View>
   );
 }
@@ -380,9 +261,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  customContent: {
-    flex: 1,
-    paddingHorizontal: spacing["400"],
   },
 });

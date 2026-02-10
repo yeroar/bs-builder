@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import DirectToBitcoinSlot from "./DirectToBitcoinSlot";
+import DirectToBitcoin from "./DirectToBitcoin";
 
 figma.connect(
-  DirectToBitcoinSlot,
+  DirectToBitcoin,
   "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=167-18040",
   {
-    example: () => <DirectToBitcoinSlot />,
+    example: () => <DirectToBitcoin />,
   }
 );

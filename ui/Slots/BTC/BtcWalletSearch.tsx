@@ -17,7 +17,7 @@ export interface WalletAddress {
   onPress?: () => void;
 }
 
-export interface BtcWalletSearchSlotProps {
+export interface BtcWalletSearchProps {
   value?: string;
   onChangeText?: (text: string) => void;
   onClearPress?: () => void;
@@ -25,7 +25,7 @@ export interface BtcWalletSearchSlotProps {
   walletAddresses?: WalletAddress[];
 }
 
-export default function BtcWalletSearchSlot({
+export default function BtcWalletSearch({
   value = "",
   onChangeText,
   onClearPress,
@@ -33,7 +33,7 @@ export default function BtcWalletSearchSlot({
   walletAddresses = [
     { address: "3NC53Da...9wff5IY", displayAddress: "3NC53Da...9wff5IY" },
   ],
-}: BtcWalletSearchSlotProps) {
+}: BtcWalletSearchProps) {
   const isPopulated = value.length > 0;
 
   return (

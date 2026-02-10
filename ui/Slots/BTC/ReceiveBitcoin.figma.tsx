@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import ReceiveBitcoinSlot from "./ReceiveBitcoinSlot";
+import ReceiveBitcoin from "./ReceiveBitcoin";
 
 figma.connect(
-  ReceiveBitcoinSlot,
+  ReceiveBitcoin,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=174-24543",
   {
-    example: () => <ReceiveBitcoinSlot />,
+    example: () => <ReceiveBitcoin />,
   }
 );

@@ -1,20 +1,20 @@
 import figma from "@figma/code-connect";
-import BtcWalletSearchSlot from "./BtcWalletSearchSlot";
+import BtcWalletSearch from "./BtcWalletSearch";
 
 figma.connect(
-  BtcWalletSearchSlot,
+  BtcWalletSearch,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=176-29058",
   {
     variant: { state: "empty" },
-    example: () => <BtcWalletSearchSlot />,
+    example: () => <BtcWalletSearch />,
   }
 );
 
 figma.connect(
-  BtcWalletSearchSlot,
+  BtcWalletSearch,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=176-29058",
   {
     variant: { state: "populated" },
-    example: () => <BtcWalletSearchSlot value="3NC53DaHr9VY37dUgDQveG5qsTH9wff5..." />,
+    example: () => <BtcWalletSearch value="3NC53DaHr9VY37dUgDQveG5qsTH9wff5..." />,
   }
 );

@@ -1,12 +1,12 @@
 import figma from "@figma/code-connect";
-import BitcoinRewardsSlot from "./BitcoinRewardsSlot";
+import BitcoinRewards from "./BitcoinRewards";
 
 figma.connect(
-  BitcoinRewardsSlot,
+  BitcoinRewards,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=174-20149",
   {
     example: () => (
-      <BitcoinRewardsSlot
+      <BitcoinRewards
         amount="$364.17"
         sats="400,240 sats"
         lifetimeRewardsValue="$720.42"

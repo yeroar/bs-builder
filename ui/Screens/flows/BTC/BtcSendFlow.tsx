@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
-import SendBitcoinSlot from "../../../Slots/BTC/SendBitcoinSlot";
-import ScanSlot from "../../../Slots/BTC/ScanSlot";
+import SendBitcoin from "../../../Slots/BTC/SendBitcoin";
+import Scan from "../../../Slots/BTC/Scan";
 import BtcSendEnterAmount from "../../../Slots/BTC/BtcSendEnterAmount";
 import BtcSendConfirmation from "../../../Slots/BTC/BtcSendConfirmation";
 import BtcSendSuccess from "../../../Slots/BTC/BtcSendSuccess";
@@ -83,7 +83,7 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
             scrollable={false}
             navVariant="start"
           >
-            <SendBitcoinSlot
+            <SendBitcoin
               searchValue={searchValue}
               onSearchChange={setSearchValue}
               onClearPress={() => setSearchValue("")}
@@ -100,7 +100,7 @@ export default function BtcSendFlow({ onComplete, onClose }: BtcSendFlowProps) {
             scrollable={false}
             navVariant="start"
           >
-            <ScanSlot />
+            <Scan />
           </FullscreenTemplate>
         );
       case "enterAmount":

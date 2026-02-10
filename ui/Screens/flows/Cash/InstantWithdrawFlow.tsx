@@ -2,20 +2,11 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
 import ScreenStack from "../../../Templates/ScreenStack";
-import TxConfirmation from "../../../Templates/TxConfirmation/TxConfirmation";
-import EnterAmount from "../../../Templates/EnterAmount/EnterAmount";
-import useAmountInput from "../../../Templates/EnterAmount/useAmountInput";
+import InstantWithdrawEnterAmount from "../../../Slots/Cash/InstantWithdrawEnterAmount";
+import InstantWithdrawConfirmation from "../../../Slots/Cash/InstantWithdrawConfirmation";
 import InstantWithdrawSuccess from "../../../Slots/Cash/InstantWithdrawSuccess";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../components/Inputs/CurrencyInput";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
-import { Keypad } from "../../../../components/Keypad";
-import ReceiptDetails from "../../../../components/DataDisplay/ListItem/Receipt/ReceiptDetails";
-import ListItemReceipt from "../../../../components/DataDisplay/ListItem/Receipt/ListItemReceipt";
-import ModalFooter from "../../../../components/Modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../../components/Primitives/FoldText";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
-import { colorMaps, spacing } from "../../../../components/tokens";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
 type FlowStep = "enterAmount" | "confirm";
@@ -111,45 +102,16 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
             navVariant="step"
             disableAnimation
           >
-            <TxConfirmation
-              currencyInput={
-                <CurrencyInput
-                  value={`$${formatWithCommas(numAmount)}`}
-                  topContextVariant="empty"
-                  bottomContextVariant="paymentMethod"
-                  paymentMethodVariant={selectedPaymentMethod}
-                  paymentMethodBrand={selectedBrand}
-                  paymentMethodLabel={selectedLabel}
-                  onPaymentMethodPress={() => setIsModalVisible(true)}
-                />
-              }
-              receiptDetails={
-                <ReceiptDetails>
-                  <ListItemReceipt label="Transfer" value={`$${formatWithCommas(numAmount)}`} />
-                  <ListItemReceipt label="Fees · 1.5%" value={`+ $${formatWithCommas(feeAmount)}`} />
-                  <ListItemReceipt label="Total" value={`$${formatWithCommas(totalAmount)}`} />
-                </ReceiptDetails>
-              }
-              disclaimer="Withdrawals are limited to $15,000 per transfer, $150,000 per day, $50,000 per month."
-              footer={
-                <ModalFooter
-                  type="default"
-                  disclaimer={
-                    <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-                      Your withdrawal may take 1-5 business days to complete.
-                    </FoldText>
-                  }
-                  primaryButton={
-                    <Button
-                      label="Confirm withdrawal"
-                      hierarchy="primary"
-                      size="md"
-                      disabled={selectedPaymentMethod === "null"}
-                      onPress={handleConfirm}
-                    />
-                  }
-                />
-              }
+            <InstantWithdrawConfirmation
+              amount={`$${formatWithCommas(numAmount)}`}
+              transferAmount={`$${formatWithCommas(numAmount)}`}
+              feeAmount={`+ $${formatWithCommas(feeAmount)}`}
+              totalAmount={`$${formatWithCommas(totalAmount)}`}
+              paymentMethodVariant={selectedPaymentMethod}
+              paymentMethodBrand={selectedBrand}
+              paymentMethodLabel={selectedLabel}
+              onPaymentMethodPress={() => setIsModalVisible(true)}
+              onConfirmPress={handleConfirm}
             />
           </FullscreenTemplate>
         );
@@ -203,73 +165,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
   );
 }
 
-// Inline enter amount component (mirrors InstantDepositEnterAmount pattern)
-function InstantWithdrawEnterAmount({
-  initialValue = "0",
-  maxAmount = "$4,900.00",
-  actionLabel = "Continue",
-  onActionPress,
-}: {
-  initialValue?: string;
-  maxAmount?: string;
-  actionLabel?: string;
-  onActionPress?: (amount: string) => void;
-}) {
-  const {
-    amount,
-    handleNumberPress,
-    handleDecimalPress,
-    handleBackspacePress,
-    hasDecimal,
-    isEmpty,
-    formatDisplayValue,
-    setAmount,
-  } = useAmountInput({ initialValue });
-
-  const handleActionPress = () => {
-    onActionPress?.(amount);
-  };
-
-  const handleMaxPress = () => {
-    const numericMax = maxAmount.replace(/[^0-9.]/g, "");
-    setAmount(numericMax);
-  };
-
-  return (
-    <EnterAmount>
-      <View style={styles.enterAmountContent}>
-        <CurrencyInput
-          value={formatDisplayValue(amount)}
-          topContextSlot={
-            <TopContext variant="empty" />
-          }
-          bottomContextSlot={
-            <BottomContext variant="maxButton">
-              <Button
-                label={`Max ${maxAmount}`}
-                hierarchy="secondary"
-                size="xs"
-                onPress={handleMaxPress}
-              />
-            </BottomContext>
-          }
-        />
-      </View>
-
-      <Keypad
-        onNumberPress={handleNumberPress}
-        onDecimalPress={handleDecimalPress}
-        onBackspacePress={handleBackspacePress}
-        disableDecimal={hasDecimal}
-        actionBar
-        actionLabel={actionLabel}
-        actionDisabled={isEmpty}
-        onActionPress={handleActionPress}
-      />
-    </EnterAmount>
-  );
-}
-
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
@@ -278,9 +173,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 200,
-  },
-  enterAmountContent: {
-    flex: 1,
-    paddingHorizontal: spacing["400"],
   },
 });

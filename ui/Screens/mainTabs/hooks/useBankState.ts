@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { DirectToBitcoinConfig, AutoStackConfig } from "../../../Slots/BTC/BtcSlot";
+import { DirectToBitcoinConfig, AutoStackConfig } from "../../../Slots/BTC/Btc";
 import { RoundUpsConfig, RecurringDepositConfig } from "../../../Slots/Cash/CashSlot";
 import { Multiplier } from "../../../Slots/Cash/RoundUpsSlot";
 
@@ -14,6 +14,7 @@ export interface BankState {
 
   // Flow state
   activeFlow: FlowType | null;
+  flowKey: number;
 
   // Sub-screen state
   showBtcScreen: boolean;
@@ -56,13 +57,17 @@ export default function useBankState(): [BankState, BankActions] {
 
   // Flow state
   const [activeFlow, setActiveFlow] = useState<FlowType | null>(null);
+  const [flowKey, setFlowKey] = useState(0);
 
   // Sub-screen state
   const [showBtcScreen, setShowBtcScreen] = useState(false);
   const [showCashScreen, setShowCashScreen] = useState(false);
 
   // Flow actions
-  const openFlow = useCallback((flow: FlowType) => setActiveFlow(flow), []);
+  const openFlow = useCallback((flow: FlowType) => {
+    setFlowKey(k => k + 1);
+    setActiveFlow(flow);
+  }, []);
   const closeFlow = useCallback(() => setActiveFlow(null), []);
 
   // Sub-screen actions
@@ -130,6 +135,7 @@ export default function useBankState(): [BankState, BankActions] {
     autoStackConfig,
     recurringDepositConfig,
     activeFlow,
+    flowKey,
     showBtcScreen,
     showCashScreen,
   };

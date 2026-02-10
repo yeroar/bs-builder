@@ -10,19 +10,19 @@ import FoldPressable from "../../../components/Primitives/FoldPressable";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import { colorMaps, spacing, radius } from "../../../components/tokens";
 
-export interface ReceiveBitcoinSlotProps {
+export interface ReceiveBitcoinProps {
   address?: string;
   qrImageUri?: string;
   onCopyPress?: () => void;
   onViewDetailsPress?: () => void;
 }
 
-export default function ReceiveBitcoinSlot({
+export default function ReceiveBitcoin({
   address = "bc1qmv2...rvlx6gj",
   qrImageUri,
   onCopyPress,
   onViewDetailsPress,
-}: ReceiveBitcoinSlotProps) {
+}: ReceiveBitcoinProps) {
   return (
     <View style={styles.container}>
       {/* QR + Address section */}

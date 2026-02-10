@@ -10,7 +10,7 @@ import ProgressVisualization from "../../../components/dataViz/ProgressVisualiza
 import NavBTCSolidIcon from "../../../components/Icons/NavBTCSolidIcon";
 import { colorMaps, spacing } from "../../../components/tokens";
 
-export interface RewardsSlotProps {
+export interface RewardsProps {
   rewardsAmount?: string;
   rewardsSats?: string;
   pendingText?: string;
@@ -27,7 +27,7 @@ export interface RewardsSlotProps {
   }>;
 }
 
-export default function RewardsSlot({
+export default function Rewards({
   rewardsAmount = "$n.nn",
   rewardsSats = "n,nnn sats",
   pendingText = "Pending: ~15.10 of BTC",
@@ -41,7 +41,7 @@ export default function RewardsSlot({
     { title: "Card reward", subtitle: "Yesterday", amount: "< $0.01", sats: "10 sats" },
     { title: "Card reward", subtitle: "Dec 17", amount: "$0.33", sats: "302 sats" },
   ],
-}: RewardsSlotProps) {
+}: RewardsProps) {
   return (
     <View style={styles.container}>
       <ProductSurfaceSecondary

@@ -1,10 +1,10 @@
 import figma from "@figma/code-connect";
-import ScanSlot from "./ScanSlot";
+import Scan from "./Scan";
 
 figma.connect(
-  ScanSlot,
+  Scan,
   "https://figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=176-29286",
   {
-    example: () => <ScanSlot />,
+    example: () => <Scan />,
   }
 );
