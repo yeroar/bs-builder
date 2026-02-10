@@ -3,6 +3,7 @@ import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
 import AuthUserAddress, { AuthUserAddressFormData } from "../../../../Slots/AuthorizedUser/AuthUserAddress";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { useKeyboardVisible } from "../../../../../hooks/useKeyboardVisible";
 
 interface AuthUserAddressScreenProps {
   formData: AuthUserAddressFormData;
@@ -12,6 +13,7 @@ interface AuthUserAddressScreenProps {
 }
 
 export default function AuthUserAddressScreen({ formData, onChangeField, onContinue, onBack }: AuthUserAddressScreenProps) {
+  const keyboardVisible = useKeyboardVisible();
   const isValid =
     formData.address.trim() !== "" &&
     formData.city.trim() !== "" &&
@@ -28,7 +30,7 @@ export default function AuthUserAddressScreen({ formData, onChangeField, onConti
       footer={
         <ModalFooter
           type="default"
-          modalVariant="keyboard"
+          modalVariant={keyboardVisible ? "keyboard" : undefined}
           primaryButton={
             <Button label="Continue" hierarchy="primary" size="md" disabled={!isValid} onPress={onContinue} />
           }

@@ -3,6 +3,7 @@ import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
 import AuthUserName, { AuthUserNameFormData } from "../../../../Slots/AuthorizedUser/AuthUserName";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { useKeyboardVisible } from "../../../../../hooks/useKeyboardVisible";
 
 interface AuthUserNameScreenProps {
   formData: AuthUserNameFormData;
@@ -12,6 +13,7 @@ interface AuthUserNameScreenProps {
 }
 
 export default function AuthUserNameScreen({ formData, onChangeField, onContinue, onBack }: AuthUserNameScreenProps) {
+  const keyboardVisible = useKeyboardVisible();
   const isValid = formData.firstName.trim() !== "" && formData.lastName.trim() !== "";
 
   return (
@@ -24,7 +26,7 @@ export default function AuthUserNameScreen({ formData, onChangeField, onContinue
       footer={
         <ModalFooter
           type="default"
-          modalVariant="keyboard"
+          modalVariant={keyboardVisible ? "keyboard" : undefined}
           primaryButton={
             <Button label="Continue" hierarchy="primary" size="md" disabled={!isValid} onPress={onContinue} />
           }

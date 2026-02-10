@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { FoldText } from "../../Primitives/FoldText";
 import { CalendarIcon } from "../../Icons/CalendarIcon";
+import { BitcoinCircleIcon } from "../../Icons/BitcoinCircleIcon";
 import { colorMaps, spacing } from "../../tokens";
 
 export type TopContextVariant = "btc" | "frequency" | "giftcard" | "empty";
@@ -29,6 +30,7 @@ export default function TopContext({
   const getIcon = () => {
     if (leadingIcon) return leadingIcon;
     if (variant === "frequency") return <CalendarIcon width={16} height={16} color={colorMaps.face.primary} />;
+    if (variant === "giftcard") return <BitcoinCircleIcon width={16} height={16} />;
     return null;
   };
 

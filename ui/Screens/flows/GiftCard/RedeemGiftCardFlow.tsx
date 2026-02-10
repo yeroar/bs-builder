@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import FullscreenTemplate from "../../../Templates/FullscreenTemplate";
-import ModalFooter from "../../../../components/Modals/ModalFooter";
-import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import RedeemBtcGiftCard from "../../../Slots/GiftCard/RedeemBtcGiftCard";
-import RedeemBtcGiftCardConfirmation from "../../../Slots/GiftCard/RedeemBtcGiftCardConfirmation";
-import RedeemBtcGiftCardSuccess from "../../../Slots/GiftCard/RedeemBtcGiftCardSuccess";
+import { View, StyleSheet } from "react-native";
+import ScreenStack from "../../../Templates/ScreenStack";
+import RedeemGiftCardEntryScreen from "./RedeemGiftCardEntryScreen";
+import RedeemGiftCardConfirmationScreen from "./RedeemGiftCardConfirmationScreen";
+import RedeemGiftCardSuccessScreen from "./RedeemGiftCardSuccessScreen";
 
-type RedeemStep = "entry" | "confirmation" | "success";
+type FlowStep = "entry" | "confirmation";
 
 export interface RedeemGiftCardFlowProps {
   onComplete: () => void;
@@ -14,87 +13,77 @@ export interface RedeemGiftCardFlowProps {
 }
 
 export default function RedeemGiftCardFlow({ onComplete, onClose }: RedeemGiftCardFlowProps) {
-  const [step, setStep] = useState<RedeemStep>("entry");
-  const [cardNumber, setCardNumber] = useState("");
-  const [pin, setPin] = useState("");
+  const [flowStack, setFlowStack] = useState<FlowStep[]>(["entry"]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const isFormValid = cardNumber.length > 0 && pin.length > 0;
+  const handleContinue = (_cardNumber: string, _pin: string) => {
+    setFlowStack(prev => [...prev, "confirmation"]);
+  };
 
-  const handleContinue = () => setStep("confirmation");
-  const handleBack = () => setStep("entry");
-  const handleConfirm = () => setStep("success");
+  const handleBack = () => {
+    setFlowStack(prev => prev.slice(0, -1));
+  };
+
+  const handleConfirm = () => {
+    setFlowStack([]);
+    setShowSuccess(true);
+  };
+
+  const handleFlowEmpty = () => {
+    if (!showSuccess) {
+      onClose();
+    }
+  };
+
   const handleDone = () => {
+    setShowSuccess(false);
     onComplete();
   };
 
-  if (step === "entry") {
-    return (
-      <FullscreenTemplate
-        onLeftPress={onClose}
-        scrollable
-        footer={
-          <ModalFooter
-            type="default"
-            disclaimer="Applicable bitcoin exchange fees may apply. Need a Bitcoin Gift Card?"
-            primaryButton={
-              <Button
-                label="Continue"
-                hierarchy="primary"
-                size="md"
-                disabled={!isFormValid}
-                onPress={handleContinue}
-              />
-            }
+  const renderScreen = (step: string) => {
+    switch (step) {
+      case "entry":
+        return (
+          <RedeemGiftCardEntryScreen
+            onClose={() => setFlowStack([])}
+            onContinue={handleContinue}
           />
-        }
-      >
-        <RedeemBtcGiftCard
-          cardNumber={cardNumber}
-          pin={pin}
-          onCardNumberChange={setCardNumber}
-          onPinChange={setPin}
-        />
-      </FullscreenTemplate>
-    );
+        );
+      case "confirmation":
+        return (
+          <RedeemGiftCardConfirmationScreen
+            onBack={handleBack}
+            onConfirm={handleConfirm}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  if (showSuccess) {
+    return <RedeemGiftCardSuccessScreen onDone={handleDone} />;
   }
 
-  if (step === "confirmation") {
-    return (
-      <FullscreenTemplate
-        title="Redeem gift card"
-        navVariant="step"
-        onLeftPress={handleBack}
-        footer={
-          <ModalFooter
-            type="default"
-            disclaimer="Having trouble redeeming?"
-            primaryButton={
-              <Button
-                label="Redeem"
-                hierarchy="primary"
-                size="md"
-                onPress={handleConfirm}
-              />
-            }
-          />
-        }
-      >
-        <RedeemBtcGiftCardConfirmation />
-      </FullscreenTemplate>
-    );
-  }
-
-  // success
   return (
-    <RedeemBtcGiftCardSuccess
-      onClose={handleDone}
-      footer={
-        <ModalFooter
-          primaryButton={
-            <Button label="Done" hierarchy="inverse" size="md" onPress={handleDone} />
-          }
-        />
-      }
-    />
+    <View style={styles.container}>
+      <ScreenStack
+        stack={flowStack}
+        renderScreen={renderScreen}
+        animateInitial
+        onEmpty={handleFlowEmpty}
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 200,
+  },
+});

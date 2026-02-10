@@ -11,7 +11,8 @@ import TagScreen from './ui/Screens/mainTabs/TagScreen';
 import HistoryScreen from './ui/Screens/flows/History/HistoryScreen';
 import { TransactionCategory } from './ui/Slots/Transactions/Transactions';
 import { ComponentLibraryScreen } from './components/ComponentLibrary';
-import GiftCardSearchScreen from './ui/Screens/flows/GiftCard/GiftCardSearchScreen';
+import GiftCardPurchaseFlow from './ui/Screens/flows/GiftCard/GiftCardPurchaseFlow';
+import { SelectedCard } from './ui/Screens/flows/GiftCard/GiftCardPurchaseFlow';
 import { BtcBuyFlow, BtcSellFlow } from './ui/Screens/flows';
 import { useOverlays } from './hooks/useOverlays';
 
@@ -24,8 +25,8 @@ export default function App() {
     push({ type: 'history', category });
   };
 
-  const goToSearchGiftCards = () => {
-    push({ type: 'searchGiftCards' });
+  const goToGiftCardFlow = (card?: SelectedCard) => {
+    push({ type: 'giftCardFlow', card });
   };
 
   const handleBuySellFlow = (flow: 'buy' | 'sell', opts?: { initialAmount?: string; onComplete?: () => void }) => {
@@ -43,7 +44,7 @@ export default function App() {
       case 'center':
         return <ExchangeScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onBuyPress={() => push({ type: 'buyFlow' })} onSellPress={() => push({ type: 'sellFlow' })} onMenuPress={() => console.log("Menu Pressed")} />;
       case 'right':
-        return <TagScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} onSearchGiftCards={goToSearchGiftCards} />;
+        return <TagScreen onTabPress={setActiveTab} onHistoryPress={goToHistory} onMenuPress={() => console.log("Menu Pressed")} onGiftCardFlow={goToGiftCardFlow} />;
       case 'notifications':
         return (
           <FullscreenTemplate
@@ -82,13 +83,14 @@ export default function App() {
                     defaultCategory={overlay.category}
                   />
                 );
-              case 'searchGiftCards':
+              case 'giftCardFlow':
                 return (
-                  <View key="search" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 }}>
-                    <GiftCardSearchScreen
-                      onBack={() => close('searchGiftCards')}
-                    />
-                  </View>
+                  <GiftCardPurchaseFlow
+                    key="giftCardFlow"
+                    card={overlay.card}
+                    onComplete={() => close('giftCardFlow')}
+                    onClose={() => close('giftCardFlow')}
+                  />
                 );
               case 'buyFlow':
                 return (

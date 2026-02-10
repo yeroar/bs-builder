@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
 import { TransactionCategory } from "../ui/Slots/Transactions/Transactions";
+import { SelectedCard } from "../ui/Screens/flows/GiftCard/GiftCardPurchaseFlow";
 
 export type OverlayType =
   | { type: "history"; category?: TransactionCategory }
-  | { type: "searchGiftCards" }
+  | { type: "giftCardFlow"; card?: SelectedCard }
   | { type: "buyFlow"; initialAmount?: string; onComplete?: () => void }
   | { type: "sellFlow"; onComplete?: () => void };
 

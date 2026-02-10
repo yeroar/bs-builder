@@ -3,6 +3,7 @@ import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
 import AuthUserDetails, { AuthUserDetailsFormData } from "../../../../Slots/AuthorizedUser/AuthUserDetails";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
+import { useKeyboardVisible } from "../../../../../hooks/useKeyboardVisible";
 
 interface AuthUserDetailsScreenProps {
   formData: AuthUserDetailsFormData;
@@ -12,6 +13,7 @@ interface AuthUserDetailsScreenProps {
 }
 
 export default function AuthUserDetailsScreen({ formData, onChangeField, onContinue, onBack }: AuthUserDetailsScreenProps) {
+  const keyboardVisible = useKeyboardVisible();
   const isValid =
     formData.dobMonth.trim() !== "" &&
     formData.dobDay.trim() !== "" &&
@@ -29,7 +31,7 @@ export default function AuthUserDetailsScreen({ formData, onChangeField, onConti
       footer={
         <ModalFooter
           type="default"
-          modalVariant="keyboard"
+          modalVariant={keyboardVisible ? "keyboard" : undefined}
           primaryButton={
             <Button label="Continue" hierarchy="primary" size="md" disabled={!isValid} onPress={onContinue} />
           }

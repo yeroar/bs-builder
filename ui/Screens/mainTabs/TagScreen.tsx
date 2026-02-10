@@ -6,25 +6,24 @@ import FoldPressable from "../../../components/Primitives/FoldPressable";
 import { colorMaps } from "../../../components/tokens";
 import TagHome, { GiftCardData } from "../../Slots/MainTabs/TagHome";
 import { RedeemGiftCardFlow } from "../flows";
-import GiftCardPurchaseFlow, { SelectedCard } from "../flows/GiftCard/GiftCardPurchaseFlow";
+import { SelectedCard } from "../flows/GiftCard/GiftCardPurchaseFlow";
 import { buildSelectedCard } from "../flows/GiftCard/buildSelectedCard";
 
 interface TagScreenProps {
   onTabPress: (tab: "left" | "center" | "right" | "notifications" | "componentLibrary") => void;
   onHistoryPress: () => void;
   onMenuPress: () => void;
-  onSearchGiftCards?: () => void;
+  onGiftCardFlow?: (card?: SelectedCard) => void;
 }
 
-export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onSearchGiftCards }: TagScreenProps) {
+export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onGiftCardFlow }: TagScreenProps) {
   const [showRedeemFlow, setShowRedeemFlow] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<SelectedCard | null>(null);
 
   const handleOpenRedeemFlow = () => setShowRedeemFlow(true);
   const handleCloseRedeemFlow = () => setShowRedeemFlow(false);
 
   const handleGiftCardPress = (card: GiftCardData) => {
-    setSelectedCard(buildSelectedCard(card));
+    onGiftCardFlow?.(buildSelectedCard(card));
   };
 
   return (
@@ -46,7 +45,7 @@ export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onS
       >
         <TagHome
           onRedeemPress={handleOpenRedeemFlow}
-          onSearchGiftCards={onSearchGiftCards}
+          onSearchGiftCards={() => onGiftCardFlow?.()}
           onGiftCardPress={handleGiftCardPress}
         />
       </RootTemplate>
@@ -55,14 +54,6 @@ export default function TagScreen({ onTabPress, onHistoryPress, onMenuPress, onS
         <RedeemGiftCardFlow
           onComplete={handleCloseRedeemFlow}
           onClose={handleCloseRedeemFlow}
-        />
-      )}
-
-      {selectedCard && (
-        <GiftCardPurchaseFlow
-          card={selectedCard}
-          onComplete={() => setSelectedCard(null)}
-          onClose={() => setSelectedCard(null)}
         />
       )}
     </>
