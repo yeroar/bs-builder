@@ -1,0 +1,189 @@
+[
+  {
+    "screen": "CoinbaseHome",
+    "type": "root",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 0,
+    "userStory": "I want to send Bitcoin to someone",
+    "goal": "view portfolio and start a send",
+    "pattern": "home-dashboard",
+    "navigation": { "from": null, "trigger": "app launch", "to": "CoinbaseSelectAsset" },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["BalanceDisplay(total)", "ActionBar(Buy, Sell, Send, Receive)", "ActionBar(Scan, Convert, Deposit, Withdraw)", "PortfolioList"],
+    "footer": { "type": "TabBar", "tabs": ["Home", "Trade", "Explore", "Activity", "More"] },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseSelectAsset",
+    "type": "selectAsset",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 1,
+    "goal": "choose which crypto asset to send",
+    "pattern": "asset-selection-list",
+    "navigation": { "from": "CoinbaseHome", "trigger": "tap Send", "to": "CoinbaseSelectNetwork", "back": "CoinbaseHome" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["SearchBar", "ListItem(Bitcoin, balance, value)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseSelectNetwork",
+    "type": "selectNetwork",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 2,
+    "goal": "choose blockchain network and understand fee differences",
+    "pattern": "network-selection-list",
+    "navigation": { "from": "CoinbaseSelectAsset", "trigger": "select Bitcoin", "to": "CoinbaseEnterRecipient", "back": "CoinbaseSelectAsset" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["PrimaryHeader(Select network)", "ListItem(Phone or email, Free)", "ListItem(Bitcoin Default, $0.55)", "ListItem(Base, Free)", "ListItem(Solana, $0.55)", "ListItem(Ethereum, $1.21)", "ListItem(Lightning, Varies)", "InfoLink(What should I pick?)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseEnterRecipient",
+    "type": "enterAddress",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 3,
+    "goal": "enter recipient email or phone number",
+    "pattern": "address-entry",
+    "navigation": { "from": "CoinbaseSelectNetwork", "trigger": "select network", "to": "CoinbaseRecipientSelected", "back": "CoinbaseSelectNetwork" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false, "keyboardAware": true },
+    "components": ["SearchBar(Phone or email)", "PromoBanner(Lightning)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseRecipientSelected",
+    "type": "enterAddress",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 3,
+    "state": "filled",
+    "goal": "confirm selected recipient",
+    "pattern": "address-entry-with-results",
+    "navigation": { "from": "CoinbaseEnterRecipient", "trigger": "enter email", "to": "CoinbaseEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["SearchBar(filled)", "ContactResult(email)", "TextLink(Save contact)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseEnterAmount",
+    "type": "enterAmount",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 4,
+    "goal": "enter amount to send in fiat with crypto conversion",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "CoinbaseRecipientSelected", "trigger": "select recipient", "to": "CoinbaseScamWarning", "back": "CoinbaseEnterRecipient" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(SGD)", "ConversionLabel(BTC)", "RecipientLabel", "BalanceLabel", "TextLink(Add a note)", "Keypad"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Preview"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseEnterAmountFilled",
+    "type": "enterAmount",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 4,
+    "state": "filled",
+    "goal": "review entered amount before preview",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "CoinbaseEnterAmount", "trigger": "enter amount", "to": "CoinbaseScamWarning" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(SGD, 0.10)", "ConversionLabel(BTC)", "RecipientLabel", "BalanceLabel", "TextLink(Add a note)", "Keypad"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Preview"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseScamWarning",
+    "type": "info",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 5,
+    "goal": "read safety warnings before sending crypto",
+    "pattern": "info-warning",
+    "navigation": { "from": "CoinbaseEnterAmountFilled", "trigger": "Preview button", "to": "CoinbaseReview" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false },
+    "components": ["Illustration(shield)", "PrimaryHeader(Before you send)", "BulletList(3 warnings)", "TextLink(Learn more)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseReview",
+    "type": "confirmation",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 6,
+    "goal": "review full transaction summary and confirm send",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "CoinbaseScamWarning", "trigger": "Continue button", "to": "CoinbaseProcessing", "back": "CoinbaseEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["TransactionHeader(BTC icon, amount)", "ReceiptDetails(To, Note, Send time)", "ScamWarning(banner)", "TotalAmount"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Send Now"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseProcessing",
+    "type": "processing",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 7,
+    "goal": "wait for transaction to process",
+    "pattern": "processing-loading",
+    "navigation": { "from": "CoinbaseReview", "trigger": "Send Now button", "to": "CoinbaseSuccess" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false },
+    "components": ["LoadingDots(3, blue)", "SkeletonPlaceholders"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseSuccess",
+    "type": "success",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 8,
+    "goal": "see confirmation that Bitcoin was sent successfully",
+    "pattern": "transaction-success",
+    "navigation": { "from": "CoinbaseProcessing", "trigger": "payment confirmed", "to": "CoinbaseHomePostSend" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false },
+    "components": ["SuccessIcon(checkmark, blue)", "PrimaryHeader(You sent 0.00000085 BTC)", "BodyText(S$0.10)", "TextLink(View details)", "PromoBanner(Send BTC for less)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "CoinbaseHomePostSend",
+    "type": "root",
+    "flow": "CoinbaseSendBitcoin",
+    "step": 9,
+    "state": "post_transaction",
+    "goal": "return to home with updated balance",
+    "pattern": "home-dashboard",
+    "navigation": { "from": "CoinbaseSuccess", "trigger": "Done button", "to": null },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["BalanceDisplay(total)", "RatingPrompt(stars)", "PortfolioList"],
+    "footer": { "type": "TabBar" },
+    "modals": []
+  }
+]

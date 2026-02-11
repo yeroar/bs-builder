@@ -198,6 +198,15 @@ const FullscreenTemplate = forwardRef<FullscreenTemplateRef, FullscreenTemplateP
           </ScrollView>
           {footer}
         </Animated.View>
+      ) : keyboardAware && !scrollable ? (
+        /* Keyboard-aware non-scrollable: animated paddingBottom shrinks content,
+           footer stays visible above keyboard */
+        <Animated.View style={[styles.content, { paddingBottom: keyboardAnim }]}>
+          <View style={styles.content}>
+            {children}
+          </View>
+          {footer}
+        </Animated.View>
       ) : (
         <>
           {/* Content Slot */}

@@ -1,0 +1,332 @@
+{
+  "context": {
+    "currentFlows": ["InstantWithdraw", "BtcSend"],
+    "sharedUserStory": "I want to send funds out of the platform (USD or BTC)",
+    "currentPattern": "enterAmount → fullscreen confirmation → fill animation success",
+    "currentSteps": {
+      "InstantWithdraw": ["PaymentMethodModal", "EnterAmount", "Confirmation", "Success"],
+      "BtcSend": ["WalletSearch", "(Scan)", "EnterAmount", "Confirmation", "Success"]
+    },
+    "insights": {
+      "bunq": "Skips confirmation entirely — delegates auth to Apple Pay/biometric",
+      "kakaobank": "Bottom sheet confirmation overlay instead of full screen navigation",
+      "revolut": "Speed-first — processing inline, toast instead of success screen",
+      "wise": "Maximum safety — multi-step auth gates after confirmation",
+      "coinbase": "Educational friction — warning screen before irreversible crypto send",
+      "phantom": "Minimal confirmation — just amount + fee, one tap to send"
+    }
+  },
+
+  "approaches": [
+    {
+      "id": "A",
+      "name": "Express",
+      "inspiration": ["bunq", "revolut"],
+      "philosophy": "Speed-first. Remove confirmation screen, inline everything.",
+      "targetUser": "Power user, repeat transactions, trusted recipients",
+      "uxLaws": ["fitts-law (fewer taps)", "doherty-threshold (<400ms perceived)", "hicks-law (one decision: amount)"],
+
+      "instantWithdraw": {
+        "steps": 2,
+        "flow": [
+          {
+            "screen": "ExpressWithdrawAmount",
+            "type": "enterAmount",
+            "goal": "enter amount with inline fee preview and pre-selected payment method",
+            "pattern": "amount-entry-with-inline-receipt",
+            "template": "FullscreenTemplate",
+            "templateProps": { "title": "Instant withdrawal", "leftIcon": "x", "scrollable": false },
+            "components": ["CurrencyInput(USD)", "TopContext(fee preview: $X fee → $Y total)", "BottomContext(payment method chip, tap to change)", "Keypad"],
+            "footer": { "type": "ModalFooter", "buttons": ["primary:Withdraw $X"] },
+            "keyChange": "Fee + total update live as you type. Payment method is a chip below amount, not a separate selector. CTA shows exact amount."
+          },
+          {
+            "screen": "ExpressWithdrawSuccess",
+            "type": "success",
+            "goal": "confirm withdrawal initiated",
+            "pattern": "transaction-success",
+            "template": "TransactionSuccess",
+            "templateProps": { "enterAnimation": "fill" },
+            "components": ["CurrencyInput(USD)", "TopContext(fee paid)"],
+            "footer": { "type": "ModalFooter", "variant": "inverse", "buttons": ["primary:Done"] }
+          }
+        ]
+      },
+
+      "btcSend": {
+        "steps": 3,
+        "flow": [
+          {
+            "screen": "ExpressBtcSendAddress",
+            "type": "enterAddress",
+            "goal": "enter or scan recipient address",
+            "pattern": "address-entry",
+            "template": "FullscreenTemplate",
+            "components": ["BtcWalletSearch", "ScanButton"],
+            "keyChange": "Same as current — address entry can't be skipped"
+          },
+          {
+            "screen": "ExpressBtcSendAmount",
+            "type": "enterAmount",
+            "goal": "enter sats with inline fee + total + estimated time",
+            "pattern": "amount-entry-with-inline-receipt",
+            "template": "FullscreenTemplate",
+            "components": ["CurrencyInput(sats)", "TopContext(~$X USD)", "InlineReceipt(fee, total, est. time)", "Keypad"],
+            "footer": { "type": "ModalFooter", "buttons": ["primary:Send X sats"] },
+            "keyChange": "No separate confirmation. Fee/total/time shown inline below amount. CTA shows exact sats."
+          },
+          {
+            "screen": "ExpressBtcSendSuccess",
+            "type": "success",
+            "goal": "confirm send initiated",
+            "pattern": "transaction-success",
+            "template": "FullscreenTemplate",
+            "templateProps": { "variant": "yellow", "enterAnimation": "fill" },
+            "components": ["CurrencyInput(sats)", "TopContext(btc, USD)", "Button(View details)"],
+            "footer": { "type": "ModalFooter", "variant": "inverse", "buttons": ["primary:Done"] }
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "B",
+      "name": "Bottom Sheet Confirm",
+      "inspiration": ["kakaobank"],
+      "philosophy": "Keep amount screen visible, overlay confirmation as bottom sheet. Reduces context-switching.",
+      "targetUser": "Standard user who wants reassurance without losing place",
+      "uxLaws": ["gestalt-proximity (amount stays visible)", "error-prevention (confirm before send)", "recognition-over-recall (see amount + details together)"],
+
+      "instantWithdraw": {
+        "steps": 2,
+        "note": "feels like 2 screens but technically 1 screen + 1 overlay",
+        "flow": [
+          {
+            "screen": "BSWithdrawAmount",
+            "type": "enterAmount",
+            "goal": "enter withdrawal amount",
+            "pattern": "amount-entry-with-keypad",
+            "template": "FullscreenTemplate",
+            "components": ["CurrencyInput(USD)", "TopContext(empty)", "Keypad", "Button(Max)"],
+            "footer": null,
+            "keyChange": "Same as current enter amount"
+          },
+          {
+            "screen": "BSWithdrawConfirmSheet",
+            "type": "confirmation",
+            "goal": "quick confirm: amount, fee, destination — overlays amount screen",
+            "pattern": "confirmation-bottom-sheet",
+            "template": "BottomSheet",
+            "templateProps": { "overlay": true, "height": "auto" },
+            "components": ["PrimaryHeader(Withdraw $X?)", "ListItemReceipt(To: Visa •1234)", "ListItemReceipt(Fee: $1.50)", "ListItemReceipt(Total: $101.50)"],
+            "footer": { "type": "ModalFooter", "buttons": ["secondary:Cancel", "primary:Confirm"], "variant": "sideBySide" },
+            "keyChange": "Bottom sheet instead of full screen. Amount screen visible behind overlay. Side-by-side Cancel/Confirm like KakaoBank."
+          }
+        ],
+        "successNote": "Fill animation triggers from bottom sheet dismiss → same TransactionSuccess"
+      },
+
+      "btcSend": {
+        "steps": 3,
+        "flow": [
+          {
+            "screen": "BSBtcSendAddress",
+            "type": "enterAddress",
+            "pattern": "address-entry",
+            "keyChange": "Same as current"
+          },
+          {
+            "screen": "BSBtcSendAmount",
+            "type": "enterAmount",
+            "pattern": "amount-entry-with-keypad",
+            "keyChange": "Same as current"
+          },
+          {
+            "screen": "BSBtcSendConfirmSheet",
+            "type": "confirmation",
+            "goal": "quick confirm: address, sats, fee, time — overlays amount screen",
+            "pattern": "confirmation-bottom-sheet",
+            "template": "BottomSheet",
+            "components": ["PrimaryHeader(Send X sats?)", "ListItemReceipt(To: 3NC53...)", "ListItemReceipt(Fee: X sats)", "ListItemReceipt(Total: X sats)", "ListItemReceipt(Est: ~24hrs)"],
+            "footer": { "type": "ModalFooter", "buttons": ["secondary:Cancel", "primary:Send"], "variant": "sideBySide" },
+            "keyChange": "Bottom sheet confirmation over the amount screen"
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "C",
+      "name": "Progressive Reveal",
+      "inspiration": ["wise (transfer summary)", "coinbase (review screen)"],
+      "philosophy": "Single scrollable screen. Amount entry at top, receipt details reveal as amount is entered. Confirmation is scrolling down, not navigating.",
+      "targetUser": "Detail-oriented user who wants full context in one view",
+      "uxLaws": ["progressive-disclosure (details appear as needed)", "serial-position (amount first, details below, CTA last)", "recognition-over-recall (all info visible)"],
+
+      "instantWithdraw": {
+        "steps": 1,
+        "note": "single screen with progressive sections",
+        "flow": [
+          {
+            "screen": "ProgressiveWithdraw",
+            "type": "enterAmount+confirmation",
+            "goal": "enter amount, see all details, confirm — all in one screen",
+            "pattern": "progressive-amount-confirm",
+            "template": "FullscreenTemplate",
+            "templateProps": { "scrollable": true, "keyboardAware": true },
+            "components": [
+              "CurrencyInput(USD, inline editable)",
+              "TopContext(empty)",
+              "--- reveals when amount > 0 ---",
+              "PaymentMethodSelector(destination)",
+              "ReceiptDetails",
+              "ListItemReceipt(Transfer: $100)",
+              "ListItemReceipt(Fee: $1.50)",
+              "ListItemReceipt(Total: $101.50)",
+              "Disclaimer(withdrawal limits)"
+            ],
+            "footer": {
+              "type": "ModalFooter",
+              "buttons": ["primary:Confirm withdrawal"],
+              "state": "disabled until amount > 0"
+            },
+            "keyChange": "No navigation between amount and confirm. Receipt appears below as user types. Keypad is inline or native keyboard. Scrollable."
+          }
+        ]
+      },
+
+      "btcSend": {
+        "steps": 2,
+        "note": "address entry is still separate, but amount+confirm merge",
+        "flow": [
+          {
+            "screen": "ProgressiveBtcSendAddress",
+            "type": "enterAddress",
+            "pattern": "address-entry",
+            "keyChange": "Same — address can't merge"
+          },
+          {
+            "screen": "ProgressiveBtcSendAmountConfirm",
+            "type": "enterAmount+confirmation",
+            "goal": "enter sats, see address + fee + total + time, confirm — one screen",
+            "pattern": "progressive-amount-confirm",
+            "template": "FullscreenTemplate",
+            "templateProps": { "scrollable": true },
+            "components": [
+              "CurrencyInput(sats, inline editable)",
+              "TopContext(~$X USD)",
+              "--- reveals when amount > 0 ---",
+              "ListItemReceipt(Bitcoin address: 3NC53...)",
+              "ListItemReceipt(Sending: X sats ($Y))",
+              "ListItemReceipt(Fees: X sats ($Y))",
+              "ListItemReceipt(Total: X sats ($Y))",
+              "ListItemReceipt(Estimated time: ~24hrs)"
+            ],
+            "footer": {
+              "type": "ModalFooter",
+              "buttons": ["primary:Confirm send"],
+              "state": "disabled until amount > 0"
+            },
+            "keyChange": "Amount + confirmation in one scrollable view. Receipt reveals progressively."
+          }
+        ]
+      }
+    },
+
+    {
+      "id": "D",
+      "name": "Unified Outbound",
+      "inspiration": ["phantom (asset picker)", "coinbase (network selection)", "wise (recipient-first)"],
+      "philosophy": "One flow for all outbound: pick what you're sending (USD or BTC), pick where, enter amount, confirm. Consistent mental model.",
+      "targetUser": "Users who hold both USD and BTC, want one 'Send' button",
+      "uxLaws": ["jacobs-law (one pattern for all sends)", "hicks-law (guided step-by-step)", "recognition-over-recall (asset shown throughout)"],
+
+      "unifiedFlow": {
+        "steps": 5,
+        "flow": [
+          {
+            "screen": "UnifiedChooseAsset",
+            "type": "selectOption",
+            "step": 0,
+            "goal": "choose what to send: USD or BTC",
+            "pattern": "option-selector-tiles",
+            "template": "FullscreenTemplate",
+            "templateProps": { "title": "Send funds", "leftIcon": "x" },
+            "components": ["PrimaryHeader(What do you want to send?)", "TileSelector(USD Cash, Bitcoin)"],
+            "footer": { "type": "ModalFooter", "buttons": ["primary:Continue"] },
+            "keyChange": "Single entry point for all outbound flows"
+          },
+          {
+            "screen": "UnifiedDestination",
+            "type": "enterAddress",
+            "step": 1,
+            "goal": "enter destination — debit card (USD) or wallet address (BTC)",
+            "pattern": "destination-entry-adaptive",
+            "template": "FullscreenTemplate",
+            "components": [
+              "if USD: PaymentMethodSelector(debit cards)",
+              "if BTC: BtcWalletSearch + ScanButton"
+            ],
+            "keyChange": "Adapts UI based on asset selection. Same screen shape, different content."
+          },
+          {
+            "screen": "UnifiedEnterAmount",
+            "type": "enterAmount",
+            "step": 2,
+            "goal": "enter amount in asset's native denomination",
+            "pattern": "amount-entry-with-keypad",
+            "template": "FullscreenTemplate",
+            "components": [
+              "CurrencyInput(USD or sats based on asset)",
+              "TopContext(conversion if BTC)",
+              "Keypad",
+              "Button(Max)"
+            ],
+            "keyChange": "Same EnterAmount screen handles both currencies"
+          },
+          {
+            "screen": "UnifiedConfirmation",
+            "type": "confirmation",
+            "step": 3,
+            "goal": "review all details — adapts receipt items based on asset",
+            "pattern": "confirmation-receipt",
+            "template": "FullscreenTemplate",
+            "components": [
+              "CurrencyInput(amount, disabled)",
+              "TopContext(asset context)",
+              "ReceiptDetails",
+              "ListItemReceipt(Destination)",
+              "ListItemReceipt(Amount)",
+              "ListItemReceipt(Fee)",
+              "ListItemReceipt(Total)",
+              "if BTC: ListItemReceipt(Estimated time)"
+            ],
+            "footer": { "type": "ModalFooter", "buttons": ["primary:Confirm send"] }
+          },
+          {
+            "screen": "UnifiedSuccess",
+            "type": "success",
+            "step": 4,
+            "goal": "see confirmation of outbound transaction",
+            "pattern": "transaction-success",
+            "template": "TransactionSuccess",
+            "templateProps": { "enterAnimation": "fill" },
+            "components": ["CurrencyInput(amount)", "TopContext(asset)"],
+            "footer": { "type": "ModalFooter", "variant": "inverse", "buttons": ["primary:Done"] }
+          }
+        ]
+      }
+    }
+  ],
+
+  "comparisonMatrix": {
+    "headers": ["Approach", "Steps (Withdraw)", "Steps (BTC Send)", "Confirmation", "Speed", "Safety", "Complexity"],
+    "rows": [
+      ["Current", "3 + modal", "4-5", "Full screen", "Medium", "High", "Medium"],
+      ["A: Express", "2", "3", "None (inline)", "Fastest", "Lower", "Low"],
+      ["B: Bottom Sheet", "2 (1+overlay)", "3 (2+overlay)", "Bottom sheet overlay", "Fast", "Medium", "Medium"],
+      ["C: Progressive", "1", "2", "Inline (scroll down)", "Fast", "High", "Low"],
+      ["D: Unified", "5", "5", "Full screen (shared)", "Slower", "High", "High (but consistent)"]
+    ]
+  }
+}

@@ -1,0 +1,275 @@
+[
+  {
+    "screen": "BunqHome",
+    "type": "root",
+    "flow": "BunqAddMoney",
+    "step": 0,
+    "userStory": "I want to add money to my bunq bank account",
+    "goal": "view accounts and start adding money",
+    "pattern": "home-dashboard",
+    "navigation": {
+      "from": null,
+      "trigger": "app launch",
+      "to": "BunqAddMenu"
+    },
+    "template": "RootTemplate",
+    "templateProps": {
+      "scrollable": true
+    },
+    "components": [
+      "AccountList(Pct, Savings, Main)",
+      "VirtualCreditCard",
+      "ActionBar(Pay, Request, Add)"
+    ],
+    "footer": {
+      "type": "TabBar",
+      "tabs": [
+        "Home",
+        "Activities",
+        "Budgeting",
+        "Alerts",
+        "Profile"
+      ]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BunqAddMenu",
+    "type": "actionSheet",
+    "flow": "BunqAddMoney",
+    "step": 1,
+    "goal": "choose what to add to the account",
+    "pattern": "action-sheet-menu",
+    "navigation": {
+      "from": "BunqHome",
+      "trigger": "tap Add",
+      "to": "BunqMethodSelection"
+    },
+    "template": "BottomSheet",
+    "templateProps": {
+      "overlay": true
+    },
+    "components": [
+      "ListItem(Add Money, icon, description)",
+      "ListItem(Add Card, icon, description)",
+      "ListItem(Add Bank Account, icon, description)"
+    ],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BunqMethodSelection",
+    "type": "selectMethod",
+    "flow": "BunqAddMoney",
+    "step": 2,
+    "goal": "choose payment method to add money with",
+    "pattern": "method-selection-list",
+    "navigation": {
+      "from": "BunqAddMenu",
+      "trigger": "tap Add Money",
+      "to": "BunqAmountPresets",
+      "back": "BunqHome"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "back",
+      "scrollable": true
+    },
+    "components": [
+      "ListItem(Credit or Debit Card, FEES VARY)",
+      "ListItem(Apple Pay, FEES VARY)",
+      "ListItem(Bank Transfer SEPA, FREE)",
+      "ListItem(iDEAL, FREE)",
+      "ListItem(SOFORT, FREE)",
+      "ListItem(From a bunq Account, FREE)",
+      "ListItem(Cash Deposit, FEES VARY)"
+    ],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BunqAmountPresets",
+    "type": "enterAmount",
+    "flow": "BunqAddMoney",
+    "step": 3,
+    "goal": "pick a preset amount or switch to manual entry",
+    "pattern": "amount-entry-presets",
+    "navigation": {
+      "from": "BunqMethodSelection",
+      "trigger": "select Apple Pay",
+      "to": "BunqAmountKeypad",
+      "back": "BunqMethodSelection"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "back",
+      "scrollable": false
+    },
+    "components": [
+      "AmountPresets(€10, €15, €20)",
+      "BodyText(Add money now at no extra cost)",
+      "DestinationLabel(To: Main)"
+    ],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": [
+        "primary:Apple Pay"
+      ]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BunqAmountKeypad",
+    "type": "enterAmount",
+    "flow": "BunqAddMoney",
+    "step": 3,
+    "state": "manual_entry",
+    "goal": "enter exact amount using keypad",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": {
+      "from": "BunqAmountPresets",
+      "trigger": "tap amount/select preset",
+      "to": "BunqProcessing"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "back",
+      "scrollable": false
+    },
+    "components": [
+      "CurrencyInput(€10.00)",
+      "BodyText(Add money now at no extra cost)",
+      "DestinationLabel(To: Main)",
+      "Keypad"
+    ],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": [
+        "primary:Apple Pay"
+      ]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BunqFeeInfo",
+    "type": "info",
+    "flow": "BunqAddMoney",
+    "step": 3,
+    "state": "fee_modal",
+    "goal": "understand fee structure for top-ups",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": {
+      "from": "BunqAmountKeypad",
+      "trigger": "tap fee info icon"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "back",
+      "scrollable": false
+    },
+    "components": [
+      "CurrencyInput(€10.00)",
+      "Keypad"
+    ],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": [
+        "primary:Apple Pay"
+      ]
+    },
+    "modals": [
+      {
+        "type": "InfoModal",
+        "components": [
+          "InfoIcon",
+          "PrimaryHeader(What Is This Fee?)",
+          "BodyText(fee explanation)",
+          "Button(OK)"
+        ]
+      }
+    ]
+  },
+  {
+    "screen": "BunqProcessing",
+    "type": "processing",
+    "flow": "BunqAddMoney",
+    "step": 4,
+    "goal": "wait for payment to process",
+    "pattern": "processing-loading",
+    "navigation": {
+      "from": "BunqAmountKeypad",
+      "trigger": "Apple Pay button",
+      "to": "BunqSuccess"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "close",
+      "scrollable": false,
+      "backgroundColor": "magenta"
+    },
+    "components": [
+      "LoadingSpinner",
+      "BodyText(Processing...)",
+      "ProgressBar"
+    ],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BunqSuccess",
+    "type": "success",
+    "flow": "BunqAddMoney",
+    "step": 5,
+    "goal": "see confirmation of successful deposit",
+    "pattern": "transaction-success",
+    "navigation": {
+      "from": "BunqProcessing",
+      "trigger": "payment confirmed",
+      "to": "BunqPostSuccess"
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "scrollable": false,
+      "backgroundColor": "magenta"
+    },
+    "components": [
+      "SuccessIcon(card+checkmark)",
+      "PrimaryHeader(Ka-Ching!)",
+      "ProgressBar"
+    ],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BunqPostSuccess",
+    "type": "info",
+    "flow": "BunqAddMoney",
+    "step": 6,
+    "goal": "learn about additional account features",
+    "pattern": "info-promo",
+    "navigation": {
+      "from": "BunqSuccess",
+      "trigger": "auto-advance",
+      "to": null
+    },
+    "template": "FullscreenTemplate",
+    "templateProps": {
+      "leftIcon": "back",
+      "scrollable": false,
+      "backgroundColor": "gold"
+    },
+    "components": [
+      "Illustration(wallet)",
+      "PrimaryHeader(Main Is Now a Bank Account)",
+      "BodyText(savings promotion)"
+    ],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": [
+        "primary:Got it!",
+        "secondary:Learn More"
+      ]
+    },
+    "modals": []
+  }
+]

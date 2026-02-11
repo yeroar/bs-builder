@@ -1,0 +1,122 @@
+[
+  {
+    "screen": "PhantomHome",
+    "type": "root",
+    "flow": "PhantomSendToken",
+    "step": 0,
+    "userStory": "I want to send a crypto token to another wallet",
+    "goal": "view portfolio and start sending",
+    "pattern": "home-dashboard",
+    "navigation": { "from": null, "trigger": "app launch", "to": "PhantomSelectToken" },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["AccountSelector(@alexsmithsmobbin, Account 2)", "BalanceDisplay($21.23, +1.74%)", "ActionBar(Receive, Send, Swap, Buy)", "PromoBanner(Explore)", "TokenList(ETH, USDC, SOL)"],
+    "footer": { "type": "TabBar", "tabs": ["Home", "Tokens", "Swap", "History", "Settings"] },
+    "modals": []
+  },
+  {
+    "screen": "PhantomSelectToken",
+    "type": "selectAsset",
+    "flow": "PhantomSendToken",
+    "step": 1,
+    "goal": "choose which token to send",
+    "pattern": "asset-selection-list",
+    "navigation": { "from": "PhantomHome", "trigger": "tap Send", "to": "PhantomEnterRecipient" },
+    "template": "BottomSheet",
+    "templateProps": { "fullHeight": true },
+    "components": ["SearchBar", "ListItem(Solana, balance)", "ListItem(Ethereum, balance)", "ListItem(Polygon, balance)", "ListItem(Bitcoin Taproot, balance)", "ListItem(Bitcoin Native Segwit, balance)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "PhantomEnterRecipient",
+    "type": "enterAddress",
+    "flow": "PhantomSendToken",
+    "step": 2,
+    "goal": "enter recipient address or select from address book",
+    "pattern": "address-entry",
+    "navigation": { "from": "PhantomSelectToken", "trigger": "select token", "to": "PhantomEnterAmount", "back": "PhantomHome" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "rightAction": "Next", "scrollable": false },
+    "components": ["TextField(username or address)", "QRButton", "AddressBook(Alex Wallet, 0xE643...e16c)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "PhantomEnterAmount",
+    "type": "enterAmount",
+    "flow": "PhantomSendToken",
+    "step": 3,
+    "goal": "enter amount to send with crypto/fiat toggle",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "PhantomEnterRecipient", "trigger": "Next button", "to": "PhantomConfirmation", "back": "PhantomEnterRecipient" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "rightAction": "Next", "scrollable": false },
+    "components": ["RecipientLabel(To: Alex Wallet)", "CurrencyInput(ETH, $0.00)", "CurrencyToggle(ETH/USD)", "BalanceLabel(Available, Max)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "PhantomEnterAmountFilled",
+    "type": "enterAmount",
+    "flow": "PhantomSendToken",
+    "step": 3,
+    "state": "filled",
+    "goal": "review entered amount before continuing",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "PhantomEnterAmount", "trigger": "enter amount", "to": "PhantomConfirmation" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "rightAction": "Next", "scrollable": false },
+    "components": ["RecipientLabel(To: Alex Wallet)", "CurrencyInput($1, ~0.0004 ETH)", "CurrencyToggle(ETH/USD)", "BalanceLabel(Available, Max)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "PhantomConfirmation",
+    "type": "confirmation",
+    "flow": "PhantomSendToken",
+    "step": 4,
+    "goal": "review transaction details and network fee before sending",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "PhantomEnterAmountFilled", "trigger": "Next button", "to": "PhantomProcessing", "back": "PhantomEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["SendIcon(purple arrow)", "AmountDisplay(0.00036 ETH, $1.00)", "ReceiptDetails(To, Network, Network Fee)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Send"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "PhantomProcessing",
+    "type": "processing",
+    "flow": "PhantomSendToken",
+    "step": 5,
+    "goal": "wait for transaction to be confirmed on-chain",
+    "pattern": "processing-loading",
+    "navigation": { "from": "PhantomConfirmation", "trigger": "Send button", "to": "PhantomSuccess" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false, "backgroundColor": "dark" },
+    "components": ["LoadingSpinner(purple)", "BodyText(Sending...)", "TransactionDetails(amount, recipient)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "PhantomSuccess",
+    "type": "success",
+    "flow": "PhantomSendToken",
+    "step": 6,
+    "goal": "see confirmation that token was sent successfully",
+    "pattern": "transaction-success",
+    "navigation": { "from": "PhantomProcessing", "trigger": "transaction confirmed", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false, "backgroundColor": "green" },
+    "components": ["SuccessIcon(checkmark, green)", "PrimaryHeader(Sent!)", "BodyText(transaction summary)", "TextLink(View transaction)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Close"]
+    },
+    "modals": []
+  }
+]

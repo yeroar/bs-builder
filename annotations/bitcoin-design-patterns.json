@@ -1,0 +1,669 @@
+{
+  "meta": {
+    "source": "bitcoin.design",
+    "url": "https://bitcoin.design/guide/daily-spending-wallet/",
+    "type": "reference-wallet",
+    "description": "Bitcoin Design Foundation reference patterns for a daily spending wallet. Not a real app — a canonical set of UX patterns for Lightning + on-chain Bitcoin.",
+    "flows": ["BitcoinDesignSend", "BitcoinDesignRequest", "BitcoinDesignReceive"],
+    "crossReferences": {
+      "CoinbaseSendBitcoin": "Steps 1-8 overlap with BitcoinDesignSend. Coinbase adds scam warning (info-warning), network selection. Missing: Lightning routing, fee priority selection, metadata entry.",
+      "PhantomSendToken": "Steps 1-6 overlap with BitcoinDesignSend. Phantom is minimal — no fee priority, no metadata, no Lightning encourage. Closest to Lightning-only subset.",
+      "InternalApproaches": "All 5 approaches (Express, BottomSheet, Progressive, Bunq, Wise) map to BitcoinDesignSend steps 2-6. RecipientStep maps to enterAddress. assetConfig feeRate maps to fee-selection."
+    }
+  },
+
+  "flows": {
+    "BitcoinDesignSend": [
+      {
+        "screen": "BDSendHome",
+        "type": "root",
+        "flow": "BitcoinDesignSend",
+        "step": 0,
+        "userStory": "I want to send bitcoin to someone",
+        "goal": "access payment initiation from home screen",
+        "pattern": "home-dashboard",
+        "navigation": { "from": null, "trigger": "app launch", "to": "BDSendEntryPoint" },
+        "template": "RootTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["AmountKeypad(integrated on home)", "ActionBar(Pay, Request)", "BalanceDisplay(HIDDEN in requesting mode for privacy)"],
+        "footer": null,
+        "modals": [],
+        "designNotes": "bitcoin.design uses a home-integrated keypad — amount first, then action (Pay/Request). Balance should be hideable for in-person privacy."
+      },
+      {
+        "screen": "BDSendEntryPoint",
+        "type": "entryPoint",
+        "flow": "BitcoinDesignSend",
+        "step": 1,
+        "goal": "initiate payment through one of 6 entry methods",
+        "pattern": "payment-entry-point",
+        "navigation": { "from": "BDSendHome", "trigger": "tap Pay / scan / paste / tap link / NFC / contact", "to": "BDSendFormatDetection" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["ContactList(saved recipients)", "TextField(address / lightning address)", "QRScanButton", "PasteButton", "NFCTrigger"],
+        "footer": null,
+        "modals": [],
+        "entryMethods": [
+          { "method": "manual", "description": "User types address + amount directly. Fallback for all scenarios." },
+          { "method": "contact", "description": "Pick from saved recipients. Most convenient for repeat payments." },
+          { "method": "paste", "description": "Paste payment info from clipboard (website, message)." },
+          { "method": "paymentLink", "description": "Tap a bitcoin: URI link that opens the wallet." },
+          { "method": "qrScan", "description": "Camera captures QR containing payment request. In-person." },
+          { "method": "nfc", "description": "Proximity-based request from nearby device. Point-of-sale." }
+        ],
+        "designNotes": "Wallet must be 'highly flexible in terms of input options and interoperability.' If format unsupported, show human-readable error."
+      },
+      {
+        "screen": "BDSendFormatDetection",
+        "type": "formatDetection",
+        "flow": "BitcoinDesignSend",
+        "step": 2,
+        "goal": "parse scanned/pasted payment request and present appropriately",
+        "pattern": "format-detection",
+        "navigation": { "from": "BDSendEntryPoint", "trigger": "scan/paste/link detected", "to": "BDSendEnterRecipient" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": [],
+        "footer": null,
+        "modals": [],
+        "formatVariants": [
+          {
+            "state": "recipientOnly",
+            "description": "Invoice has recipient but no amount. Show recipient pre-filled, amount empty for user entry.",
+            "components": ["RecipientLabel(pre-filled)", "AmountInput(empty)"]
+          },
+          {
+            "state": "fullInvoice",
+            "description": "LNURL with rich metadata. All fields pre-filled: recipient, amount, description, merchant info.",
+            "components": ["RecipientLabel(pre-filled)", "AmountDisplay(pre-filled)", "DescriptionText", "MerchantInfo"]
+          },
+          {
+            "state": "withdrawalInvoice",
+            "description": "No action type specified. User must choose pay vs withdraw.",
+            "components": ["ActionChoice(Pay, Withdraw)"]
+          },
+          {
+            "state": "expiredInvoice",
+            "description": "Lightning invoice has expired (default 1 hour). Show clear expiration modal.",
+            "components": ["ExpiredModal(This invoice has expired)"]
+          },
+          {
+            "state": "incompatibleFormat",
+            "description": "Format not supported by wallet. Human-readable error explaining incompatibility.",
+            "components": ["ErrorModal(Format not supported)"]
+          }
+        ],
+        "designNotes": "Compatibility problems are common due to many formats. Always show human-readable errors, never raw technical strings."
+      },
+      {
+        "screen": "BDSendEnterRecipient",
+        "type": "enterAddress",
+        "flow": "BitcoinDesignSend",
+        "step": 3,
+        "goal": "enter or confirm recipient address",
+        "pattern": "address-entry",
+        "navigation": { "from": "BDSendFormatDetection", "trigger": "manual entry selected", "to": "BDSendEnterAmount", "back": "BDSendHome" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "leftIcon": "back", "scrollable": false, "keyboardAware": true },
+        "components": ["TextField(address / lightning address / node ID)", "QRScanButton", "PasteButton", "ContactList(saved recipients)"],
+        "footer": null,
+        "modals": [],
+        "recipientFormats": [
+          { "format": "onChainAddress", "example": "bc1q...", "validation": "checksum, format-specific", "reusable": false },
+          { "format": "lightningAddress", "example": "user@domain.com", "validation": "email-like format", "reusable": true },
+          { "format": "lightningNodeId", "example": "pubkey hex", "validation": "hex format", "reusable": true },
+          { "format": "bolt11Invoice", "example": "lnbc...", "validation": "expiry check", "reusable": false },
+          { "format": "bolt12Offer", "example": "lno...", "validation": "format check", "reusable": true },
+          { "format": "lnurl", "example": "lnurl...", "validation": "HTTP endpoint check", "reusable": true },
+          { "format": "silentPayment", "example": "sp1...", "validation": "BIP-352 format", "reusable": true },
+          { "format": "bip353Dns", "example": "user@domain (DNS)", "validation": "DNS lookup", "reusable": true }
+        ],
+        "designNotes": "Contacts are 'the most convenient' method. Wallets should prioritize reusable formats (silent payments, BOLT 12, DNS) for contacts. On-chain addresses disappear from contact after use (single-use for privacy)."
+      },
+      {
+        "screen": "BDSendEnterAmount",
+        "type": "enterAmount",
+        "flow": "BitcoinDesignSend",
+        "step": 4,
+        "goal": "enter amount in preferred denomination with live conversion",
+        "pattern": "amount-entry-with-keypad",
+        "navigation": { "from": "BDSendEnterRecipient", "trigger": "recipient confirmed", "to": "BDSendFeeSelection", "back": "BDSendEnterRecipient" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "leftIcon": "back", "scrollable": false },
+        "components": ["RecipientLabel(To: name/address)", "CurrencyInput(BTC/sats/fiat)", "CurrencyToggle(BTC ↔ sats ↔ fiat)", "BalanceLabel(Available)", "Keypad", "MetadataFields(description, tags, contact)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Review"]
+        },
+        "modals": [],
+        "denominationOptions": [
+          { "unit": "sats", "description": "Smallest bitcoin unit. Best for small Lightning payments." },
+          { "unit": "BTC", "description": "Full bitcoin denomination. Standard for larger amounts." },
+          { "unit": "fiat", "description": "Local currency with live conversion. Most intuitive for daily spending." }
+        ],
+        "designNotes": "Amount and recipient entry should be simple and convenient so users don't accidentally send an incorrect amount. Toggle clears input when switching units as safeguard."
+      },
+      {
+        "screen": "BDSendFeeSelection",
+        "type": "feeSelection",
+        "flow": "BitcoinDesignSend",
+        "step": 5,
+        "goal": "select fee priority for on-chain transactions",
+        "pattern": "fee-selection",
+        "navigation": { "from": "BDSendEnterAmount", "trigger": "Review button (on-chain only)", "to": "BDSendReview", "back": "BDSendEnterAmount" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "leftIcon": "back", "scrollable": false },
+        "components": ["FeeOptionList(Low, Standard, High)", "FeeEstimate(sats + fiat)", "ConfirmationTimeEstimate", "CustomFeeEntry(sat/vbyte, advanced)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Continue"]
+        },
+        "modals": [],
+        "feeStates": [
+          { "state": "standard", "description": "3 predefined tiers with urgency labels and confirmation time estimates." },
+          { "state": "highFeeWarning", "description": "Triggered when fee >= 50% of transaction amount. Red highlighting prevents overpayment." },
+          { "state": "lowBalance", "description": "Limited options when insufficient funds for higher tiers." },
+          { "state": "customEntry", "description": "Manual sat/vbyte adjustment. For edge cases like wallet clearance or receiver-pays." }
+        ],
+        "lightningNote": "Lightning fees are typically single/double-digit sats. Routing fees displayed separately from service fees. No user selection needed — this step is skipped for Lightning.",
+        "designNotes": "Default: sender pays fees. Optional: receiver absorbs fees (for 'send all'). Warning thresholds prevent overpayment."
+      },
+      {
+        "screen": "BDSendLightningEncourage",
+        "type": "info",
+        "flow": "BitcoinDesignSend",
+        "step": 5,
+        "state": "lightningEncourage",
+        "goal": "warn user about higher on-chain fees and suggest Lightning alternative",
+        "pattern": "info-warning",
+        "navigation": { "from": "BDSendFormatDetection", "trigger": "on-chain address scanned", "to": "BDSendReview" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["WarningIcon", "PrimaryHeader(Higher fees detected)", "BodyText(This will take 10 min to 1 hour to confirm)", "FeeDisplay(1,023 sats)", "TextLink(Ask recipient for Lightning format)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Continue with on-chain", "secondary:Cancel"]
+        },
+        "modals": [],
+        "designNotes": "Lightning is likely the best option for the majority of payments. Ideal: user doesn't consider on-chain vs lightning — it's all bitcoin. But user retains choice to proceed."
+      },
+      {
+        "screen": "BDSendReview",
+        "type": "confirmation",
+        "flow": "BitcoinDesignSend",
+        "step": 6,
+        "goal": "review all transaction details and give final consent",
+        "pattern": "confirmation-receipt",
+        "navigation": { "from": "BDSendFeeSelection", "trigger": "Continue / fee selected", "to": "BDSendAuth", "back": "BDSendEnterAmount" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "leftIcon": "back", "scrollable": true },
+        "components": ["TransactionSummary(recipient, amount BTC, amount fiat)", "FeeBreakdown(routing fee / mining fee)", "MetadataDisplay(description, tags)", "HighFeeWarning(conditional)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Send"]
+        },
+        "modals": [],
+        "designNotes": "Always give the user an opportunity to review and confirm details before sending. When payment initiated via invoice and no additional input needed, the whole interaction IS review + confirmation."
+      },
+      {
+        "screen": "BDSendAuth",
+        "type": "auth",
+        "flow": "BitcoinDesignSend",
+        "step": 7,
+        "goal": "final security step before broadcasting transaction",
+        "pattern": "biometric-auth",
+        "navigation": { "from": "BDSendReview", "trigger": "Send button", "to": "BDSendProcessing" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["PINEntry or BiometricPrompt"],
+        "footer": null,
+        "modals": [],
+        "designNotes": "Security step should come AFTER all payment options are selected. This final step represents the user's final consent. Optional — may be skipped for low-value Lightning payments."
+      },
+      {
+        "screen": "BDSendProcessingLightning",
+        "type": "processing",
+        "flow": "BitcoinDesignSend",
+        "step": 8,
+        "state": "lightning",
+        "goal": "show instant Lightning payment completion",
+        "pattern": "processing-loading",
+        "navigation": { "from": "BDSendAuth", "trigger": "auth passed", "to": "BDSendSuccess" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["MinimalIndicator(optional — seconds, no loader needed)"],
+        "footer": null,
+        "modals": [],
+        "designNotes": "Lightning payments typically complete in seconds and don't require loaders. Only show extended wait message if uncharacteristically long."
+      },
+      {
+        "screen": "BDSendProcessingOnChain",
+        "type": "processing",
+        "flow": "BitcoinDesignSend",
+        "step": 8,
+        "state": "onChain",
+        "goal": "show on-chain transaction broadcast and pending confirmation",
+        "pattern": "processing-loading",
+        "navigation": { "from": "BDSendAuth", "trigger": "auth passed", "to": "BDSendSuccess" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["ConfirmationProgress(0/6 → 1/6 → 6/6)", "StatusText(Broadcasting... / Pending confirmation...)", "MetadataEntry(label, tag during wait)", "AddContactPrompt"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["secondary:Return to wallet"]
+        },
+        "modals": [],
+        "confirmationDepth": {
+          "0conf": "Transaction in memory pool, pending mining",
+          "1conf": "Single block inclusion. Slight reorg risk exists",
+          "6conf": "Widely accepted as final. No reorganization can affect this transaction"
+        },
+        "transactionModification": {
+          "rbf": "Replace-by-Fee: cancel a pending transaction before block inclusion",
+          "cpfp": "Child-Pays-for-Parent: speed up a stuck transaction before block inclusion"
+        },
+        "designNotes": "On-chain takes 10+ minutes. More detailed status updates are helpful. Users should NOT be forced to wait — wallet stays usable. Offer metadata entry during wait."
+      },
+      {
+        "screen": "BDSendSuccess",
+        "type": "success",
+        "flow": "BitcoinDesignSend",
+        "step": 9,
+        "goal": "confirm payment was sent successfully with proof of payment",
+        "pattern": "transaction-success",
+        "navigation": { "from": "BDSendProcessingLightning", "trigger": "payment confirmed", "to": null },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["SuccessIcon", "PrimaryHeader(Sent!)", "TransactionSummary(amount, recipient)", "ProofOfPayment(Lightning: preimage / On-chain: explorer link)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Done"]
+        },
+        "modals": [],
+        "proofOfPayment": {
+          "lightning": "Preimage can be considered a proof of payment",
+          "onChain": "Link to a bitcoin explorer can be shared as a payment confirmation"
+        },
+        "designNotes": "Brief transaction summary with access to further details. In-person: show screen to receiver. Shareable via chat/email."
+      },
+      {
+        "screen": "BDSendError",
+        "type": "error",
+        "flow": "BitcoinDesignSend",
+        "step": 8,
+        "state": "error",
+        "goal": "communicate payment failure with actionable next steps",
+        "pattern": "error-bottom-sheet",
+        "navigation": { "from": "BDSendProcessingLightning", "trigger": "payment failed", "to": null },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["ErrorIcon", "ErrorMessage(what went wrong)", "FundStatus(reassurance)", "FixSteps(how to fix)", "NextAction(what to do next)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Try again", "secondary:Cancel"]
+        },
+        "modals": [],
+        "errorSeverity": [
+          { "level": 1, "description": "Problem cannot be identified. Show generic error with self-help tips." },
+          { "level": 2, "description": "Problem identified, requires manual action. Show specific error with steps." },
+          { "level": 3, "description": "Problem identified, user chooses solution. Present options." },
+          { "level": 4, "description": "Auto-fixable with negligible impact. Fix transparently, no screen needed." }
+        ],
+        "errorTypes": [
+          "routingError: Lightning path not found",
+          "insufficientFunds: Balance too low",
+          "invoiceExpired: Lightning invoice expired",
+          "formatIncompatible: Payment request format not supported",
+          "offlineReceiver: Receiving Lightning wallet is offline"
+        ]
+      }
+    ],
+
+    "BitcoinDesignRequest": [
+      {
+        "screen": "BDRequestHome",
+        "type": "root",
+        "flow": "BitcoinDesignRequest",
+        "step": 0,
+        "userStory": "I want to receive bitcoin from someone",
+        "goal": "enter amount for payment request from home screen keypad",
+        "pattern": "amount-entry-with-keypad",
+        "navigation": { "from": null, "trigger": "app launch", "to": "BDRequestGenerate" },
+        "template": "RootTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["AmountKeypad(integrated)", "CurrencyToggle(sats / BTC / fiat)", "ActionBar(Request)"],
+        "footer": null,
+        "modals": [],
+        "designNotes": "Amount is OPTIONAL. Skip when sender determines amount. Reduces price volatility exposure. Toggle clears input on unit switch."
+      },
+      {
+        "screen": "BDRequestGenerate",
+        "type": "requestGeneration",
+        "flow": "BitcoinDesignRequest",
+        "step": 1,
+        "goal": "generate unified payment request and display sharing options",
+        "pattern": "payment-request-display",
+        "navigation": { "from": "BDRequestHome", "trigger": "tap Request", "to": null },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": true },
+        "components": ["QRCode(unified BIP21, high-contrast, large)", "ShareOptions(QR, Copy, NFC, PaymentLink)", "FormatToggle(Unified / Lightning only / On-chain only)", "MetadataFields(note, label, contact)", "FeeWarning(conditional)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Share"]
+        },
+        "modals": [],
+        "paymentRequestFormat": {
+          "default": "Unified BIP21 combining Lightning invoice + on-chain swap address",
+          "fallbacks": ["Lightning invoice only", "On-chain address only"],
+          "qrOptimization": "Uppercasing bech32 strings results in less complex, more easily scannable QR codes",
+          "autoBrightness": "Increase screen brightness for improved scanning reliability"
+        },
+        "feeScenarios": [
+          { "condition": "No open channels, on-demand channel opening needed", "fee": true },
+          { "condition": "Zero-amount invoice exceeds inbound liquidity", "fee": true },
+          { "condition": "Requested amount exceeds receive limit", "fee": true },
+          { "condition": "Amount within existing receive limit", "fee": false }
+        ],
+        "sharingMethods": [
+          { "method": "qr", "description": "High-contrast large QR code for in-person scanning" },
+          { "method": "plaintext", "description": "Copy text for secure communication channels" },
+          { "method": "nfc", "description": "Contactless short-distance wireless sharing" },
+          { "method": "paymentLink", "description": "bitcoin: URI hyperlink for other apps" }
+        ],
+        "designNotes": "Default to unified request. User doesn't choose Lightning/on-chain — that's confusing for newcomers. Fee info shown BEFORE sharing. Online requirement: notify user to keep wallet open."
+      },
+      {
+        "screen": "BDRequestExpiration",
+        "type": "info",
+        "flow": "BitcoinDesignRequest",
+        "step": 1,
+        "state": "expirationSettings",
+        "goal": "configure invoice expiration duration",
+        "pattern": "info-warning",
+        "navigation": { "from": "BDRequestGenerate", "trigger": "advanced settings", "to": "BDRequestGenerate" },
+        "template": "BottomSheet",
+        "templateProps": {},
+        "components": ["ExpirationSelector(30s, 1min, 1hr, 24hr, custom)"],
+        "footer": null,
+        "modals": [],
+        "expirationRules": [
+          { "scenario": "Fiat-denominated, in-person", "duration": "30-60 seconds", "rationale": "Mitigate price volatility. Auto-refresh on expiration." },
+          { "scenario": "Zero-amount or BTC-denominated", "duration": "Up to 24 hours", "rationale": "Suits message-based sharing." },
+          { "scenario": "Custom (advanced)", "duration": "User-configurable", "rationale": "In advanced settings only. Only advanced users will use this." }
+        ]
+      }
+    ],
+
+    "BitcoinDesignReceive": [
+      {
+        "screen": "BDReceiveOfflineNotification",
+        "type": "notification",
+        "flow": "BitcoinDesignReceive",
+        "step": 0,
+        "goal": "alert user to incoming payment when wallet is closed",
+        "pattern": "push-notification",
+        "navigation": { "from": null, "trigger": "incoming payment while offline", "to": "BDReceiveProcessing" },
+        "template": "SystemNotification",
+        "templateProps": {},
+        "components": ["PushNotification(Payment incoming, open wallet to receive)"],
+        "footer": null,
+        "modals": [],
+        "designNotes": "Lightning Wallet Server (LWS) intercepts payments while offline and sends push notification. Non-custodial Lightning requires online status to receive."
+      },
+      {
+        "screen": "BDReceiveProcessing",
+        "type": "processing",
+        "flow": "BitcoinDesignReceive",
+        "step": 1,
+        "goal": "process incoming payment (channel opening or submarine swap if needed)",
+        "pattern": "processing-loading",
+        "navigation": { "from": "BDReceiveOfflineNotification", "trigger": "open app from notification", "to": "BDReceiveSuccess" },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["ProcessingIndicator", "StatusText(Receiving payment... / Opening channel... / Converting funds...)"],
+        "footer": null,
+        "modals": [],
+        "processingVariants": [
+          { "state": "directLightning", "description": "Existing channel with sufficient inbound liquidity. Instant." },
+          { "state": "channelOpening", "description": "LSP opens channel on-demand. Zero-confirmation capability." },
+          { "state": "submarineSwap", "description": "On-chain payment converted to Lightning balance via swap." }
+        ],
+        "designNotes": "Abstract complexity. Users need not understand submarine swaps — just 'funds converting to your wallet.'"
+      },
+      {
+        "screen": "BDReceiveSuccess",
+        "type": "success",
+        "flow": "BitcoinDesignReceive",
+        "step": 2,
+        "goal": "confirm payment received with fee transparency",
+        "pattern": "transaction-success",
+        "navigation": { "from": "BDReceiveProcessing", "trigger": "payment confirmed", "to": null },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["SuccessIcon", "AmountDisplay(received amount)", "FeeDisplay(channel opening fee if applicable)", "ReceiptOption(save/share)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Done"]
+        },
+        "modals": [],
+        "designNotes": "Make it clear if extra fees were incurred (e.g., channel open). Display fees in transaction details, not hidden."
+      },
+      {
+        "screen": "BDReceiveSwapFailed",
+        "type": "error",
+        "flow": "BitcoinDesignReceive",
+        "step": 2,
+        "state": "swapFailed",
+        "goal": "handle failed submarine swap with recovery options",
+        "pattern": "error-bottom-sheet",
+        "navigation": { "from": "BDReceiveProcessing", "trigger": "swap failure", "to": null },
+        "template": "FullscreenTemplate",
+        "templateProps": { "scrollable": false },
+        "components": ["WarningNotification(persistent on home)", "ActivityEntry(swap status detail)", "RetryButton", "ExternalAddressOption(send to on-chain address)"],
+        "footer": {
+          "type": "ModalFooter",
+          "buttons": ["primary:Retry swap", "secondary:Send to address"]
+        },
+        "modals": [],
+        "failureCauses": ["LWS service unavailability", "Receiving exceeds inbound capacity", "Address reuse for multiple on-chain payments"],
+        "recoveryPath": "If retry fails, wallet opens new channel locally without LWS. Multiple fallbacks prevent permanent payment loss.",
+        "designNotes": "Persistent home screen notification ensures visibility. Two-option interface keeps options clear."
+      }
+    ]
+  },
+
+  "paymentRequestFormats": {
+    "lightning": [
+      {
+        "format": "BOLT 11 Invoice",
+        "type": "single-use",
+        "expiry": "60 minutes default, configurable",
+        "privacy": "low (node public key visible)",
+        "data": ["amount", "description", "payer name", "expiry", "routing hints"],
+        "uxNotes": "Should not be shared publicly. Use 'payment request' not 'invoice' terminology. Never call these 'lightning addresses'."
+      },
+      {
+        "format": "BOLT 12 Offers",
+        "type": "reusable (static → dynamic)",
+        "expiry": "none (offer is static, generated invoices expire)",
+        "privacy": "high (blinded paths, native Lightning communication)",
+        "data": ["fiat currencies", "requester names", "min/max amounts", "recurrence", "pull payments"],
+        "uxNotes": "Experimental/draft. Smaller QR codes. More privacy-preserving than LNURL. Censorship-resistant."
+      },
+      {
+        "format": "LNURL-Pay",
+        "type": "reusable",
+        "expiry": "none",
+        "privacy": "medium (relies on third-party server)",
+        "data": ["images", "merchant info", "dynamic invoice generation"],
+        "uxNotes": "HTTP server-based. Users are relying on a third-party server to act honestly. Rich metadata possible."
+      },
+      {
+        "format": "Lightning Address",
+        "type": "reusable",
+        "expiry": "none",
+        "privacy": "medium (server dependency)",
+        "data": ["email-like format: user@domain.com"],
+        "uxNotes": "Most human-readable format. Built on LNURL. Ideal for sharing on profiles, business cards."
+      },
+      {
+        "format": "LNURL-Withdraw",
+        "type": "reusable",
+        "expiry": "none",
+        "privacy": "medium",
+        "data": ["pull payment capability"],
+        "uxNotes": "Enables payment pulling for refunds or sender-initiated requests."
+      },
+      {
+        "format": "Node ID (Keysend)",
+        "type": "reusable",
+        "expiry": "none",
+        "privacy": "low (leaks public information)",
+        "data": ["public node identifier"],
+        "uxNotes": "No proof-of-payment. Senders cannot attach descriptions."
+      },
+      {
+        "format": "AMP Invoice",
+        "type": "reusable",
+        "expiry": "none",
+        "privacy": "medium (harder to correlate payments)",
+        "data": ["atomic multi-path routing"],
+        "uxNotes": "Builds on Keysend. Better privacy but no proof-of-payment."
+      }
+    ],
+    "onChain": [
+      {
+        "format": "Standard Address",
+        "type": "single-use (recommended)",
+        "privacy": "low if reused",
+        "variants": ["Legacy (1...)", "Segwit (3...)", "Native Segwit (bc1q...)", "Taproot (bc1p...)"],
+        "uxNotes": "Different types offer different fees and features. Single-use for privacy — address disappears from contact after payment."
+      },
+      {
+        "format": "Silent Payment (BIP-352)",
+        "type": "reusable",
+        "privacy": "high",
+        "data": ["sp1... format"],
+        "uxNotes": "Ideal for contacts. Experimental. Eliminates address reuse problem."
+      },
+      {
+        "format": "Payment Code (BIP-47)",
+        "type": "reusable",
+        "privacy": "medium",
+        "data": ["requires initial on-chain setup transaction per user pair"],
+        "uxNotes": "Popularized by Samourai/Sparrow. Extra on-chain cost for setup."
+      }
+    ],
+    "unified": {
+      "format": "BIP 321 URI",
+      "scheme": "bitcoin:",
+      "description": "Combines multiple formats in single request. Default for requesting.",
+      "tradeoff": "Larger QR codes — can be an issue for lower-end devices",
+      "optimization": "Uppercasing bech32 strings reduces QR complexity"
+    }
+  },
+
+  "contacts": {
+    "designPrinciples": [
+      "We primarily think in terms of names and faces, not addresses",
+      "Contacts abstract complex address formats behind human-readable names",
+      "Auto-matching contacts to payment requests is sensitive — only auto-match using unspoofable identifiers",
+      "On-chain addresses disappear from contact after first use (single-use for privacy)",
+      "Less convenient contact assignment = less likely users use it",
+      "Applications should provide convenient backup for contacts (e.g., automatic cloud backup)"
+    ],
+    "contactStates": [
+      { "state": "nameOnly", "description": "No addresses. Cannot send to, but can assign to invoices/transactions." },
+      { "state": "singleAddress", "description": "Basic state. Enables full payment functionality." },
+      { "state": "multipleAddresses", "description": "Multiple formats (Lightning, on-chain, silent). Transaction history per address." }
+    ],
+    "addressValidation": [
+      { "state": "valid", "display": "Checkmark + format type label" },
+      { "state": "invalid", "display": "Error messaging" },
+      { "state": "unsupported", "display": "Format recognized but not supported by wallet" },
+      { "state": "warning", "display": "Supported but with privacy/security implications" }
+    ],
+    "preferredFormats": [
+      "Silent payments (BIP-352) — reusable, high privacy",
+      "Lightning offers (BOLT 12) — reusable, high privacy",
+      "DNS payment instructions (BIP-353) — human-readable, reusable",
+      "Lightning address — human-readable, reusable (medium privacy)"
+    ]
+  },
+
+  "activity": {
+    "listViewPatterns": {
+      "colorCoding": "Green for received (+), neutral for sent (-). Red reserved for errors only.",
+      "metadataLayers": ["Minimal (raw data only)", "Rich (descriptions, tags, contacts)", "Mixed"],
+      "fallbackIcons": "Indicate sent/received direction + status. Disappear when contact images available.",
+      "micropaymentGrouping": "Smart automatic grouping collapses small transactions into expandable groups."
+    },
+    "transactionDetailFields": {
+      "lightning": ["recipient", "amount", "timestamp", "invoice data", "payment hash", "route details"],
+      "onChain": ["recipient", "amount", "fees", "confirmation count", "transaction ID", "block", "address"]
+    },
+    "searchAndExport": "Search transactions + export for migration, accounting, tax. Encourage metadata entry during send/receive when context is fresh."
+  },
+
+  "universalFlowSkeleton": {
+    "description": "Every money movement — send bitcoin, withdraw cash, pay contact, transfer between accounts — shares this skeleton. Differences are in edges: address formats, fee models, auth gates, confirmation depth.",
+    "steps": [
+      {
+        "step": "entryPoint",
+        "required": true,
+        "variants": ["manual address", "contact selection", "QR scan", "paste", "payment link", "NFC"],
+        "bitcoinSpecific": "6 entry points. Format detection determines subsequent flow.",
+        "cashEquivalent": "Phone, email, bank routing, card number"
+      },
+      {
+        "step": "recipient",
+        "required": true,
+        "variants": ["address input", "contact picker", "pre-filled from invoice"],
+        "bitcoinSpecific": "8+ address formats with different validation. Contacts abstract complexity.",
+        "cashEquivalent": "Phone/email field, contact book, saved recipients"
+      },
+      {
+        "step": "amount",
+        "required": true,
+        "variants": ["keypad", "presets", "pre-filled from invoice", "dual-currency display"],
+        "bitcoinSpecific": "Three denomination options (sats/BTC/fiat). Toggle clears on switch.",
+        "cashEquivalent": "Single currency keypad. Presets common (bunq-style)."
+      },
+      {
+        "step": "feeSelection",
+        "required": false,
+        "variants": ["inline display", "separate screen", "priority tiers", "dynamic estimation"],
+        "bitcoinSpecific": "On-chain: 3-tier priority (Low/Standard/High). Lightning: typically auto. Custom sat/vbyte for advanced.",
+        "cashEquivalent": "Fixed fee (percentage), shown inline or in receipt. No user selection."
+      },
+      {
+        "step": "review",
+        "required": true,
+        "variants": ["full-screen receipt", "bottom sheet", "inline reveal", "skip (express)"],
+        "bitcoinSpecific": "High-fee warning when fee >= 50% of amount. Lightning encourage when on-chain scanned.",
+        "cashEquivalent": "Standard receipt with line items. Less critical — fiat transfers are reversible."
+      },
+      {
+        "step": "auth",
+        "required": false,
+        "variants": ["biometric", "PIN", "password", "skip (low value)"],
+        "bitcoinSpecific": "Final consent after all options selected. Optional for low-value Lightning.",
+        "cashEquivalent": "Usually biometric or PIN. Banks often require for any amount."
+      },
+      {
+        "step": "processing",
+        "required": true,
+        "variants": ["instant (no UI)", "spinner", "progress bar", "confirmation counter"],
+        "bitcoinSpecific": "Lightning: instant (no loader). On-chain: 10+ min, confirmation depth 0→1→6. Non-blocking UI.",
+        "cashEquivalent": "1-3 second spinner. Usually instant for card/P2P."
+      },
+      {
+        "step": "success",
+        "required": true,
+        "variants": ["full-screen celebration", "toast", "minimal confirmation"],
+        "bitcoinSpecific": "Proof of payment: Lightning preimage / on-chain explorer link. Metadata entry opportunity.",
+        "cashEquivalent": "Done button. Transaction ID. Share receipt."
+      }
+    ]
+  }
+}

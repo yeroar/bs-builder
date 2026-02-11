@@ -48,7 +48,7 @@ export default function InstantWithdrawConfirmation({
           <ListItemReceipt label="Total" value={totalAmount} />
         </ReceiptDetails>
       }
-      disclaimer="Withdrawals are limited to $15,000 per transfer, $150,000 per day, $50,000 per month."
+      disclaimer="By confirming, you authorize Fold to initiate an instant withdrawal to your debit card. Funds are typically available within 30 minutes but may take up to 24 hours depending on your bank. A 1.5% fee applies to all instant withdrawals. This transaction cannot be reversed once initiated."
     />
   );
 }

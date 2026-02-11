@@ -1,0 +1,373 @@
+[
+  {
+    "screen": "BtcBuyEnterAmount",
+    "type": "enterAmount",
+    "flow": "BtcBuy",
+    "step": 0,
+    "userStory": "I want to buy Bitcoin",
+    "goal": "enter USD amount to purchase with sats conversion",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "BtcMain", "trigger": "tap Buy", "to": "BtcBuyConfirmation", "back": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Buy bitcoin", "leftIcon": "x", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(btc, sats equivalent)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcBuyConfirmation",
+    "type": "confirmation",
+    "flow": "BtcBuy",
+    "step": 1,
+    "goal": "review purchase details, fees, and payment method",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "BtcBuyEnterAmount", "trigger": "Continue button", "to": "BtcBuySuccess", "back": "BtcBuyEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Confirm purchase", "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(btc)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(BTC price)", "ListItemReceipt(Purchase)", "ListItemReceipt(Fee)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm purchase"],
+      "disclaimer": "Bitcoin price is..."
+    },
+    "modals": ["ChoosePaymentMethodModal"]
+  },
+  {
+    "screen": "BtcBuySuccess",
+    "type": "success",
+    "flow": "BtcBuy",
+    "step": 2,
+    "goal": "see confirmation of Bitcoin purchase",
+    "pattern": "transaction-success",
+    "navigation": { "from": "BtcBuyConfirmation", "trigger": "Confirm purchase button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["FoldPageViewHeader", "CurrencyInput(USD, disabled)", "TopContext(btc)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"],
+      "disclaimer": "Disclaimer text"
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "BtcSellEnterAmount",
+    "type": "enterAmount",
+    "flow": "BtcSell",
+    "step": 0,
+    "userStory": "I want to sell my Bitcoin",
+    "goal": "enter BTC amount to sell with USD conversion",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "BtcMain", "trigger": "tap Sell", "to": "BtcSellConfirmation", "back": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Sell bitcoin", "leftIcon": "x", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(btc, sats equivalent)", "Keypad", "Button(Max BTC)", "Toast(max validation)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcSellConfirmation",
+    "type": "confirmation",
+    "flow": "BtcSell",
+    "step": 1,
+    "goal": "review sale details and fees",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "BtcSellEnterAmount", "trigger": "Continue button", "to": "BtcSellSuccess", "back": "BtcSellEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Sell bitcoin", "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(btc)", "ReceiptDetails", "ListItemReceipt(BTC price)", "ListItemReceipt(Sale amount)", "ListItemReceipt(Fee)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm sell"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcSellSuccess",
+    "type": "success",
+    "flow": "BtcSell",
+    "step": 2,
+    "goal": "see confirmation of Bitcoin sale",
+    "pattern": "transaction-success",
+    "navigation": { "from": "BtcSellConfirmation", "trigger": "Confirm sell button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["FoldPageViewHeader", "CurrencyInput(USD, disabled)", "TopContext(btc)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "BtcSendWalletSearch",
+    "type": "enterAddress",
+    "flow": "BtcSend",
+    "step": 0,
+    "userStory": "I want to send Bitcoin to another wallet",
+    "goal": "search or paste a Bitcoin wallet address",
+    "pattern": "address-entry",
+    "navigation": { "from": "BtcMain", "trigger": "tap Send", "to": ["BtcSendScan", "BtcSendEnterAmount"], "back": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Send bitcoin", "leftIcon": "x", "scrollable": false },
+    "components": ["BtcWalletSearch(TextField, scan icon)", "Divider", "InfoRow(InfoCircleIcon)", "InfoRow(SettingsIcon)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcSendScan",
+    "type": "scan",
+    "flow": "BtcSend",
+    "step": 1,
+    "goal": "scan QR code to get wallet address",
+    "pattern": "qr-scanner",
+    "navigation": { "from": "BtcSendWalletSearch", "trigger": "tap scan icon", "to": "BtcSendEnterAmount", "back": "BtcSendWalletSearch" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Send bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["FoldText(message)", "CameraScanner(placeholder)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcSendEnterAmount",
+    "type": "enterAmount",
+    "flow": "BtcSend",
+    "step": 2,
+    "goal": "enter sats amount to send",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "BtcSendWalletSearch", "trigger": "select address", "to": "BtcSendConfirmation", "back": "BtcSendWalletSearch" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Send bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(sats)", "TopContext(btc, USD equivalent)", "Keypad", "Button(Max sats)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcSendConfirmation",
+    "type": "confirmation",
+    "flow": "BtcSend",
+    "step": 3,
+    "goal": "review send details: address, amount, fees, time",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "BtcSendEnterAmount", "trigger": "Continue button", "to": "BtcSendSuccess", "back": "BtcSendEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Send bitcoin", "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(sats, disabled)", "TopContext(btc)", "ReceiptDetails", "ListItemReceipt(address)", "ListItemReceipt(fee sats)", "ListItemReceipt(fee USD)", "ListItemReceipt(total)", "ListItemReceipt(estimated time)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm send"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcSendSuccess",
+    "type": "success",
+    "flow": "BtcSend",
+    "step": 4,
+    "goal": "see confirmation that send was initiated",
+    "pattern": "transaction-success",
+    "navigation": { "from": "BtcSendConfirmation", "trigger": "Confirm send button", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Send initiated", "variant": "yellow", "scrollable": false },
+    "components": ["CurrencyInput(sats, disabled)", "TopContext(btc)", "Button(View details)", "BottomContext"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "BtcAutoStackIntro",
+    "type": "intro",
+    "flow": "BtcAutoStack",
+    "step": 0,
+    "userStory": "I want to automatically buy Bitcoin on a schedule",
+    "goal": "understand auto stack feature benefits",
+    "pattern": "feature-intro",
+    "navigation": { "from": "BtcMain", "trigger": "tap Auto stack", "to": "BtcAutoStackFrequency" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["IntroTemplate", "ListItem(Schedule)", "ListItem(Amount)", "ListItem(Fees)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcAutoStackFrequency",
+    "type": "selectOption",
+    "flow": "BtcAutoStack",
+    "step": 1,
+    "goal": "choose purchase frequency: daily, weekly, or monthly",
+    "pattern": "option-selector-tiles",
+    "navigation": { "from": "BtcAutoStackIntro", "trigger": "Continue button", "to": "BtcAutoStackEnterAmount", "back": "BtcAutoStackIntro" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Auto stack bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["TileSelector(Daily, Weekly, Monthly)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcAutoStackEnterAmount",
+    "type": "enterAmount",
+    "flow": "BtcAutoStack",
+    "step": 2,
+    "goal": "enter recurring purchase amount",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "BtcAutoStackFrequency", "trigger": "Continue button", "to": "BtcAutoStackConfirmation", "back": "BtcAutoStackFrequency" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Auto stack bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(frequency label)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "BtcAutoStackConfirmation",
+    "type": "confirmation",
+    "flow": "BtcAutoStack",
+    "step": 3,
+    "goal": "review auto stack setup: frequency, amount, fees, start date",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "BtcAutoStackEnterAmount", "trigger": "Continue button", "to": "BtcAutoStackSuccess", "back": "BtcAutoStackEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Auto stack bitcoin", "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(frequency)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(BTC price)", "ListItemReceipt(recurring)", "ListItemReceipt(starting)", "ListItemReceipt(fees)", "ListItemReceipt(sats)", "ListItemReceipt(payment)", "ListItemReceipt(amount type)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm auto-stack"],
+      "disclaimer": "Disclaimer text"
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcAutoStackSuccess",
+    "type": "success",
+    "flow": "BtcAutoStack",
+    "step": 4,
+    "goal": "see confirmation that auto stack is active",
+    "pattern": "transaction-success",
+    "navigation": { "from": "BtcAutoStackConfirmation", "trigger": "Confirm auto-stack button", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "variant": "yellow", "scrollable": false },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(frequency)", "Button(View details)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"],
+      "disclaimer": "Disclaimer text"
+    },
+    "modals": []
+  },
+  {
+    "screen": "BtcAutoStackDetails",
+    "type": "details",
+    "flow": "BtcAutoStack",
+    "step": 5,
+    "goal": "view active auto stack details and manage/turn off",
+    "pattern": "automation-details",
+    "navigation": { "from": "BtcMain", "trigger": "tap active Auto stack", "to": null, "back": "BtcMain" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Auto stack bitcoin", "leftIcon": "back", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(frequency)", "Divider", "ReceiptDetails", "ListItemReceipt(amount)", "ListItemReceipt(frequency)", "ListItemReceipt(next purchase)", "ListItemReceipt(total cost)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["tertiary:Turn off Auto stack"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "DirectToBitcoinIntro",
+    "type": "intro",
+    "flow": "DirectToBitcoin",
+    "step": 0,
+    "userStory": "I want to automatically convert a portion of my deposits to Bitcoin",
+    "goal": "understand direct-to-bitcoin automation feature",
+    "pattern": "feature-intro",
+    "navigation": { "from": "BtcMain", "trigger": "tap Direct to bitcoin", "to": "DirectToBitcoinConfigure" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["IntroTemplate", "ListItem(Automatic)", "ListItem(Percentage)", "ListItem(Control)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["secondary:Set up direct deposit", "primary:Select a percentage"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "DirectToBitcoinConfigure",
+    "type": "selectOption",
+    "flow": "DirectToBitcoin",
+    "step": 1,
+    "goal": "select percentage of deposits to convert to BTC",
+    "pattern": "option-selector-ring",
+    "navigation": { "from": "DirectToBitcoinIntro", "trigger": "Select a percentage button", "to": ["DirectToBitcoinEnterCustom", "DirectToBitcoinConfirm"], "back": "DirectToBitcoinIntro" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Direct to bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["Ring(percentage visual)", "ButtonSelector(1%, 5%, 10%, 15%, 20%, Custom)", "FoldText(disclaimer)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "disclaimer": "Disclaimer text"
+    },
+    "modals": []
+  },
+  {
+    "screen": "DirectToBitcoinEnterCustom",
+    "type": "enterAmount",
+    "flow": "DirectToBitcoin",
+    "step": 2,
+    "goal": "enter custom percentage (0-100%)",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "DirectToBitcoinConfigure", "trigger": "tap Custom", "to": "DirectToBitcoinConfigure", "back": "DirectToBitcoinConfigure" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Direct to bitcoin", "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(%)", "Keypad(0-100)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "DirectToBitcoinConfirm",
+    "type": "confirmation",
+    "flow": "DirectToBitcoin",
+    "step": 3,
+    "goal": "review split ratio and processing fee",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "DirectToBitcoinConfigure", "trigger": "Continue button", "to": "DirectToBitcoinSuccess", "back": "DirectToBitcoinConfigure" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Direct to bitcoin", "leftIcon": "back", "scrollable": true },
+    "components": ["PrimaryHeader", "ReceiptDetails", "ListItemReceipt(BTC %)", "ListItemReceipt(Cash %)", "ListItemReceipt(Processing fee)", "Divider", "FoldText(disclaimer)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "DirectToBitcoinSuccess",
+    "type": "success",
+    "flow": "DirectToBitcoin",
+    "step": 4,
+    "goal": "see confirmation that automation is active",
+    "pattern": "automation-success",
+    "navigation": { "from": "DirectToBitcoinConfirm", "trigger": "Confirm button", "to": null },
+    "template": "AutomationSuccess",
+    "templateProps": {},
+    "components": ["AutomationSuccess(percentage)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  }
+]

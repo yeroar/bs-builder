@@ -1,0 +1,144 @@
+[
+  {
+    "screen": "GiftCardSearch",
+    "type": "search",
+    "flow": "GiftCardPurchase",
+    "step": 0,
+    "userStory": "I want to buy a gift card with Bitcoin rewards",
+    "goal": "search and filter gift cards by brand, category, and redemption method",
+    "pattern": "marketplace-search",
+    "navigation": { "from": "TagHome", "trigger": "tap gift card or search", "to": "GCDetailModal" },
+    "template": "SafeAreaView",
+    "templateProps": {},
+    "components": ["SearchBar", "DropDown(redemption method)", "DropDown(categories)", "SearchHeader(Recent)", "SearchPill(recent items)", "SearchHeader(Recommended)", "ListItemGiftCard(recommended)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "GCDetailModal",
+    "type": "details",
+    "flow": "GiftCardPurchase",
+    "step": 1,
+    "goal": "view gift card details and select purchase amount",
+    "pattern": "product-detail-modal",
+    "navigation": { "from": "GiftCardSearch", "trigger": "tap gift card", "to": "GiftCardConfirmation" },
+    "template": "Modal",
+    "templateProps": { "overlay": true },
+    "components": ["PrimaryHeader(brand, iconSlot)", "Divider", "QuickBuyInput(preset amounts grid)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "GiftCardConfirmation",
+    "type": "confirmation",
+    "flow": "GiftCardPurchase",
+    "step": 2,
+    "goal": "review gift card purchase: amount, fees, rewards, payment method, optional gift",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "GCDetailModal", "trigger": "Continue button", "to": "GiftCardSuccess", "back": "GiftCardSearch" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Buy gift card", "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, giftcard variant, brand icon)", "TopContext(giftcard)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Location)", "ListItemReceipt(Total)", "ListItemReceipt(Rewards sats)", "Divider", "ListItem(Send as a gift)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm purchase"],
+      "disclaimer": "Disclaimer text"
+    },
+    "modals": ["ChoosePaymentMethodModal", "SendAsAGiftOverlay"]
+  },
+  {
+    "screen": "SendAsAGiftOverlay",
+    "type": "form",
+    "flow": "GiftCardPurchase",
+    "step": 2,
+    "state": "send_as_gift",
+    "goal": "enter gift delivery method and recipient info",
+    "pattern": "form-overlay",
+    "navigation": { "from": "GiftCardConfirmation", "trigger": "tap Send as a gift toggle" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["FoldText(header)", "PillSelector(Text message, Email)", "TextField(Your name)", "TextField(Recipient phone/email)", "TextField(Recipient name)", "TextField(Gift message)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "GiftCardSuccess",
+    "type": "success",
+    "flow": "GiftCardPurchase",
+    "step": 3,
+    "goal": "see gift card purchase confirmation with redeem option",
+    "pattern": "transaction-success",
+    "navigation": { "from": "GiftCardConfirmation", "trigger": "Confirm purchase button (fill animation)", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["FoldPageViewHeader(star icon)", "CurrencyInput(USD, giftcard variant)", "TopContext(giftcard)", "Button(View details)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Redeem", "secondary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "RedeemGiftCardEntry",
+    "type": "form",
+    "flow": "RedeemGiftCard",
+    "step": 0,
+    "userStory": "I want to redeem a BTC gift card",
+    "goal": "enter gift card number and PIN",
+    "pattern": "form-entry",
+    "navigation": { "from": "TagHome", "trigger": "tap Redeem BTC gift card", "to": "RedeemGiftCardConfirmation", "back": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": true, "keyboardAware": true },
+    "components": ["Image(btcGiftCard)", "Divider", "FoldText(header)", "TextField(card number)", "TextField(PIN)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "disclaimer": "Disclaimer text",
+      "modalVariant": "dynamic(keyboard)"
+    },
+    "modals": []
+  },
+  {
+    "screen": "RedeemGiftCardConfirmation",
+    "type": "confirmation",
+    "flow": "RedeemGiftCard",
+    "step": 1,
+    "goal": "review redemption amount, processing fee, and total sats",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "RedeemGiftCardEntry", "trigger": "Continue button", "to": "RedeemGiftCardSuccess", "back": "RedeemGiftCardEntry" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, giftcard variant)", "TopContext(giftcard, BitcoinCircleIcon)", "BottomContext(refreshing quote)", "ReceiptDetails", "ListItemReceipt(Gift card amount)", "ListItemReceipt(Processing fee)", "ListItemReceipt(Total sats)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Redeem"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RedeemGiftCardSuccess",
+    "type": "success",
+    "flow": "RedeemGiftCard",
+    "step": 2,
+    "goal": "see confirmation that gift card was redeemed for BTC",
+    "pattern": "transaction-success",
+    "navigation": { "from": "RedeemGiftCardConfirmation", "trigger": "Redeem button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["FoldPageViewHeader", "CurrencyInput(USD, giftcard variant)", "TopContext(giftcard)", "Button(View details)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "screen": "RevolutHome",
+    "type": "root",
+    "flow": "RevolutAddMoney",
+    "step": 0,
+    "userStory": "I want to add money to my Revolut account",
+    "goal": "view account balance and initiate top-up",
+    "pattern": "home-dashboard",
+    "navigation": { "from": null, "trigger": "app launch", "to": "RevolutEnterAmountApplePay" },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true, "backgroundColor": "gradient-blue", "activeTab": "home" },
+    "components": ["Avatar", "SearchBar", "BalanceDisplay", "ActionBar(Add money, Move, Details, More)", "TransactionList(empty)", "ProductSurface(Interest)", "ProductSurface(Currency account)"],
+    "footer": { "type": "TabBar", "tabs": ["Home", "Invest", "Payments", "Crypto", "Lifestyle"] },
+    "modals": []
+  },
+  {
+    "screen": "RevolutEnterAmountApplePay",
+    "type": "enterAmount",
+    "flow": "RevolutAddMoney",
+    "step": 1,
+    "goal": "enter amount to add via Apple Pay",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "RevolutHome", "trigger": "tap Add money", "to": "RevolutProcessing", "back": "RevolutHome" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false, "backgroundColor": "dark" },
+    "components": ["PaymentMethodSelector(Apple Pay, Change)", "ArrowDown", "CurrencyInput(SGD, balance)", "Keypad(with math operators)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Apple Pay"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RevolutEnterAmountCard",
+    "type": "enterAmount",
+    "flow": "RevolutAddMoney",
+    "step": 1,
+    "state": "card_selected",
+    "goal": "enter amount to add via debit card",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "RevolutEnterAmountApplePay", "trigger": "tap Change → select card", "to": "RevolutProcessing", "back": "RevolutHome" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false, "backgroundColor": "dark" },
+    "components": ["PaymentMethodSelector(VISA ··7390, Change)", "ArrowDown", "CurrencyInput(SGD, balance, No fee)", "Keypad(with math operators)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Add money securely"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RevolutProcessing",
+    "type": "processing",
+    "flow": "RevolutAddMoney",
+    "step": 2,
+    "state": "loading",
+    "goal": "wait for payment to process",
+    "pattern": "processing-loading",
+    "navigation": { "from": "RevolutEnterAmountCard", "trigger": "tap Add money securely", "to": ["RevolutPending", "RevolutError"] },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false, "backgroundColor": "dark" },
+    "components": ["PaymentMethodSelector(disabled)", "CurrencyInput(disabled)", "LoadingSpinner"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:loading"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RevolutError",
+    "type": "error",
+    "flow": "RevolutAddMoney",
+    "step": 2,
+    "state": "error",
+    "goal": "understand why payment failed and retry",
+    "pattern": "error-bottom-sheet",
+    "navigation": { "from": "RevolutProcessing", "trigger": "payment failed", "to": "RevolutEnterAmountCard" },
+    "template": "BottomSheet",
+    "templateProps": { "overlay": true },
+    "components": ["ErrorIcon(X, red)", "BodyText(Make sure your card has enough funds)", "Button(Retry)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "RevolutPending",
+    "type": "success",
+    "flow": "RevolutAddMoney",
+    "step": 3,
+    "state": "pending",
+    "goal": "see that deposit is being processed",
+    "pattern": "transaction-pending",
+    "navigation": { "from": "RevolutProcessing", "trigger": "payment accepted", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false, "backgroundColor": "dark" },
+    "components": ["PaymentMethodSelector(disabled)", "CurrencyInput(disabled)", "Toast(clock icon, 'Your deposit of $20 is being processed')"],
+    "footer": null,
+    "modals": []
+  }
+]

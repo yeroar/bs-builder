@@ -1,0 +1,356 @@
+{
+  "home-dashboard": {
+    "zones": {
+      "top": ["avatar/profile", "balance display"],
+      "center": ["action bar (primary actions)", "portfolio/token list (scrollable)"],
+      "bottom": ["tab bar navigation"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "action buttons in thumb zone, tab bar at bottom edge" },
+      { "law": "serial-position", "applies": "balance first (primary info), actions second (primary task), list last (browsing)" },
+      { "law": "hicks-law", "applies": "action bar limited to 3-5 primary actions" },
+      { "law": "aesthetic-usability", "applies": "branded colors/gradients increase perceived quality" }
+    ]
+  },
+  "action-sheet-menu": {
+    "zones": {
+      "bottom": ["action options list (overlay on current screen)"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "options appear from bottom, closest to thumb" },
+      { "law": "hicks-law", "applies": "limited to 3-4 actions to minimize decision time" },
+      { "law": "gestalt-proximity", "applies": "related actions grouped in single sheet" }
+    ]
+  },
+  "recipient-list-search": {
+    "zones": {
+      "top": ["search bar"],
+      "center": ["recent contacts (avatars)", "full recipient list (scrollable)"],
+      "bottom": ["tab bar"]
+    },
+    "laws": [
+      { "law": "serial-position", "applies": "search first for power users, recents second for repeat users" },
+      { "law": "recognition-over-recall", "applies": "avatars and names shown, no need to type from memory" },
+      { "law": "hicks-law", "applies": "search narrows options, recents surface most likely choices" }
+    ]
+  },
+  "recipient-action-sheet": {
+    "zones": {
+      "top": ["avatar + recipient info"],
+      "center": ["action buttons (Send, Request)"]
+    },
+    "laws": [
+      { "law": "gestalt-proximity", "applies": "identity info grouped above, actions grouped below" },
+      { "law": "hicks-law", "applies": "2 clear actions, minimal decision cost" },
+      { "law": "recognition-over-recall", "applies": "recipient shown with avatar, user confirms visually" }
+    ]
+  },
+  "asset-selection-list": {
+    "zones": {
+      "top": ["search bar (optional)"],
+      "center": ["asset list with balance/value"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "search filters large lists, only relevant assets shown" },
+      { "law": "millers-law", "applies": "list items show name + balance + value, 3 data points per item" },
+      { "law": "recognition-over-recall", "applies": "token icons + names, user picks visually" }
+    ]
+  },
+  "network-selection-list": {
+    "zones": {
+      "top": ["header explaining context"],
+      "center": ["network options with fee labels"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "fee shown inline reduces need for separate comparison step" },
+      { "law": "progressive-disclosure", "applies": "'What should I pick?' link for users who need help" },
+      { "law": "jacobs-law", "applies": "free options listed first, matching user expectation of cheapest = best" }
+    ]
+  },
+  "method-selection-list": {
+    "zones": {
+      "top": ["header"],
+      "center": ["payment method list with fee labels"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "fee/free labels help filter without tapping into each option" },
+      { "law": "millers-law", "applies": "7 methods at limit — bunq pushes boundary but uses clear labels" },
+      { "law": "von-restorff", "applies": "FREE badge stands out vs FEES VARY, guides toward free options" }
+    ]
+  },
+  "address-entry": {
+    "zones": {
+      "top": ["text input field"],
+      "center": ["helper actions (paste, QR, recents, address book)"],
+      "bottom": ["keyboard (system)"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "paste/QR buttons near input field, reducing travel distance" },
+      { "law": "recognition-over-recall", "applies": "address book shows saved contacts, no need to remember addresses" },
+      { "law": "error-prevention", "applies": "QR scan and paste avoid manual entry errors for long addresses" }
+    ]
+  },
+  "address-entry-with-results": {
+    "zones": {
+      "top": ["filled input field"],
+      "center": ["matching results"]
+    },
+    "laws": [
+      { "law": "recognition-over-recall", "applies": "matched results shown as user types, visual confirmation" },
+      { "law": "gestalt-proximity", "applies": "results grouped below input, clear relationship" }
+    ]
+  },
+  "amount-entry-dual-currency": {
+    "zones": {
+      "top": ["send currency input"],
+      "center": ["receive currency input", "balance label"],
+      "bottom": ["CTA button"]
+    },
+    "laws": [
+      { "law": "von-restorff", "applies": "two inputs visually paired, conversion shown as relationship" },
+      { "law": "progressive-disclosure", "applies": "balance shown only as context, not editable" },
+      { "law": "fitts-law", "applies": "CTA at bottom in thumb zone" }
+    ]
+  },
+  "amount-entry-with-keypad": {
+    "zones": {
+      "top": ["source/context info (payment method, recipient)"],
+      "center": ["amount input (visually dominant, largest element)"],
+      "bottom": ["keypad", "CTA button"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "keypad and CTA in thumb zone, largest touch targets" },
+      { "law": "von-restorff", "applies": "amount input is visually dominant — largest font, center screen" },
+      { "law": "progressive-disclosure", "applies": "payment method selector appears only after amount entered (Wise, Coinbase)" },
+      { "law": "doherty-threshold", "applies": "conversion rate updates instantly as user types" },
+      { "law": "serial-position", "applies": "context first (who/where), amount center (task), keypad bottom (input)" }
+    ]
+  },
+  "amount-entry-presets": {
+    "zones": {
+      "top": ["preset amount chips"],
+      "center": ["context info (destination, limits)"],
+      "bottom": ["CTA button"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "3 preset options reduce decision to simple pick" },
+      { "law": "default-effect", "applies": "preset amounts guide toward common choices" },
+      { "law": "fitts-law", "applies": "chips are large touch targets, CTA at bottom" }
+    ]
+  },
+  "transfer-summary-review": {
+    "zones": {
+      "top": ["currency inputs (send → receive)"],
+      "center": ["payment method", "delivery estimate", "fee breakdown"],
+      "bottom": ["CTA button"]
+    },
+    "laws": [
+      { "law": "serial-position", "applies": "amounts first (what), details middle (how), action last (go)" },
+      { "law": "gestalt-proximity", "applies": "fee breakdown grouped, delivery info grouped separately" },
+      { "law": "progressive-disclosure", "applies": "fee details expandable, not overwhelming by default" }
+    ]
+  },
+  "confirmation-receipt": {
+    "zones": {
+      "top": ["transaction header (icon + amount)"],
+      "center": ["receipt details sections (scrollable)"],
+      "bottom": ["confirm CTA"]
+    },
+    "laws": [
+      { "law": "serial-position", "applies": "amount first (anchoring), details middle (review), action last" },
+      { "law": "gestalt-proximity", "applies": "related details grouped in card sections" },
+      { "law": "fitts-law", "applies": "confirm button large, at bottom edge, easy to reach" },
+      { "law": "error-prevention", "applies": "all details visible before irreversible action" }
+    ]
+  },
+  "info-warning": {
+    "zones": {
+      "top": ["illustration/icon"],
+      "center": ["warning header + bullet list"],
+      "bottom": ["CTA button"]
+    },
+    "laws": [
+      { "law": "von-restorff", "applies": "shield icon and warning styling make screen stand out from flow" },
+      { "law": "peak-end-rule", "applies": "interruption creates memorable friction point" },
+      { "law": "error-prevention", "applies": "scam warnings reduce impulsive sends" }
+    ]
+  },
+  "password-auth": {
+    "zones": {
+      "top": ["header/title"],
+      "center": ["password input"],
+      "bottom": ["forgot link", "CTA button"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "single input field centered, CTA at bottom" },
+      { "law": "error-prevention", "applies": "secure entry dots prevent shoulder surfing" },
+      { "law": "progressive-disclosure", "applies": "forgot password link secondary, not competing with main action" }
+    ]
+  },
+  "device-verification": {
+    "zones": {
+      "top": ["illustration"],
+      "center": ["header + explanation"],
+      "bottom": ["CTA button"]
+    },
+    "laws": [
+      { "law": "aesthetic-usability", "applies": "illustration reduces anxiety during security step" },
+      { "law": "progressive-disclosure", "applies": "alternative verification offered, not forced" }
+    ]
+  },
+  "2fa-method-select": {
+    "zones": {
+      "top": ["header"],
+      "center": ["method options list"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "3 options (text, voice, app) — manageable choice set" },
+      { "law": "recognition-over-recall", "applies": "methods shown with icons, user picks familiar one" }
+    ]
+  },
+  "otp-code-entry": {
+    "zones": {
+      "top": ["header + instructions"],
+      "center": ["OTP input boxes"],
+      "bottom": ["keypad", "try another link"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "keypad fills bottom half, large touch targets" },
+      { "law": "millers-law", "applies": "6-digit code chunked into individual boxes for easier entry" },
+      { "law": "doherty-threshold", "applies": "auto-submit on last digit, no extra tap needed" }
+    ]
+  },
+  "biometric-auth": {
+    "zones": {
+      "center": ["system biometric/passcode prompt"]
+    },
+    "laws": [
+      { "law": "jacobs-law", "applies": "native iOS/Android prompt — user already knows the interaction" },
+      { "law": "doherty-threshold", "applies": "biometric completes in <1s, feels instant" }
+    ]
+  },
+  "processing-loading": {
+    "zones": {
+      "center": ["loading indicator + status text"]
+    },
+    "laws": [
+      { "law": "doherty-threshold", "applies": "spinner/dots signal system is working, prevents perceived hang" },
+      { "law": "aesthetic-usability", "applies": "branded colors/animations (bunq magenta, Coinbase dots) maintain engagement" }
+    ]
+  },
+  "transaction-success": {
+    "zones": {
+      "top": ["success icon (checkmark)"],
+      "center": ["confirmation message + details"],
+      "bottom": ["CTA button (Done/Close/Got it)"]
+    },
+    "laws": [
+      { "law": "peak-end-rule", "applies": "success is the END of flow — celebration disproportionately affects memory" },
+      { "law": "von-restorff", "applies": "green/colored background, large icon — visually distinct from all other screens" },
+      { "law": "aesthetic-usability", "applies": "animations (Wise fill, bunq Ka-Ching) create positive emotional peak" },
+      { "law": "zeigarnik-effect", "applies": "clear completion signal — brain registers task as done" }
+    ]
+  },
+  "transaction-pending": {
+    "zones": {
+      "center": ["disabled inputs (context preserved)", "toast notification"]
+    },
+    "laws": [
+      { "law": "doherty-threshold", "applies": "toast feedback signals acceptance even though processing continues" },
+      { "law": "gestalt-continuity", "applies": "same screen layout as entry — user sees their input acknowledged" }
+    ]
+  },
+  "transaction-details-timeline": {
+    "zones": {
+      "top": ["transaction header (icon + amount)"],
+      "center": ["tab selector", "timeline/updates list (scrollable)"],
+      "bottom": ["CTA (repeat transfer)"]
+    },
+    "laws": [
+      { "law": "serial-position", "applies": "amount first for context, timeline for status, action last" },
+      { "law": "gestalt-continuity", "applies": "timeline creates visual flow of progress" },
+      { "law": "recognition-over-recall", "applies": "status icons on timeline provide instant comprehension" }
+    ]
+  },
+  "error-bottom-sheet": {
+    "zones": {
+      "center": ["error icon + message"],
+      "bottom": ["retry button"]
+    },
+    "laws": [
+      { "law": "von-restorff", "applies": "red icon stands out, immediately signals problem" },
+      { "law": "error-prevention", "applies": "actionable message (check funds) helps user fix the issue" },
+      { "law": "fitts-law", "applies": "retry button large and reachable, easy recovery" }
+    ]
+  },
+  "info-promo": {
+    "zones": {
+      "top": ["illustration"],
+      "center": ["header + description"],
+      "bottom": ["primary CTA + secondary link"]
+    },
+    "laws": [
+      { "law": "peak-end-rule", "applies": "post-success promo leverages positive emotional state" },
+      { "law": "hicks-law", "applies": "2 options only: dismiss or learn more" },
+      { "law": "aesthetic-usability", "applies": "branded color (bunq gold) maintains premium feel" }
+    ]
+  },
+  "payment-entry-point": {
+    "zones": {
+      "top": ["address/recipient input field"],
+      "center": ["entry method options (contacts, QR, paste, NFC)"],
+      "bottom": ["keyboard (system)"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "multiple entry methods but only one visible at a time — user picks their preferred path" },
+      { "law": "jacobs-law", "applies": "QR scan, paste, contacts match user expectations from other payment apps" },
+      { "law": "error-prevention", "applies": "QR and paste eliminate manual entry errors for complex addresses" },
+      { "law": "recognition-over-recall", "applies": "contacts show names+faces, not raw addresses" }
+    ]
+  },
+  "format-detection": {
+    "zones": {
+      "center": ["detected format display", "action choice (if ambiguous)"]
+    },
+    "laws": [
+      { "law": "progressive-disclosure", "applies": "wallet parses format silently — user sees result, not technical parsing" },
+      { "law": "error-prevention", "applies": "expired/incompatible formats caught before user enters amount" },
+      { "law": "jacobs-law", "applies": "human-readable errors when format unsupported, not raw technical strings" }
+    ]
+  },
+  "fee-selection": {
+    "zones": {
+      "top": ["fee tier options (Low / Standard / High)"],
+      "center": ["fee estimate (sats + fiat) + confirmation time estimate"],
+      "bottom": ["CTA button", "custom fee entry (advanced, secondary)"]
+    },
+    "laws": [
+      { "law": "hicks-law", "applies": "3 tiers reduce complex fee market to simple choice" },
+      { "law": "progressive-disclosure", "applies": "custom sat/vbyte entry hidden in advanced — only power users need it" },
+      { "law": "von-restorff", "applies": "high-fee warning (red) when fee >= 50% of transaction — prevents overpayment" },
+      { "law": "default-effect", "applies": "standard tier pre-selected as sensible default" }
+    ]
+  },
+  "payment-request-display": {
+    "zones": {
+      "top": ["QR code (large, high-contrast)"],
+      "center": ["format toggle (Unified / Lightning / On-chain)", "metadata fields"],
+      "bottom": ["share options (Copy, NFC, Link)", "CTA button"]
+    },
+    "laws": [
+      { "law": "fitts-law", "applies": "QR code large for easy scanning at distance" },
+      { "law": "hicks-law", "applies": "default to unified format — don't force Lightning/on-chain choice on newcomers" },
+      { "law": "error-prevention", "applies": "fee warnings shown BEFORE sharing request, not after" },
+      { "law": "progressive-disclosure", "applies": "format toggle and expiration settings secondary — unified default works for most" }
+    ]
+  },
+  "push-notification": {
+    "zones": {
+      "center": ["notification banner (system level)"]
+    },
+    "laws": [
+      { "law": "doherty-threshold", "applies": "notification appears within seconds of incoming payment attempt" },
+      { "law": "von-restorff", "applies": "payment notification distinct from other app notifications" }
+    ]
+  }
+}

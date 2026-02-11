@@ -1,0 +1,129 @@
+[
+  {
+    "screen": "KakaoHome",
+    "type": "root",
+    "flow": "KakaoBankTransfer",
+    "step": 0,
+    "userStory": "I want to transfer money to someone",
+    "goal": "view account balance and recent transactions",
+    "pattern": "home-dashboard",
+    "navigation": { "from": null, "trigger": "app launch", "to": "KakaoRecipientSelect" },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["BalanceDisplay(300,000원)", "ActionBar(Transfer, Account info)", "TransactionList(recent: ATM, transfers, PayPal)"],
+    "footer": { "type": "TabBar", "tabs": ["Home", "Bank", "Transfer", "Menu"] },
+    "modals": []
+  },
+  {
+    "screen": "KakaoRecipientSelect",
+    "type": "search",
+    "flow": "KakaoBankTransfer",
+    "step": 1,
+    "goal": "select recipient by account number or KakaoTalk friend",
+    "pattern": "recipient-list-search",
+    "navigation": { "from": "KakaoHome", "trigger": "tap Transfer", "to": "KakaoEnterAmount", "back": "KakaoHome" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["TabSelector(Account number, KakaoTalk friends)", "SectionHeader(My Accounts)", "ListItem(NH X Kakao Pay)", "ListItem(Wooricredit)", "SectionHeader(Recent Transfers)", "ListItem(recent recipients, starred)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "KakaoEnterAmount",
+    "type": "enterAmount",
+    "flow": "KakaoBankTransfer",
+    "step": 2,
+    "goal": "enter transfer amount with quick presets",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "KakaoRecipientSelect", "trigger": "select recipient", "to": "KakaoEnterAmountFilled", "back": "KakaoRecipientSelect" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["RecipientLabel(name, bank, account)", "AccountDropdown(source account, balance)", "CurrencyInput(placeholder)", "QuickAmountChips(+1만, +5만, +10만, 전액)", "Keypad(with 00 key)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Next(disabled)"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "KakaoEnterAmountFilled",
+    "type": "enterAmount",
+    "flow": "KakaoBankTransfer",
+    "step": 2,
+    "state": "filled",
+    "goal": "review amount and add optional memo/display names",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "KakaoEnterAmount", "trigger": "enter amount", "to": "KakaoConfirmModal" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["RecipientLabel(name, bank, account)", "CurrencyInput(10,000원)", "QuickAmountChips(+1万, +5万, +10万, 전액)", "TextField(Display to recipient)", "TextField(Display to me)", "TextLink(+ Add transfer note)", "Keypad"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Next"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "KakaoConfirmModal",
+    "type": "confirmation",
+    "flow": "KakaoBankTransfer",
+    "step": 3,
+    "goal": "confirm transfer amount and recipient before sending",
+    "pattern": "confirmation-modal",
+    "navigation": { "from": "KakaoEnterAmountFilled", "trigger": "Next button", "to": "KakaoSuccess" },
+    "template": "BottomSheet",
+    "templateProps": { "overlay": true },
+    "components": ["Avatar(recipient, green)", "BodyText(Transfer 10,000원 to Lee?)", "RecipientInfo(농협 356)", "WarningBanner(duplicate transfer warning, red)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["secondary:Cancel", "primary:Transfer"],
+      "variant": "sideBySide"
+    },
+    "modals": []
+  },
+  {
+    "screen": "KakaoSuccess",
+    "type": "success",
+    "flow": "KakaoBankTransfer",
+    "step": 4,
+    "goal": "see confirmation that money was sent",
+    "pattern": "transaction-success",
+    "navigation": { "from": "KakaoConfirmModal", "trigger": "Transfer button", "to": "KakaoSuccessDetails" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": false },
+    "components": ["TransactionSummary(from → to)", "SuccessIcon(checkmark, yellow)", "PrimaryHeader(Sent 10,000원 to Lee)", "RecipientInfo(농협 356)", "BodyText(memo)", "PromoBanner(investment returns)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["secondary:Share", "primary:Confirm"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "KakaoSuccessDetails",
+    "type": "details",
+    "flow": "KakaoBankTransfer",
+    "step": 5,
+    "goal": "view full transfer details and balance after transfer",
+    "pattern": "transaction-details-receipt",
+    "navigation": { "from": "KakaoSuccess", "trigger": "Confirm button", "to": "KakaoReceipt" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "scrollable": true },
+    "components": ["SuccessIcon(checkmark)", "PrimaryHeader(Sent 10,000원 to Lee)", "RecipientInfo(농협 356)", "Timestamp(2025.06.21 15:42:52)", "ActionBar(Share, Confirm Transfer)", "ReceiptDetails(sending account, amount, fee:free, display names, withdrawal account, balance after:270,000원)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "KakaoReceipt",
+    "type": "details",
+    "flow": "KakaoBankTransfer",
+    "step": 6,
+    "goal": "view and download formal transfer confirmation certificate",
+    "pattern": "formal-receipt",
+    "navigation": { "from": "KakaoSuccessDetails", "trigger": "Confirm Transfer button", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "rightAction": "download", "scrollable": true },
+    "components": ["PrimaryHeader(KakaoBank Transfer Confirmation)", "ReceiptDetails(amount, time, accounts, fee:0원, display names)", "Disclaimer(legal text)"],
+    "footer": null,
+    "modals": []
+  }
+]

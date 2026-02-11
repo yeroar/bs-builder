@@ -9,6 +9,7 @@ export type BottomContextVariant = "maxButton" | "paymentMethod" | "addPaymentMe
 export interface BottomContextProps {
   variant?: BottomContextVariant;
   maxAmount?: string;
+  maxError?: boolean;
   paymentMethodVariant?: PmSelectorVariant;
   paymentMethodBrand?: string;
   paymentMethodLabel?: string;
@@ -23,6 +24,7 @@ export interface BottomContextProps {
 export default function BottomContext({
   variant = "maxButton",
   maxAmount = "$0.00",
+  maxError = false,
   paymentMethodVariant = "null",
   paymentMethodBrand,
   paymentMethodLabel,
@@ -49,10 +51,11 @@ export default function BottomContext({
               onPress={onMaxPress}
               style={({ pressed }) => [
                 styles.maxButton,
-                pressed && styles.maxButtonPressed,
+                maxError && styles.maxButtonError,
+                pressed && (maxError ? styles.maxButtonErrorPressed : styles.maxButtonPressed),
               ]}
             >
-              <FoldText type="body-md-bold" style={styles.maxButtonText}>
+              <FoldText type="body-md-bold" style={[styles.maxButtonText, maxError && styles.maxButtonTextError]}>
                 Max {maxAmount}
               </FoldText>
             </Pressable>
@@ -100,9 +103,18 @@ const styles = StyleSheet.create({
   maxButtonPressed: {
     backgroundColor: colorMaps.object.secondary.pressed,
   },
+  maxButtonError: {
+    backgroundColor: colorMaps.object.negative.subtle.default,
+  },
+  maxButtonErrorPressed: {
+    backgroundColor: colorMaps.object.negative.subtle.pressed,
+  },
   maxButtonText: {
     color: colorMaps.face.primary,
     fontSize: 14,
     lineHeight: 14,
+  },
+  maxButtonTextError: {
+    color: colorMaps.face.negativeBold,
   },
 });

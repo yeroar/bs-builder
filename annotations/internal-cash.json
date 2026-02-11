@@ -1,0 +1,371 @@
+[
+  {
+    "screen": "DepositOptions",
+    "type": "selectMethod",
+    "flow": "CashDeposit",
+    "step": 0,
+    "userStory": "I want to add money to my Cash account",
+    "goal": "choose deposit method: instant, one-time, or recurring",
+    "pattern": "method-selection-list",
+    "navigation": { "from": "CashMain", "trigger": "tap Add", "to": ["InstantDepositEnterAmount", "OneTimeDepositEnterAmount", "RecurringDepositEnterAmount"] },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["FoldText(header)", "ListItem(Instant, fee chip)", "ListItem(One-time)", "ListItem(Recurring)"],
+    "footer": null,
+    "modals": []
+  },
+
+  {
+    "screen": "InstantDepositEnterAmount",
+    "type": "enterAmount",
+    "flow": "InstantDeposit",
+    "step": 0,
+    "userStory": "I want to instantly deposit from my debit card",
+    "goal": "enter deposit amount from debit card",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "DepositOptions", "trigger": "tap Instant", "to": "InstantDepositConfirmation", "back": "DepositOptions" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(empty)", "Keypad", "Button(Max amount)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "InstantDepositConfirmation",
+    "type": "confirmation",
+    "flow": "InstantDeposit",
+    "step": 1,
+    "goal": "review deposit amount, fee, and payment method",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "InstantDepositEnterAmount", "trigger": "Continue button", "to": "InstantDepositSuccess", "back": "InstantDepositEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Transfer)", "ListItemReceipt(Fee)", "ListItemReceipt(Total)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm deposit"]
+    },
+    "modals": ["ChoosePaymentMethodModal(debitCard)"]
+  },
+  {
+    "screen": "InstantDepositSuccess",
+    "type": "success",
+    "flow": "InstantDeposit",
+    "step": 2,
+    "goal": "see confirmation of instant deposit",
+    "pattern": "transaction-success",
+    "navigation": { "from": "InstantDepositConfirmation", "trigger": "Confirm deposit button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "OneTimeDepositEnterAmount",
+    "type": "enterAmount",
+    "flow": "OneTimeDeposit",
+    "step": 0,
+    "userStory": "I want to deposit from my bank account",
+    "goal": "enter deposit amount from bank account",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "DepositOptions", "trigger": "tap One-time", "to": "OneTimeDepositConfirmation", "back": "DepositOptions" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(empty)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "OneTimeDepositConfirmation",
+    "type": "confirmation",
+    "flow": "OneTimeDeposit",
+    "step": 1,
+    "goal": "review bank deposit amount and payment method",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "OneTimeDepositEnterAmount", "trigger": "Continue button", "to": "OneTimeDepositSuccess", "back": "OneTimeDepositEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Transfer)", "ListItemReceipt(Total)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm deposit"]
+    },
+    "modals": ["ChoosePaymentMethodModal(bankAccount)"]
+  },
+  {
+    "screen": "OneTimeDepositSuccess",
+    "type": "success",
+    "flow": "OneTimeDeposit",
+    "step": 2,
+    "goal": "see confirmation of bank deposit",
+    "pattern": "transaction-success",
+    "navigation": { "from": "OneTimeDepositConfirmation", "trigger": "Confirm deposit button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "RecurringDepositEnterAmount",
+    "type": "enterAmount",
+    "flow": "RecurringDeposit",
+    "step": 0,
+    "userStory": "I want to set up automatic recurring deposits",
+    "goal": "enter recurring deposit amount with frequency context",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "DepositOptions", "trigger": "tap Recurring", "to": "RecurringDepositConfirmation", "back": "DepositOptions" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(frequency label)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "RecurringDepositConfirmation",
+    "type": "confirmation",
+    "flow": "RecurringDeposit",
+    "step": 1,
+    "goal": "review recurring deposit: frequency, start date, payment method",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "RecurringDepositEnterAmount", "trigger": "Continue button", "to": "RecurringDepositSuccess", "back": "RecurringDepositEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(frequency)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Frequency)", "ListItemReceipt(Starting date)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm deposit"]
+    },
+    "modals": ["ChoosePaymentMethodModal(bankAccount)"]
+  },
+  {
+    "screen": "RecurringDepositSuccess",
+    "type": "success",
+    "flow": "RecurringDeposit",
+    "step": 2,
+    "goal": "see confirmation that recurring deposit is set up",
+    "pattern": "transaction-success",
+    "navigation": { "from": "RecurringDepositConfirmation", "trigger": "Confirm deposit button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(frequency)", "Button(View details)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "WithdrawOptions",
+    "type": "selectMethod",
+    "flow": "CashWithdraw",
+    "step": 0,
+    "userStory": "I want to withdraw money from my Cash account",
+    "goal": "choose withdrawal method: instant or one-time",
+    "pattern": "method-selection-list",
+    "navigation": { "from": "CashMain", "trigger": "tap Withdraw", "to": ["InstantWithdrawEnterAmount", "OneTimeWithdrawEnterAmount"] },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["FoldText(header)", "ListItem(Instant, fee chip, time)", "ListItem(One-time, time)"],
+    "footer": null,
+    "modals": []
+  },
+
+  {
+    "screen": "InstantWithdrawEnterAmount",
+    "type": "enterAmount",
+    "flow": "InstantWithdraw",
+    "step": 0,
+    "userStory": "I want to instantly withdraw to my debit card",
+    "goal": "enter withdrawal amount to debit card",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "WithdrawOptions", "trigger": "tap Instant", "to": "InstantWithdrawConfirmation", "back": "WithdrawOptions" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(empty)", "Keypad", "Button(Max amount)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "InstantWithdrawConfirmation",
+    "type": "confirmation",
+    "flow": "InstantWithdraw",
+    "step": 1,
+    "goal": "review withdrawal amount, fee, and destination",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "InstantWithdrawEnterAmount", "trigger": "Continue button", "to": "InstantWithdrawSuccess", "back": "InstantWithdrawEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Transfer)", "ListItemReceipt(Fee)", "ListItemReceipt(Total)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm withdrawal"]
+    },
+    "modals": ["ChoosePaymentMethodModal(debitCard)"]
+  },
+  {
+    "screen": "InstantWithdrawSuccess",
+    "type": "success",
+    "flow": "InstantWithdraw",
+    "step": 2,
+    "goal": "see confirmation of instant withdrawal",
+    "pattern": "transaction-success",
+    "navigation": { "from": "InstantWithdrawConfirmation", "trigger": "Confirm withdrawal button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "OneTimeWithdrawEnterAmount",
+    "type": "enterAmount",
+    "flow": "OneTimeWithdraw",
+    "step": 0,
+    "userStory": "I want to withdraw to my bank account",
+    "goal": "enter withdrawal amount to bank account",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "WithdrawOptions", "trigger": "tap One-time", "to": "OneTimeWithdrawConfirmation", "back": "WithdrawOptions" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": false },
+    "components": ["CurrencyInput(USD)", "TopContext(empty)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "OneTimeWithdrawConfirmation",
+    "type": "confirmation",
+    "flow": "OneTimeWithdraw",
+    "step": 1,
+    "goal": "review bank withdrawal amount and destination",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "OneTimeWithdrawEnterAmount", "trigger": "Continue button", "to": "OneTimeWithdrawSuccess", "back": "OneTimeWithdrawEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)", "PaymentMethodSelector", "ReceiptDetails", "ListItemReceipt(Transfer)", "ListItemReceipt(Total)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm withdrawal"]
+    },
+    "modals": ["ChoosePaymentMethodModal(bankAccount)"]
+  },
+  {
+    "screen": "OneTimeWithdrawSuccess",
+    "type": "success",
+    "flow": "OneTimeWithdraw",
+    "step": 2,
+    "goal": "see confirmation of bank withdrawal",
+    "pattern": "transaction-success",
+    "navigation": { "from": "OneTimeWithdrawConfirmation", "trigger": "Confirm withdrawal button", "to": null },
+    "template": "TransactionSuccess",
+    "templateProps": { "enterAnimation": "fill" },
+    "components": ["CurrencyInput(USD, disabled)", "TopContext(empty)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "RoundUpsIntro",
+    "type": "intro",
+    "flow": "RoundUps",
+    "step": 0,
+    "userStory": "I want to automatically invest spare change into Bitcoin",
+    "goal": "understand round ups feature and multiplier options",
+    "pattern": "feature-intro",
+    "navigation": { "from": "CashMain", "trigger": "tap Round ups", "to": "RoundUpsConfigure" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["IntroTemplate", "ListItem(Multiplier)", "ListItem(Automatic buys)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RoundUpsConfigure",
+    "type": "selectOption",
+    "flow": "RoundUps",
+    "step": 1,
+    "goal": "choose round ups multiplier and see progress toward threshold",
+    "pattern": "option-selector-tiles",
+    "navigation": { "from": "RoundUpsIntro", "trigger": "Continue button", "to": "RoundUpsSuccess", "back": "RoundUpsIntro" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "title": "Round ups", "leftIcon": "back", "scrollable": false },
+    "components": ["PrimaryHeader", "ButtonSelector(1x, 2x, 5x, 10x)", "ProgressVisualization(threshold)", "FoldText(disclaimer)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Activate"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "RoundUpsSuccess",
+    "type": "success",
+    "flow": "RoundUps",
+    "step": 2,
+    "goal": "see confirmation that round ups is active",
+    "pattern": "automation-success",
+    "navigation": { "from": "RoundUpsConfigure", "trigger": "Activate button", "to": null },
+    "template": "AutomationSuccess",
+    "templateProps": {},
+    "components": ["AutomationSuccess(multiplier)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+
+  {
+    "screen": "RecurringDepositManager",
+    "type": "details",
+    "flow": "RecurringDepositManage",
+    "step": 0,
+    "userStory": "I want to manage my recurring deposits",
+    "goal": "view and manage scheduled deposits",
+    "pattern": "automation-details",
+    "navigation": { "from": "CashMain", "trigger": "tap Recurring deposit", "to": "RecurringDepositDetailScreen", "back": "CashMain" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["PrimaryHeader", "ListItem(Schedule deposit)", "Divider", "ListItem(scheduled deposits with status chips)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "RecurringDepositDetailScreen",
+    "type": "details",
+    "flow": "RecurringDepositManage",
+    "step": 1,
+    "goal": "view single recurring deposit details and modify",
+    "pattern": "automation-details",
+    "navigation": { "from": "RecurringDepositManager", "trigger": "tap deposit", "to": null, "back": "RecurringDepositManager" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["ListItemReceipt(Started)", "ListItemReceipt(Frequency, chip)", "PaymentMethodSelector(From)"],
+    "footer": null,
+    "modals": []
+  }
+]

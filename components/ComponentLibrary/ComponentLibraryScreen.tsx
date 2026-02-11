@@ -1,9 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Modal } from "react-native";
 import FullscreenTemplate from "../../ui/Templates/FullscreenTemplate";
 import PillSelector from "../Selectors/PillSelector/PillSelector";
 import { FoldText } from "../Primitives/FoldText";
 import Toast, { ToastType } from "../Feedback/Toast/Toast";
+import MiniModal from "../Modals/MiniModal";
+import Button from "../Primitives/Buttons/Button/Button";
+import { BitcoinCircleIcon } from "../Icons/BitcoinCircleIcon";
+import { BankIcon } from "../Icons/BankIcon";
 import { colorMaps, spacing } from "../tokens";
 
 // Category components
@@ -16,9 +20,25 @@ import DataDisplayCategory from "./categories/DataDisplayCategory";
 import FeedbackCategory from "./categories/FeedbackCategory";
 import ModalsCategory from "./categories/ModalsCategory";
 import HeadersCategory from "./categories/HeadersCategory";
+import ApproachesCategory, { ApproachId } from "./categories/ApproachesCategory";
+import type { AssetType } from "../../ui/Screens/flows/Cash/approaches/assetConfig";
+
+// Approach flows
+import ExpressWithdrawFlow from "../../ui/Screens/flows/Cash/approaches/ExpressWithdrawFlow";
+import BottomSheetWithdrawFlow from "../../ui/Screens/flows/Cash/approaches/BottomSheetWithdrawFlow";
+import ProgressiveWithdrawFlow from "../../ui/Screens/flows/Cash/approaches/ProgressiveWithdrawFlow";
+import BunqStyleWithdrawFlow from "../../ui/Screens/flows/Cash/approaches/BunqStyleWithdrawFlow";
+import WiseStyleWithdrawFlow from "../../ui/Screens/flows/Cash/approaches/WiseStyleWithdrawFlow";
+import VenmoStyleFlow from "../../ui/Screens/flows/Cash/approaches/VenmoStyleFlow";
+import ZelleStyleFlow from "../../ui/Screens/flows/Cash/approaches/ZelleStyleFlow";
+import CashAppStyleFlow from "../../ui/Screens/flows/Cash/approaches/CashAppStyleFlow";
+import StrikeStyleFlow from "../../ui/Screens/flows/Cash/approaches/StrikeStyleFlow";
+import RemittanceStyleFlow from "../../ui/Screens/flows/Cash/approaches/RemittanceStyleFlow";
+import MPesaStyleFlow from "../../ui/Screens/flows/Cash/approaches/MPesaStyleFlow";
 
 const CATEGORIES = [
   { id: "all", label: "All" },
+  { id: "approaches", label: "Approaches" },
   { id: "foundation", label: "Foundation" },
   { id: "forms", label: "Forms" },
   { id: "selection", label: "Selection" },
@@ -38,6 +58,9 @@ interface ComponentLibraryScreenProps {
 
 export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScreenProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("all");
+  const [activeApproach, setActiveApproach] = useState<ApproachId | null>(null);
+  const [pendingApproach, setPendingApproach] = useState<ApproachId | null>(null);
+  const [assetType, setAssetType] = useState<AssetType>("cash");
   const [toastVisible, setToastVisible] = useState(false);
   const [toastConfig, setToastConfig] = useState<{
     message: string;
@@ -51,6 +74,24 @@ export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScree
 
   const hideToast = useCallback(() => {
     setToastVisible(false);
+  }, []);
+
+  const handleLaunchApproach = useCallback((id: ApproachId) => {
+    setPendingApproach(id);
+  }, []);
+
+  const handleAssetSelect = useCallback((type: AssetType) => {
+    setAssetType(type);
+    setActiveApproach(pendingApproach);
+    setPendingApproach(null);
+  }, [pendingApproach]);
+
+  const handleCloseAssetSelector = useCallback(() => {
+    setPendingApproach(null);
+  }, []);
+
+  const handleCloseApproach = useCallback(() => {
+    setActiveApproach(null);
   }, []);
 
   const renderCategoryContent = () => {
@@ -73,10 +114,16 @@ export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScree
         return <FeedbackCategory onShowToast={showToast} />;
       case "modals":
         return <ModalsCategory />;
+      case "approaches":
+        return <ApproachesCategory onLaunch={handleLaunchApproach} />;
       case "all":
       default:
         return (
           <>
+            <View style={styles.categorySection}>
+              <FoldText type="header-sm" style={styles.sectionTitle}>Approaches</FoldText>
+              <ApproachesCategory onLaunch={handleLaunchApproach} />
+            </View>
             <View style={styles.categorySection}>
               <FoldText type="header-sm" style={styles.sectionTitle}>Foundation</FoldText>
               <FoundationCategory />
@@ -115,6 +162,36 @@ export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScree
             </View>
           </>
         );
+    }
+  };
+
+  // Render the active approach flow as a fullscreen overlay
+  const renderApproachOverlay = () => {
+    switch (activeApproach) {
+      case "express":
+        return <ExpressWithdrawFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "bottomSheet":
+        return <BottomSheetWithdrawFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "progressive":
+        return <ProgressiveWithdrawFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "bunq":
+        return <BunqStyleWithdrawFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "wise":
+        return <WiseStyleWithdrawFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "venmo":
+        return <VenmoStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "zelle":
+        return <ZelleStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "cashApp":
+        return <CashAppStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "strike":
+        return <StrikeStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "remittance":
+        return <RemittanceStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "mpesa":
+        return <MPesaStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      default:
+        return null;
     }
   };
 
@@ -171,6 +248,49 @@ export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScree
           />
         </View>
       )}
+
+      {/* Asset type selector — shown before launching approach */}
+      <Modal
+        visible={pendingApproach !== null}
+        transparent
+        animationType="none"
+        onRequestClose={handleCloseAssetSelector}
+      >
+        <MiniModal
+          variant="default"
+          onClose={handleCloseAssetSelector}
+          showHeader={false}
+        >
+          <View style={styles.assetSelectorContent}>
+            <FoldText type="header-sm" style={styles.assetSelectorTitle}>
+              Test with which asset?
+            </FoldText>
+            <View style={styles.assetSelectorButtons}>
+              <Button
+                label="Cash (USD)"
+                hierarchy="secondary"
+                size="md"
+                leadingSlot={<BankIcon width={20} height={20} color={colorMaps.face.primary} />}
+                onPress={() => handleAssetSelect("cash")}
+              />
+              <Button
+                label="Bitcoin (BTC)"
+                hierarchy="secondary"
+                size="md"
+                leadingSlot={<BitcoinCircleIcon width={20} height={20} color={colorMaps.face.primary} />}
+                onPress={() => handleAssetSelect("bitcoin")}
+              />
+            </View>
+          </View>
+        </MiniModal>
+      </Modal>
+
+      {/* Approach flow overlay — renders ABOVE everything */}
+      {activeApproach && (
+        <View style={styles.approachOverlay}>
+          {renderApproachOverlay()}
+        </View>
+      )}
     </View>
   );
 }
@@ -212,5 +332,21 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: colorMaps.face.primary,
     marginBottom: spacing["400"],
+  },
+  approachOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 500,
+    backgroundColor: colorMaps.layer.background,
+  },
+  assetSelectorContent: {
+    gap: spacing["400"],
+    alignItems: "center",
+  },
+  assetSelectorTitle: {
+    color: colorMaps.face.primary,
+  },
+  assetSelectorButtons: {
+    width: "100%",
+    gap: spacing["300"],
   },
 });

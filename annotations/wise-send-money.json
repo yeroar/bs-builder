@@ -1,0 +1,214 @@
+[
+  {
+    "screen": "WiseRecipientList",
+    "type": "search",
+    "flow": "WiseSendMoney",
+    "step": 0,
+    "userStory": "I want to send money to someone abroad",
+    "goal": "find and select a recipient to send money to",
+    "pattern": "recipient-list-search",
+    "navigation": { "from": null, "trigger": "tab:Recipients", "to": "WiseRecipientAction" },
+    "template": "RootTemplate",
+    "templateProps": { "scrollable": true, "activeTab": "recipients" },
+    "components": ["SearchBar", "PromoBanner", "ListItem(+Add)", "AvatarRow(recent)"],
+    "footer": { "type": "TabBar" },
+    "modals": []
+  },
+  {
+    "screen": "WiseRecipientAction",
+    "type": "details",
+    "flow": "WiseSendMoney",
+    "step": 1,
+    "goal": "choose what to do with this recipient",
+    "pattern": "recipient-action-sheet",
+    "navigation": { "from": "WiseRecipientList", "trigger": "tap recipient", "to": "WiseEnterAmount" },
+    "template": "BottomSheet",
+    "templateProps": {},
+    "components": ["Avatar", "RecipientInfo", "ActionButton(Send)", "ActionButton(Request)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "WiseEnterAmount",
+    "type": "enterAmount",
+    "flow": "WiseSendMoney",
+    "step": 2,
+    "goal": "enter how much to send and see conversion rate",
+    "pattern": "amount-entry-dual-currency",
+    "navigation": { "from": "WiseRecipientAction", "trigger": "tap Send", "to": "WiseTransferSummary", "back": "WiseRecipientList" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["CurrencyInput(send)", "CurrencyInput(receive)", "BalanceLabel"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "disclaimer": "Enter either amount to continue"
+    },
+    "modals": []
+  },
+  {
+    "screen": "WiseEnterAmountActive",
+    "type": "enterAmount",
+    "flow": "WiseSendMoney",
+    "step": 2,
+    "state": "keyboard_open",
+    "goal": "type exact amount using keypad",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "WiseEnterAmount", "trigger": "tap input field" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "keyboardAware": true },
+    "components": ["CurrencyInput(send)", "CurrencyInput(receive)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "WiseEnterAmountFilled",
+    "type": "enterAmount",
+    "flow": "WiseSendMoney",
+    "step": 2,
+    "state": "filled",
+    "goal": "review entered amount and select payment method",
+    "pattern": "amount-entry-with-keypad",
+    "navigation": { "from": "WiseEnterAmountActive", "trigger": "enter amount", "to": "WiseTransferSummary" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "keyboardAware": true },
+    "components": ["CurrencyInput(send)", "CurrencyInput(receive)", "PaymentMethodSelector", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "WiseTransferSummary",
+    "type": "confirmation",
+    "flow": "WiseSendMoney",
+    "step": 3,
+    "goal": "review transfer details, fees, and delivery estimate",
+    "pattern": "transfer-summary-review",
+    "navigation": { "from": "WiseEnterAmountFilled", "trigger": "Continue button", "to": "WiseConfirmAndSend", "back": "WiseEnterAmount" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": true },
+    "components": ["CurrencyInput(send)", "CurrencyInput(receive)", "PaymentMethodSelector", "DeliveryEstimate", "FeeBreakdown"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "disclaimer": "Max speed. Min fees."
+    },
+    "modals": []
+  },
+  {
+    "screen": "WiseConfirmAndSend",
+    "type": "confirmation",
+    "flow": "WiseSendMoney",
+    "step": 4,
+    "goal": "review final receipt and confirm the transfer",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "WiseTransferSummary", "trigger": "Continue button", "to": "WisePasswordAuth", "back": "WiseTransferSummary" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["PaymentMethodSelector", "ReceiptDetails(transfer)", "ReceiptDetails(recipient)", "ReceiptDetails(schedule)", "TextField(reference)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm and send"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "WisePasswordAuth",
+    "type": "auth",
+    "flow": "WiseSendMoney",
+    "step": 5,
+    "goal": "authenticate with password to authorize transfer",
+    "pattern": "password-auth",
+    "navigation": { "from": "WiseConfirmAndSend", "trigger": "Confirm and send button", "to": "WiseDeviceVerification" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false, "keyboardAware": true },
+    "components": ["PrimaryHeader", "TextField(password, secureEntry)", "TextLink(forgot)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Approve"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "WiseDeviceVerification",
+    "type": "auth",
+    "flow": "WiseSendMoney",
+    "step": 5,
+    "state": "device_check",
+    "goal": "verify device identity for security",
+    "pattern": "device-verification",
+    "navigation": { "from": "WisePasswordAuth", "trigger": "Approve button", "to": "Wise2FAMethodSelect" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["Illustration", "PrimaryHeader", "TextLink(new device)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Verify another way"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "Wise2FAMethodSelect",
+    "type": "auth",
+    "flow": "WiseSendMoney",
+    "step": 5,
+    "state": "method_select",
+    "goal": "choose how to receive verification code",
+    "pattern": "2fa-method-select",
+    "navigation": { "from": "WiseDeviceVerification", "trigger": "Verify another way button", "to": "WiseSMSCode" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["PrimaryHeader", "ListItem(text)", "ListItem(voice)", "ListItem(app)"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "WiseSMSCode",
+    "type": "auth",
+    "flow": "WiseSendMoney",
+    "step": 5,
+    "state": "sms_entry",
+    "goal": "enter SMS verification code",
+    "pattern": "otp-code-entry",
+    "navigation": { "from": "Wise2FAMethodSelect", "trigger": "select text method", "to": "WiseSuccess" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "keyboardAware": true },
+    "components": ["PrimaryHeader", "OTPInput(6 digits)", "TextLink(try another)", "Keypad"],
+    "footer": null,
+    "modals": []
+  },
+  {
+    "screen": "WiseSuccess",
+    "type": "success",
+    "flow": "WiseSendMoney",
+    "step": 6,
+    "goal": "see confirmation that transfer was successful",
+    "pattern": "transaction-success",
+    "navigation": { "from": "WiseSMSCode", "trigger": "OTP verified", "to": "WiseTransferDetails" },
+    "template": "TransactionSuccess",
+    "templateProps": { "backgroundColor": "green", "enterAnimation": "fill" },
+    "components": ["Illustration(checkmark)", "PrimaryHeader(ALL DONE)", "BodyText"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Got it"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "WiseTransferDetails",
+    "type": "details",
+    "flow": "WiseSendMoney",
+    "step": 7,
+    "goal": "track transfer status and view updates",
+    "pattern": "transaction-details-timeline",
+    "navigation": { "from": "WiseSuccess", "trigger": "Got it button", "to": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["TransactionHeader(icon, amount)", "TabSelector(Updates/Details)", "TimelineList(status updates)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Repeat this transfer"]
+    },
+    "modals": []
+  }
+]

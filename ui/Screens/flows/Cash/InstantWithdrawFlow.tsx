@@ -7,9 +7,7 @@ import InstantWithdrawConfirmation from "../../../Slots/Cash/InstantWithdrawConf
 import InstantWithdrawSuccess from "../../../Slots/Cash/InstantWithdrawSuccess";
 import ModalFooter from "../../../../components/Modals/ModalFooter";
 import Button from "../../../../components/Primitives/Buttons/Button/Button";
-import { FoldText } from "../../../../components/Primitives/FoldText";
 import { PmSelectorVariant } from "../../../../components/Inputs/CurrencyInput/PmSelector";
-import { colorMaps } from "../../../../components/tokens";
 import ChoosePaymentMethodModal, { PaymentMethodSelection } from "../../../Slots/Modals/ChoosePaymentMethodModal";
 import { formatWithCommas } from "../../../../components/utils/formatWithCommas";
 
@@ -108,11 +106,6 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
             footer={
               <ModalFooter
                 type="default"
-                disclaimer={
-                  <FoldText type="body-sm" style={{ color: colorMaps.face.tertiary, textAlign: "center" }}>
-                    Your withdrawal may take 1-5 business days to complete.
-                  </FoldText>
-                }
                 primaryButton={
                   <Button
                     label="Confirm withdrawal"
@@ -159,8 +152,16 @@ export default function InstantWithdrawFlow({ onComplete, onClose }: InstantWith
             type="inverse"
             primaryButton={
               <Button
-                label="Done"
+                label="View details"
                 hierarchy="inverse"
+                size="md"
+                onPress={handleSuccessDone}
+              />
+            }
+            secondaryButton={
+              <Button
+                label="Done"
+                hierarchy="secondary"
                 size="md"
                 onPress={handleSuccessDone}
               />

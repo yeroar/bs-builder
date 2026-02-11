@@ -1,0 +1,123 @@
+[
+  {
+    "screen": "AuthUserIntro",
+    "type": "intro",
+    "flow": "AuthorizedUser",
+    "step": 0,
+    "userStory": "I want to add an authorized user to my account",
+    "goal": "understand authorized user benefits and requirements",
+    "pattern": "feature-intro",
+    "navigation": { "from": "CashMain", "trigger": "tap Authorized users", "to": "AuthUserName" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "x", "scrollable": false },
+    "components": ["PrimaryHeader", "ListItem(feature 1)", "ListItem(feature 2)", "ListItem(feature 3)", "Divider", "FoldText(details)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Get started"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserName",
+    "type": "form",
+    "flow": "AuthorizedUser",
+    "step": 1,
+    "goal": "enter authorized user's first, middle, and last name",
+    "pattern": "form-entry",
+    "navigation": { "from": "AuthUserIntro", "trigger": "Get started button", "to": "AuthUserAddress", "back": "AuthUserIntro" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true, "keyboardAware": true },
+    "components": ["PrimaryHeader", "TextField(First name)", "TextField(Middle name)", "TextField(Last name)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "modalVariant": "dynamic(keyboard)"
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserAddress",
+    "type": "form",
+    "flow": "AuthorizedUser",
+    "step": 2,
+    "goal": "enter authorized user's address or use default",
+    "pattern": "form-entry",
+    "navigation": { "from": "AuthUserName", "trigger": "Continue button", "to": "AuthUserDetails", "back": "AuthUserName" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true, "keyboardAware": true },
+    "components": ["PrimaryHeader", "Checklist(use default address)", "TextField(Address)", "TextField(Apt)", "TextField(City)", "TextField(State)", "TextField(Zip)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "modalVariant": "dynamic(keyboard)"
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserDetails",
+    "type": "form",
+    "flow": "AuthorizedUser",
+    "step": 3,
+    "goal": "enter DOB, SSN, and email for authorized user",
+    "pattern": "form-entry",
+    "navigation": { "from": "AuthUserAddress", "trigger": "Continue button", "to": "AuthUserReview", "back": "AuthUserAddress" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true, "keyboardAware": true },
+    "components": ["PrimaryHeader", "TextField(DOB month)", "TextField(DOB day)", "TextField(DOB year)", "TextField(SSN, secureEntry, EyeIcon)", "TextField(Email)", "Footnote(ShieldIcon, security message)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Continue"],
+      "modalVariant": "dynamic(keyboard)"
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserReview",
+    "type": "confirmation",
+    "flow": "AuthorizedUser",
+    "step": 4,
+    "goal": "review all entered information before submitting",
+    "pattern": "confirmation-receipt",
+    "navigation": { "from": "AuthUserDetails", "trigger": "Continue button", "to": "AuthUserSuccess", "back": "AuthUserDetails" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "navVariant": "step", "scrollable": true },
+    "components": ["PrimaryHeader", "Divider", "ListItemReceipt(Name)", "ListItemReceipt(Address)", "ListItemReceipt(DOB)", "ListItemReceipt(SSN masked)", "ListItemReceipt(Email)"],
+    "footer": {
+      "type": "ModalFooter",
+      "buttons": ["primary:Confirm"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserSuccess",
+    "type": "success",
+    "flow": "AuthorizedUser",
+    "step": 5,
+    "goal": "see confirmation that authorized user was added",
+    "pattern": "transaction-success",
+    "navigation": { "from": "AuthUserReview", "trigger": "Confirm button", "to": "AuthUserManager" },
+    "template": "FullscreenTemplate",
+    "templateProps": { "variant": "yellow", "enterAnimation": "fill", "scrollable": false },
+    "components": ["FoldText(success title)", "FoldText(success message)"],
+    "footer": {
+      "type": "ModalFooter",
+      "variant": "inverse",
+      "buttons": ["primary:Done"]
+    },
+    "modals": []
+  },
+  {
+    "screen": "AuthUserManager",
+    "type": "details",
+    "flow": "AuthorizedUser",
+    "step": 6,
+    "goal": "view and manage authorized users, add more",
+    "pattern": "list-management",
+    "navigation": { "from": "AuthUserSuccess", "trigger": "Done button", "to": ["AuthUserIntro"], "back": null },
+    "template": "FullscreenTemplate",
+    "templateProps": { "leftIcon": "back", "scrollable": true },
+    "components": ["PrimaryHeader", "ListItem(user, status icon)", "ListItem(+ Add authorized user)"],
+    "footer": null,
+    "modals": []
+  }
+]
