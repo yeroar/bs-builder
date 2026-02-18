@@ -17,8 +17,8 @@ import { BtcBuyFlow, BtcSellFlow } from './ui/Screens/flows';
 import { useOverlays } from './hooks/useOverlays';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'componentLibrary'>('center');
-  const [previousTab, setPreviousTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'componentLibrary'>('center');
+  const [activeTab, setActiveTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'componentLibrary'>('left');
+  const [previousTab, setPreviousTab] = useState<'left' | 'center' | 'right' | 'notifications' | 'componentLibrary'>('left');
   const { overlays, push, close, get } = useOverlays();
 
   const goToHistory = (category?: TransactionCategory) => {

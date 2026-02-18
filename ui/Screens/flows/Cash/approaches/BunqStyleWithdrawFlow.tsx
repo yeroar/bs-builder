@@ -9,13 +9,10 @@
  *
  * Flow: [DebitCardModal] → Amount → Confirmation → Success
  */
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import FullscreenTemplate from "../../../../Templates/FullscreenTemplate";
-import EnterAmount from "../../../../Templates/EnterAmount/EnterAmount";
-import useAmountInput from "../../../../Templates/EnterAmount/useAmountInput";
-import { CurrencyInput, TopContext, BottomContext } from "../../../../../components/Inputs/CurrencyInput";
-import { Keypad } from "../../../../../components/Keypad";
+import WheelPicker from "../../../../../components/Inputs/WheelPicker/WheelPicker";
 import { PmSelectorVariant } from "../../../../../components/Inputs/CurrencyInput/PmSelector";
 import ModalFooter from "../../../../../components/Modals/ModalFooter";
 import Button from "../../../../../components/Primitives/Buttons/Button/Button";
@@ -54,23 +51,13 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
   const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
 
-  // Amount input
-  const {
-    amount,
-    handleNumberPress,
-    handleDecimalPress,
-    handleBackspacePress,
-    hasDecimal,
-    isEmpty,
-    formatDisplayValue,
-    setAmount,
-  } = useAmountInput({ initialValue: "0" });
-
-  const numAmount = parseFloat(amount) || 0;
-  const isOverMax = numAmount > MAX_AMOUNT;
-  const isValidAmount = numAmount >= 1 && !isOverMax;
-  const feeAmount = numAmount * FEE_RATE;
-  const totalAmount = numAmount + feeAmount;
+  // Wheel picker amounts: $1 .. $2500
+  const amounts = useMemo(
+    () => Array.from({ length: MAX_AMOUNT }, (_, i) => String(i + 1)),
+    []
+  );
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const numAmount = selectedIndex + 1;
 
   const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
     setSelectedPaymentMethod(selection.variant);
@@ -85,12 +72,8 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
     onClose();
   };
 
-  const handleMaxPress = () => {
-    setAmount(String(MAX_AMOUNT));
-  };
-
   const handleNext = () => {
-    setConfirmedAmount(amount);
+    setConfirmedAmount(String(numAmount));
     setPhase("confirmation");
   };
 
@@ -207,7 +190,7 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
     );
   }
 
-  // Amount entry screen
+  // Amount entry screen — wheel picker
   return (
     <FullscreenTemplate
       title="Instant withdrawal"
@@ -215,43 +198,38 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
       onLeftPress={onClose}
       scrollable={false}
       disableAnimation
-    >
-      <EnterAmount>
-        <View style={styles.amountContent}>
-          <CurrencyInput
-            value={formatDisplayValue(amount)}
-            topContextSlot={<TopContext variant="empty" />}
-            bottomContextSlot={
-              <BottomContext
-                variant="maxButton"
-                maxAmount={`$${MAX_AMOUNT.toLocaleString()}`}
-                onMaxPress={handleMaxPress}
-              />
-            }
-          />
-        </View>
-
-        <Keypad
-          onNumberPress={handleNumberPress}
-          onDecimalPress={handleDecimalPress}
-          onBackspacePress={handleBackspacePress}
-          disableDecimal={hasDecimal}
-          actionBar
-          actionLabel={isValidAmount ? `Next · ${config.formatAmount(numAmount)}` : "Next"}
-          actionDisabled={!isValidAmount}
-          onActionPress={handleNext}
+      footer={
+        <ModalFooter
+          type="default"
+          primaryButton={
+            <Button
+              label={`Next · ${config.formatAmount(numAmount)}`}
+              hierarchy="primary"
+              size="md"
+              onPress={handleNext}
+            />
+          }
         />
-      </EnterAmount>
+      }
+    >
+      <View style={styles.wheelContent}>
+        <WheelPicker
+          items={amounts}
+          selectedIndex={selectedIndex}
+          onIndexChange={setSelectedIndex}
+          formatLabel={(val) => config.formatAmount(Number(val))}
+        />
+      </View>
     </FullscreenTemplate>
   );
 }
 
 const styles = StyleSheet.create({
-  // Amount
-  amountContent: {
+  // Wheel picker
+  wheelContent: {
     flex: 1,
-    paddingHorizontal: spacing["400"],
-    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: spacing["500"],
   },
 
   // Confirmation

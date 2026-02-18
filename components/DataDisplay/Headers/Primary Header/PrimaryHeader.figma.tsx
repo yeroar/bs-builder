@@ -25,11 +25,11 @@ figma.connect(
         false: undefined,
       }),
 
-      leadingSlot: figma.boolean("hasActionBar", {
+      primaryAction: figma.boolean("hasActionBar", {
         true: figma.instance("leadingAction"),
         false: undefined,
       }),
-      trailingSlot: figma.boolean("hasSecondaryButton", {
+      secondaryAction: figma.boolean("hasSecondaryButton", {
         true: figma.instance("secondaryButton"),
         false: undefined,
       }),
@@ -39,15 +39,15 @@ figma.connect(
         false: undefined,
       }),
     },
-    example: ({ noPaddings, iconSlot, header, body, validationChildren, leadingSlot, trailingSlot, disclaimer }) => (
+    example: ({ noPaddings, iconSlot, header, body, validationChildren, primaryAction, secondaryAction, disclaimer }) => (
       <PrimaryHeader
         noPaddings={noPaddings}
         iconSlot={iconSlot}
         header={header}
         body={body}
         validationChildren={validationChildren}
-        leadingSlot={leadingSlot}
-        trailingSlot={trailingSlot}
+        primaryAction={primaryAction}
+        secondaryAction={secondaryAction}
         disclaimer={disclaimer}
       />
     ),
