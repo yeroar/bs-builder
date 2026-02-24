@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import {
   Pressable,
   View,
@@ -6,18 +6,24 @@ import {
   ViewStyle,
   PressableStateCallbackType,
   Animated,
+  Easing,
 } from "react-native";
 import { FoldText } from "../../FoldText";
 import { colorMaps, spacing, radius } from "../../../tokens";
+import SunIcon from "../../../Icons/SunIcon";
 
 export type ButtonHierarchy = "primary" | "secondary" | "tertiary" | "inverse" | "destructive";
 export type ButtonSize = "lg" | "md" | "sm" | "xs";
 
 export interface ButtonProps {
-  label: string;
+  label?: string;
   hierarchy?: ButtonHierarchy;
   size?: ButtonSize;
   disabled?: boolean;
+  loading?: boolean;
+  success?: boolean;
+  /** Spin speed in ms for the loading icon */
+  spinSpeed?: number;
   leadingSlot?: React.ReactNode;
   trailingSlot?: React.ReactNode;
   onPress?: () => void;
@@ -78,11 +84,66 @@ function getTextColor(hierarchy: ButtonHierarchy, disabled: boolean): string {
   }
 }
 
+/** Character delay for staggered animation (ms) */
+const CHAR_STAGGER = 30;
+/** Duration per character enter animation (ms) */
+const CHAR_DURATION = 250;
+/** Starting translateY offset for slide-down */
+const CHAR_OFFSET = -16;
+
+function StaggeredText({ text, color, textType }: { text: string; color: string; textType: string }) {
+  const chars = Array.from(text);
+
+  return (
+    <View style={styles.staggeredRow}>
+      {chars.map((char, i) => (
+        <StaggeredChar key={`${i}-${char}`} char={char} index={i} color={color} textType={textType} />
+      ))}
+    </View>
+  );
+}
+
+function StaggeredChar({ char, index, color, textType }: { char: string; index: number; color: string; textType: string }) {
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(CHAR_OFFSET)).current;
+
+  useEffect(() => {
+    const delay = index * CHAR_STAGGER;
+    Animated.parallel([
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: CHAR_DURATION,
+        delay,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.spring(translateY, {
+        toValue: 0,
+        delay,
+        speed: 14,
+        bounciness: 4,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ opacity, transform: [{ translateY }] }}>
+      <FoldText type={textType} style={{ color }}>
+        {char === " " ? "\u00A0" : char}
+      </FoldText>
+    </Animated.View>
+  );
+}
+
 export default function Button({
   label,
   hierarchy = "primary",
   size = "md",
   disabled = false,
+  loading = false,
+  success = false,
+  spinSpeed = 800,
   leadingSlot,
   trailingSlot,
   onPress,
@@ -90,9 +151,10 @@ export default function Button({
   testID,
   numberOfLines,
 }: ButtonProps) {
+  const isDisabled = disabled || loading || success;
   const config = sizeConfig[size];
   const textType = size === "xs" ? "button-sm" : "button-lg";
-  const textColor = useMemo(() => getTextColor(hierarchy, disabled), [hierarchy, disabled]);
+  const textColor = useMemo(() => getTextColor(hierarchy, (loading || success) ? false : disabled), [hierarchy, disabled, loading, success]);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const containerStyle = useMemo(
@@ -105,7 +167,7 @@ export default function Button({
   );
 
   const handlePressIn = () => {
-    if (!disabled) {
+    if (!isDisabled) {
       Animated.spring(scaleAnim, {
         toValue: 0.96,
         useNativeDriver: true,
@@ -137,20 +199,29 @@ export default function Button({
   const getStyle = ({ pressed }: PressableStateCallbackType): ViewStyle[] => [
     styles.container,
     containerStyle,
-    { backgroundColor: getBackgroundColor(hierarchy, pressed, disabled) },
+    { backgroundColor: getBackgroundColor(hierarchy, pressed, (loading || success) ? false : disabled) },
     ...(style ? [visualStyle] : []),
   ];
 
-  return (
-    <Animated.View style={wrapperStyle}>
-      <Pressable
-        style={getStyle}
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        disabled={disabled}
-        testID={testID}
-      >
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <SunIcon
+          spinning
+          spinSpeed={spinSpeed}
+          width={config.iconSize}
+          height={config.iconSize}
+          color={getTextColor(hierarchy, false)}
+        />
+      );
+    }
+
+    if (success && label) {
+      return <StaggeredText text={label} color={getTextColor(hierarchy, false)} textType={textType} />;
+    }
+
+    return (
+      <>
         {leadingSlot && (
           <View style={styles.iconWrapper}>{leadingSlot}</View>
         )}
@@ -164,6 +235,21 @@ export default function Button({
         {trailingSlot && (
           <View style={styles.iconWrapper}>{trailingSlot}</View>
         )}
+      </>
+    );
+  };
+
+  return (
+    <Animated.View style={wrapperStyle}>
+      <Pressable
+        style={getStyle}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={isDisabled}
+        testID={testID}
+      >
+        {renderContent()}
       </Pressable>
     </Animated.View>
   );
@@ -176,6 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: spacing["100"],
     position: "relative",
+    overflow: "hidden",
   },
   iconWrapper: {
     justifyContent: "center",
@@ -185,5 +272,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing["100"],
     justifyContent: "center",
     alignItems: "center",
+  },
+  staggeredRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

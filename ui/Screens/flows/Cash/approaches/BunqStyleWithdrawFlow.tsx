@@ -32,6 +32,7 @@ export interface BunqStyleWithdrawFlowProps {
 }
 
 type Phase = "amount" | "confirmation" | "success";
+type ConfirmState = "idle" | "loading" | "success";
 
 const MAX_AMOUNT = 2500;
 const FEE_RATE = 0.015;
@@ -41,15 +42,14 @@ const LEGAL_COPY =
 
 export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, onClose }: BunqStyleWithdrawFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [phase, setPhase] = useState<Phase>("amount");
-  const [started, setStarted] = useState(false);
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method (debit card)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>("visa");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Wheel picker amounts: $1 .. $2500
   const amounts = useMemo(
@@ -59,17 +59,14 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const numAmount = selectedIndex + 1;
 
+  // Animated confirm button state
+  const [confirmState, setConfirmState] = useState<ConfirmState>("idle");
+
   const handlePaymentMethodSelect = (selection: PaymentMethodSelection) => {
     setSelectedPaymentMethod(selection.variant);
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setStarted(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handleNext = () => {
@@ -78,24 +75,17 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
   };
 
   const handleConfirm = () => {
-    setPhase("success");
+    setConfirmState("loading");
+    setTimeout(() => setConfirmState("success"), 1500);
+    setTimeout(() => {
+      setConfirmState("idle");
+      setPhase("success");
+    }, 2300);
   };
 
   const handleDone = () => {
     onComplete();
   };
-
-  // Debit card modal (before flow starts)
-  if (!started) {
-    return (
-      <ChoosePaymentMethodModal
-        visible={isModalVisible}
-        onClose={handleCloseModal}
-        onSelect={handlePaymentMethodSelect}
-        type="debitCard"
-      />
-    );
-  }
 
   // Success screen
   if (phase === "success") {
@@ -150,9 +140,11 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
             type="default"
             primaryButton={
               <Button
-                label="Confirm withdrawal"
+                label={confirmState === "success" ? "Done" : "Confirm withdrawal"}
                 hierarchy="primary"
                 size="md"
+                loading={confirmState === "loading"}
+                success={confirmState === "success"}
                 onPress={handleConfirm}
               />
             }
@@ -192,35 +184,44 @@ export default function BunqStyleWithdrawFlow({ assetType = "cash", onComplete, 
 
   // Amount entry screen — wheel picker
   return (
-    <FullscreenTemplate
-      title="Instant withdrawal"
-      leftIcon="x"
-      onLeftPress={onClose}
-      scrollable={false}
-      disableAnimation
-      footer={
-        <ModalFooter
-          type="default"
-          primaryButton={
-            <Button
-              label={`Next · ${config.formatAmount(numAmount)}`}
-              hierarchy="primary"
-              size="md"
-              onPress={handleNext}
-            />
-          }
-        />
-      }
-    >
-      <View style={styles.wheelContent}>
-        <WheelPicker
-          items={amounts}
-          selectedIndex={selectedIndex}
-          onIndexChange={setSelectedIndex}
-          formatLabel={(val) => config.formatAmount(Number(val))}
-        />
-      </View>
-    </FullscreenTemplate>
+    <>
+      <FullscreenTemplate
+        title="Instant withdrawal"
+        leftIcon="x"
+        onLeftPress={onClose}
+        scrollable={false}
+        disableAnimation
+        footer={
+          <ModalFooter
+            type="default"
+            primaryButton={
+              <Button
+                label={`Next · ${config.formatAmount(numAmount)}`}
+                hierarchy="primary"
+                size="md"
+                onPress={handleNext}
+              />
+            }
+          />
+        }
+      >
+        <View style={styles.wheelContent}>
+          <WheelPicker
+            items={amounts}
+            selectedIndex={selectedIndex}
+            onIndexChange={setSelectedIndex}
+            formatLabel={(val) => config.formatAmount(Number(val))}
+          />
+        </View>
+      </FullscreenTemplate>
+
+      <ChoosePaymentMethodModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onSelect={handlePaymentMethodSelect}
+        type="debitCard"
+      />
+    </>
   );
 }
 

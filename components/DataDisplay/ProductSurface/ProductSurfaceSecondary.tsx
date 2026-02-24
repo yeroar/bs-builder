@@ -8,6 +8,7 @@ export interface ProductSurfaceSecondaryProps {
   label?: string;
   amount?: string;
   dataViz?: ReactNode;
+  card?: ReactNode;
   actionBar?: ReactNode;
   hasTitleIcon?: boolean;
   onPress?: () => void;
@@ -18,6 +19,7 @@ export default function ProductSurfaceSecondary({
   label = "Rewards",
   amount = "$0.00",
   dataViz,
+  card,
   actionBar,
   hasTitleIcon = false,
   onPress,
@@ -54,6 +56,9 @@ export default function ProductSurfaceSecondary({
         {/* Data Viz / Progress Visualization */}
         {dataViz}
       </View>
+
+      {/* Card */}
+      {card}
 
       {/* Action Bar */}
       {actionBar && (

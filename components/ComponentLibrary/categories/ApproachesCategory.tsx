@@ -5,7 +5,7 @@ import Button from "../../Primitives/Buttons/Button/Button";
 import { FoldText } from "../../Primitives/FoldText";
 import { colorMaps, spacing } from "../../tokens";
 
-export type ApproachId = "express" | "bottomSheet" | "progressive" | "bunq" | "wise" | "venmo" | "zelle" | "cashApp" | "strike" | "remittance" | "mpesa";
+export type ApproachId = "express" | "bottomSheet" | "progressive" | "bunq" | "wise" | "venmo" | "zelle" | "cashApp" | "strike" | "remittance" | "mpesa" | "sectionTest" | "defiVault" | "guardedSend" | "quickConvert" | "giftCard";
 
 interface ApproachesCategoryProps {
   onLaunch: (id: ApproachId) => void;
@@ -132,6 +132,60 @@ export default function ApproachesCategory({ onLaunch }: ApproachesCategoryProps
           <Meta label="Source" value="M-Pesa / Chipper Cash" />
           <Meta label="Steps" value="3 (Phone → Amount → PIN → Success)" />
           <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("mpesa")} />
+        </View>
+      </ComponentCard>
+
+      <ComponentCard
+        title="L: Section Test"
+        description="Composite: Family recipient → Coinbase warning → bunq amount picker."
+      >
+        <View style={styles.cardContent}>
+          <Meta label="Source" value="Family + Coinbase + bunq" />
+          <Meta label="Steps" value="3 (Recipient → Warning → Amount → Success)" />
+          <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("sectionTest")} />
+        </View>
+      </ComponentCard>
+
+      <ComponentCard
+        title="M: DeFi Vault"
+        description="Coin picker with search, % presets + MAX, inline sheet confirm, success upsell."
+      >
+        <View style={styles.cardContent}>
+          <Meta label="Source" value="Fuse + KakaoBank + Cash App" />
+          <Meta label="Steps" value="3 (Select → Amount → Sheet → Success)" />
+          <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("defiVault")} />
+        </View>
+      </ComponentCard>
+
+      <ComponentCard
+        title="N: Guarded Send"
+        description="Contact-first, chip presets, dual summary, password gate. Extra friction as a feature."
+      >
+        <View style={styles.cardContent}>
+          <Meta label="Source" value="Cash App + Wise" />
+          <Meta label="Steps" value="5 (Recipient → Amount → Summary → Auth → Success)" />
+          <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("guardedSend")} />
+        </View>
+      </ComponentCard>
+
+      <ComponentCard
+        title="O: Quick Convert"
+        description="Sheet-first amount entry with chips, expands to full-screen confirm. Recurring upsell."
+      >
+        <View style={styles.cardContent}>
+          <Meta label="Source" value="Cash App + Wise + Fuse" />
+          <Meta label="Steps" value="3 (Sheet → Confirm → Success)" />
+          <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("quickConvert")} />
+        </View>
+      </ComponentCard>
+      <ComponentCard
+        title="P: Gift Card Purchase"
+        description="Card or header variant, amount grid, keypad entry, confirmation with receipt, bottom sheet success. Revolut-inspired."
+      >
+        <View style={styles.cardContent}>
+          <Meta label="Source" value="Revolut donation flow" />
+          <Meta label="Steps" value="4 (Select Amount → Keypad → Confirm → Success)" />
+          <Button label="Launch" hierarchy="primary" size="sm" onPress={() => onLaunch("giftCard")} />
         </View>
       </ComponentCard>
     </View>

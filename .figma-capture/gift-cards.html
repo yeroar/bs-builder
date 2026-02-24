@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440">
+  <title>Gift Cards Marketplace</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: hidden; width: 100%; max-width: 1440px; margin: 0 auto; }
+    body { font-family: 'Inter', sans-serif; background: #F8F8F8; color: #1A1A1A; }
+
+    /* ===== Header ===== */
+    .header {
+      background: #FFF;
+      border-bottom: 1px solid #E5E5E5;
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 32px; }
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #F7931A;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: #1A1A1A; }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #F2F2F2;
+      border-radius: 12px;
+      padding: 12px 16px;
+      width: 400px;
+      gap: 8px;
+    }
+    .search-bar svg { flex-shrink: 0; color: #999; }
+    .search-bar input {
+      border: none;
+      background: transparent;
+      font-size: 15px;
+      color: #999;
+      outline: none;
+      width: 100%;
+    }
+    .header-right { display: flex; align-items: center; gap: 24px; }
+    .header-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-secondary { background: #F2F2F2; color: #1A1A1A; }
+    .btn-primary { background: #1A1A1A; color: #FFF; }
+
+    /* ===== Layout ===== */
+    .page { display: flex; width: 100%; }
+    .sidebar {
+      width: 260px;
+      padding: 32px 24px;
+      background: #FFF;
+      border-right: 1px solid #E5E5E5;
+      min-height: calc(100vh - 68px);
+      flex-shrink: 0;
+    }
+    .sidebar h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+    .cat-list { list-style: none; }
+    .cat-list li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-list li.active {
+      background: #FFF7ED;
+      color: #F7931A;
+      font-weight: 600;
+    }
+    .cat-list li:hover { background: #F8F8F8; }
+    .cat-icon { font-size: 18px; }
+
+    .main-content { flex: 1; padding: 32px 40px; min-width: 0; overflow: hidden; }
+
+    /* ===== Hero Banner ===== */
+    .hero {
+      background: linear-gradient(135deg, #1A1A1A 0%, #333 100%);
+      border-radius: 20px;
+      padding: 48px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-text h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: #FFF;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero-text p {
+      font-size: 16px;
+      color: #AAA;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(247,147,26,0.15);
+      color: #F7931A;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .hero-cards {
+      display: flex;
+      gap: 12px;
+      transform: rotate(-5deg);
+    }
+    .hero-card {
+      width: 140px;
+      height: 88px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .hero-card:nth-child(1) { background: #FF6B35; }
+    .hero-card:nth-child(2) { background: #4A90D9; }
+    .hero-card:nth-child(3) { background: #7B68EE; }
+
+    /* ===== Filter Bar ===== */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #E5E5E5;
+      background: #FFF;
+      font-size: 13px;
+      font-weight: 500;
+      color: #666;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .filter-chip.active {
+      background: #1A1A1A;
+      color: #FFF;
+      border-color: #1A1A1A;
+    }
+    .filter-chip svg { width: 14px; height: 14px; }
+    .results-count {
+      margin-left: auto;
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* ===== Section Header ===== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1A1A1A;
+    }
+    .section-header .count {
+      font-size: 14px;
+      color: #999;
+      font-weight: 400;
+    }
+    .see-all {
+      font-size: 14px;
+      font-weight: 600;
+      color: #F7931A;
+      text-decoration: none;
+    }
+
+    /* ===== Carousel ===== */
+    .carousel-wrapper {
+      position: relative;
+      margin-bottom: 40px;
+    }
+    .carousel {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .carousel::-webkit-scrollbar { display: none; }
+
+    /* ===== Category Chips ===== */
+    .cat-chips {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cat-chips::-webkit-scrollbar { display: none; }
+    .cat-chip-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .cat-chip-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .cat-chip-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #666;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* ===== Gift Card ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .gift-card {
+      background: #FFF;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #EBEBEB;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .gift-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+    .card-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image .brand-logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFF;
+    }
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #FFF;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .card-sats-back {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #F7931A;
+      color: #FFF;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .card-body { padding: 14px 16px; }
+    .card-merchant {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 4px;
+    }
+    .card-price {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #666;
+    }
+    .stars { color: #F7931A; letter-spacing: -1px; }
+    .card-delivery {
+      font-size: 11px;
+      color: #22C55E;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    .card-footer {
+      padding: 0 16px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .buy-btn {
+      padding: 8px 20px;
+      background: #1A1A1A;
+      color: #FFF;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .fav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #E5E5E5;
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* ===== Trending Card (Carousel) ===== */
+    .trending-card {
+      flex-shrink: 0;
+      width: 200px;
+      background: #FFF;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #EBEBEB;
+      cursor: pointer;
+    }
+    .trending-img {
+      width: 200px;
+      height: 125px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .trending-img .brand-logo { font-size: 20px; font-weight: 700; color: #FFF; }
+    .trending-body { padding: 12px 14px; }
+    .trending-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .trending-price { font-size: 12px; color: #999; }
+
+    /* ===== Balance Checker ===== */
+    .balance-section {
+      background: linear-gradient(135deg, #F7931A 0%, #E8850F 100%);
+      border-radius: 20px;
+      padding: 40px 48px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .balance-text h2 { font-size: 24px; font-weight: 700; color: #FFF; margin-bottom: 8px; }
+    .balance-text p { font-size: 14px; color: rgba(255,255,255,0.8); }
+    .balance-btn {
+      padding: 12px 28px;
+      background: #FFF;
+      color: #1A1A1A;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ===== Promo Grid ===== */
+    .promo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .promo-card {
+      border-radius: 16px;
+      padding: 32px;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .promo-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .promo-card p { font-size: 13px; margin-bottom: 16px; }
+    .promo-card .promo-link {
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ===== Payment Trust ===== */
+    .payment-trust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+      background: #FFF;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      border: 1px solid #EBEBEB;
+    }
+    .trust-label { font-size: 13px; color: #999; font-weight: 500; }
+    .trust-badge {
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: #F2F2F2;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo"><span>fold</span> gifts</div>
+    <div class="search-bar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Search 200+ gift card brands..." />
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="header-btn btn-secondary">Check Balance</button>
+    <button class="header-btn btn-primary">Sign In</button>
+  </div>
+</div>
+
+<div class="page">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>Categories</h3>
+    <ul class="cat-list">
+      <li class="active"><span class="cat-icon">&#11088;</span> Featured</li>
+      <li><span class="cat-icon">&#127828;</span> Restaurants</li>
+      <li><span class="cat-icon">&#127915;</span> Entertainment</li>
+      <li><span class="cat-icon">&#128187;</span> Electronics</li>
+      <li><span class="cat-icon">&#128717;</span> Retail</li>
+      <li><span class="cat-icon">&#9992;&#65039;</span> Travel</li>
+      <li><span class="cat-icon">&#127918;</span> Gaming</li>
+      <li><span class="cat-icon">&#128132;</span> Beauty</li>
+      <li><span class="cat-icon">&#127968;</span> Home</li>
+      <li><span class="cat-icon">&#127939;</span> Sports</li>
+      <li><span class="cat-icon">&#128118;</span> Kids</li>
+      <li><span class="cat-icon">&#127873;</span> New</li>
+    </ul>
+  </div>
+
+  <!-- Main -->
+  <div class="main-content">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Buy Gift Cards,<br/>Earn Bitcoin</h1>
+        <p>Stack sats on every purchase. Up to 6% back in bitcoin rewards.</p>
+        <div class="hero-badge">&#9889; Earn sats on 200+ brands</div>
+      </div>
+      <div class="hero-cards">
+        <div class="hero-card"></div>
+        <div class="hero-card"></div>
+        <div class="hero-card"></div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-chip active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+        All
+      </div>
+      <div class="filter-chip">Digital</div>
+      <div class="filter-chip">Physical</div>
+      <div class="filter-chip">Best Rewards</div>
+      <div class="filter-chip">Popular</div>
+      <div class="filter-chip">Price &#9662;</div>
+      <div class="filter-chip">Brand &#9662;</div>
+      <span class="results-count">234 gift cards</span>
+    </div>
+
+    <!-- Featured Section -->
+    <div class="section-header">
+      <h2>Featured Gift Cards <span class="count">(8)</span></h2>
+      <a href="#" class="see-all">See all &rarr;</a>
+    </div>
+
+    <div class="card-grid">
+      <!-- Card 1 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #FF6B35, #FF8F5E);">
+          <span class="brand-logo">DoorDash</span>
+          <span class="card-sats-back">6% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">DoorDash</div>
+          <div class="card-price">$25 - $200</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.9 (2,717)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #1DB954, #1ED760);">
+          <span class="brand-logo">Spotify</span>
+          <span class="card-sats-back">4% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Spotify</div>
+          <div class="card-price">$10 - $100</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.6 (1,204)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #0071CE, #0094FF);">
+          <span class="brand-logo">Walmart</span>
+          <span class="card-badge">Popular</span>
+          <span class="card-sats-back">3% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Walmart</div>
+          <div class="card-price">$5 - $500</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.2 (5,830)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #00704A, #1E8E5E);">
+          <span class="brand-logo">Starbucks</span>
+          <span class="card-sats-back">5% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Starbucks</div>
+          <div class="card-price">$5 - $100</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (3,291)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #E31837, #FF3B58);">
+          <span class="brand-logo">Target</span>
+          <span class="card-sats-back">3% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Target</div>
+          <div class="card-price">$5 - $500</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.1 (2,890)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #232F3E, #37475A);">
+          <span class="brand-logo">Amazon</span>
+          <span class="card-badge">Popular</span>
+          <span class="card-sats-back">2% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Amazon</div>
+          <div class="card-price">$15 - $2,000</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.5 (12,400)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #A855F7, #C084FC);">
+          <span class="brand-logo">Uber Eats</span>
+          <span class="card-sats-back">5% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Uber Eats</div>
+          <div class="card-price">$15 - $200</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.3 (987)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="gift-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #003087, #009CDE);">
+          <span class="brand-logo">Best Buy</span>
+          <span class="card-sats-back">3.5% back</span>
+        </div>
+        <div class="card-body">
+          <div class="card-merchant">Best Buy</div>
+          <div class="card-price">$25 - $500</div>
+          <div class="card-rating"><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8 (3,291)</div>
+          <div class="card-delivery">&#9889; Email delivery</div>
+        </div>
+        <div class="card-footer">
+          <button class="buy-btn">Buy</button>
+          <button class="fav-btn">&#9825;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Balance Checker -->
+    <div class="balance-section">
+      <div class="balance-text">
+        <h2>Check Your Gift Card Balance</h2>
+        <p>Enter your card details to see your remaining balance instantly.</p>
+      </div>
+      <button class="balance-btn">Check Balance &rarr;</button>
+    </div>
+
+    <!-- Trending Section -->
+    <div class="section-header">
+      <h2>Trending Now <span class="count">(15)</span></h2>
+      <a href="#" class="see-all">See all &rarr;</a>
+    </div>
+
+    <div class="carousel-wrapper">
+      <div class="carousel">
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #5865F2, #7289DA);"><span class="brand-logo" style="font-size:16px;color:#fff">Discord</span></div>
+          <div class="trending-body"><div class="trending-name">Discord Nitro</div><div class="trending-price">$10 - $100</div></div>
+        </div>
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #E60012, #FF1A1A);"><span class="brand-logo" style="font-size:16px;color:#fff">Nintendo</span></div>
+          <div class="trending-body"><div class="trending-name">Nintendo eShop</div><div class="trending-price">$10 - $200</div></div>
+        </div>
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #107C10, #2EA043);"><span class="brand-logo" style="font-size:16px;color:#fff">Xbox</span></div>
+          <div class="trending-body"><div class="trending-name">Xbox Gift Card</div><div class="trending-price">$10 - $100</div></div>
+        </div>
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #E4405F, #F56040);"><span class="brand-logo" style="font-size:16px;color:#fff">Sephora</span></div>
+          <div class="trending-body"><div class="trending-name">Sephora</div><div class="trending-price">$10 - $250</div></div>
+        </div>
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #FF9900, #FFAD33);"><span class="brand-logo" style="font-size:16px;color:#fff">Chipotle</span></div>
+          <div class="trending-body"><div class="trending-name">Chipotle</div><div class="trending-price">$10 - $100</div></div>
+        </div>
+        <div class="trending-card">
+          <div class="trending-img" style="background: linear-gradient(135deg, #4285F4, #5C9EFF);"><span class="brand-logo" style="font-size:16px;color:#fff">Google Play</span></div>
+          <div class="trending-body"><div class="trending-name">Google Play</div><div class="trending-price">$10 - $200</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Promo Grid -->
+    <div class="promo-grid">
+      <div class="promo-card" style="background: linear-gradient(135deg, #FFF7ED, #FEF3C7);">
+        <h3 style="color:#92400E;">Earn Rewards on Every Purchase</h3>
+        <p style="color:#A16207;">Stack sats automatically. No fees, no minimums.</p>
+        <a href="#" class="promo-link" style="color:#F7931A;">Learn more &rarr;</a>
+      </div>
+      <div class="promo-card" style="background: linear-gradient(135deg, #EFF6FF, #DBEAFE);">
+        <h3 style="color:#1E40AF;">Corporate Gift Cards</h3>
+        <p style="color:#3B82F6;">Reward employees and clients with bulk gift card orders.</p>
+        <a href="#" class="promo-link" style="color:#2563EB;">Learn more &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Payment Trust -->
+    <div class="payment-trust">
+      <span class="trust-label">We accept</span>
+      <span class="trust-badge">Visa</span>
+      <span class="trust-badge">Mastercard</span>
+      <span class="trust-badge">Amex</span>
+      <span class="trust-badge">Apple Pay</span>
+      <span class="trust-badge">Bitcoin &#9889;</span>
+      <span class="trust-badge">Lightning</span>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

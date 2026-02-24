@@ -35,6 +35,11 @@ import CashAppStyleFlow from "../../ui/Screens/flows/Cash/approaches/CashAppStyl
 import StrikeStyleFlow from "../../ui/Screens/flows/Cash/approaches/StrikeStyleFlow";
 import RemittanceStyleFlow from "../../ui/Screens/flows/Cash/approaches/RemittanceStyleFlow";
 import MPesaStyleFlow from "../../ui/Screens/flows/Cash/approaches/MPesaStyleFlow";
+import ApproachSectionTest from "../../ui/Screens/flows/Cash/approaches/ApproachSectionTest";
+import DeFiVaultStyleFlow from "../../ui/Screens/flows/Cash/approaches/DeFiVaultStyleFlow";
+import GuardedSendStyleFlow from "../../ui/Screens/flows/Cash/approaches/GuardedSendStyleFlow";
+import QuickConvertStyleFlow from "../../ui/Screens/flows/Cash/approaches/QuickConvertStyleFlow";
+import GiftCardPurchaseFlow from "../../ui/Screens/flows/Cash/approaches/GiftCardPurchaseFlow";
 
 const CATEGORIES = [
   { id: "all", label: "All" },
@@ -190,6 +195,16 @@ export default function ComponentLibraryScreen({ onBack }: ComponentLibraryScree
         return <RemittanceStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
       case "mpesa":
         return <MPesaStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "sectionTest":
+        return <ApproachSectionTest assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "defiVault":
+        return <DeFiVaultStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "guardedSend":
+        return <GuardedSendStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "quickConvert":
+        return <QuickConvertStyleFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
+      case "giftCard":
+        return <GiftCardPurchaseFlow assetType={assetType} onComplete={handleCloseApproach} onClose={handleCloseApproach} />;
       default:
         return null;
     }

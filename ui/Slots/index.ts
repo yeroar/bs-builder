@@ -19,6 +19,9 @@ export { default as GCRedemptionMethod } from "./GiftCard/GCRedemptionMethod";
 export { default as RedeemBtcGiftCard } from "./GiftCard/RedeemBtcGiftCard";
 export { default as SendAsAGift } from "./GiftCard/SendAsAGift";
 
+// Send
+export { default as SelectRecipient } from "./Send/SelectRecipient";
+
 // MainTabs
 export { default as BankHome } from "./MainTabs/BankHome";
 export { default as TagHome } from "./MainTabs/TagHome";

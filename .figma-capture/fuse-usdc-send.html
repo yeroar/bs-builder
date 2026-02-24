@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuse - USDC Send Flow</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'SF Pro Text', sans-serif; background: #444; display: flex; gap: 20px; padding: 32px; flex-wrap: wrap; justify-content: center; }
+    .screen { width: 320px; height: 694px; position: relative; overflow: hidden; border-radius: 32px; flex-shrink: 0; }
+    .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 0; height: 44px; font-size: 13px; font-weight: 600; }
+    .home-indicator { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; }
+    .nav { display: flex; align-items: center; padding: 8px 16px; gap: 8px; }
+    .nav .back { font-size: 18px; color: #666; }
+    .nav .title { font-size: 16px; font-weight: 600; flex: 1; text-align: center; }
+
+    /* Screen 1: Home */
+    .s1 { background: #fff; color: #000; }
+    .home-header { padding: 12px 16px; }
+    .home-greeting { font-size: 13px; color: #888; }
+    .home-balance { font-size: 32px; font-weight: 700; margin: 4px 0; }
+    .coin-row { display: flex; gap: 8px; padding: 8px 16px; }
+    .coin-chip { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: #f5f5f5; border-radius: 20px; font-size: 13px; font-weight: 500; }
+    .coin-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; }
+    .action-sheet { margin: 12px 16px; background: #f8f8f8; border-radius: 16px; padding: 16px; }
+    .action-sheet .icon { font-size: 28px; margin-bottom: 8px; }
+    .action-sheet .label { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .action-sheet .desc { font-size: 12px; color: #888; line-height: 1.3; }
+    .action-btns { display: flex; gap: 8px; padding: 8px 16px; }
+    .action-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 10px; border: 1.5px solid #eee; border-radius: 12px; font-size: 13px; font-weight: 500; }
+
+    /* Screen 2: Select coin */
+    .s2 { background: #fff; color: #000; }
+    .section-title { font-size: 18px; font-weight: 700; padding: 8px 16px; }
+    .search-input { margin: 4px 16px; padding: 10px 12px; background: #f5f5f5; border-radius: 10px; font-size: 13px; color: #999; }
+    .coin-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+    .coin-lg { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; }
+    .coin-info { flex: 1; }
+    .coin-name { font-size: 15px; font-weight: 600; }
+    .coin-symbol { font-size: 12px; color: #888; }
+    .coin-bal { text-align: right; }
+    .coin-usd { font-size: 14px; font-weight: 600; }
+    .coin-units { font-size: 11px; color: #888; }
+
+    /* Screen 3: Choose recipient */
+    .s3 { background: #fff; color: #000; }
+    .toggle-row { display: flex; gap: 0; margin: 8px 16px; border-radius: 10px; overflow: hidden; border: 1.5px solid #eee; }
+    .toggle-btn { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 500; background: #fff; }
+    .toggle-btn.active { background: #000; color: #fff; }
+    .paste-btn { margin-left: auto; padding: 6px 14px; background: #f0f0f0; border-radius: 8px; font-size: 12px; font-weight: 500; }
+    .contact-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+    .contact-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #fff; }
+    .contact-name { font-size: 14px; font-weight: 500; }
+
+    /* Screen 4: Enter amount */
+    .s4 { background: #000; color: #fff; }
+    .amount-header { display: flex; align-items: center; gap: 8px; padding: 8px 16px; }
+    .amount-coin { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(255,255,255,0.1); border-radius: 16px; font-size: 13px; }
+    .amount-display { text-align: center; padding: 24px 0 8px; }
+    .amount-big { font-size: 48px; font-weight: 700; }
+    .amount-usd { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .denom-row { display: flex; gap: 8px; justify-content: center; padding: 8px 16px; }
+    .denom-chip { padding: 6px 16px; border-radius: 16px; font-size: 13px; font-weight: 500; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
+    .denom-chip.max { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+    .dark-recipient { display: flex; align-items: center; gap: 8px; padding: 8px 16px; }
+    .dark-recipient .av { width: 28px; height: 28px; border-radius: 50%; background: #4CAF50; }
+    .dark-recipient .name { font-size: 13px; color: rgba(255,255,255,0.7); }
+    .dark-keypad { display: grid; grid-template-columns: repeat(3, 1fr); padding: 8px 32px; }
+    .dk { height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; color: #fff; }
+    .dark-btn { margin: 8px 16px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+    .dark-btn.disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); }
+    .dark-btn.active { background: #fff; color: #000; }
+
+    /* Screen 5: Amount filled */
+    .s5 { background: #000; color: #fff; }
+
+    /* Screen 6: Review */
+    .s6 { background: #fff; color: #000; }
+    .review-amount { text-align: center; padding: 16px; }
+    .review-coin-icon { width: 48px; height: 48px; border-radius: 50%; background: #2775CA; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 700; }
+    .review-value { font-size: 20px; font-weight: 700; }
+    .review-row { display: flex; justify-content: space-between; padding: 12px 16px; font-size: 14px; }
+    .review-label { color: #888; }
+    .review-divider { height: 1px; background: #f0f0f0; margin: 0 16px; }
+    .note-option { display: flex; align-items: center; gap: 8px; padding: 12px 16px; font-size: 14px; color: #888; }
+
+    /* Wallet screens */
+    .wallet-screen { background: #fff; }
+    .wallet-header { padding: 12px 16px; }
+    .wallet-label { font-size: 12px; color: #888; display: flex; align-items: center; gap: 6px; }
+    .wallet-badge { padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; }
+    .wallet-balance { font-size: 28px; font-weight: 700; margin: 4px 0; }
+    .wallet-sub { font-size: 12px; color: #888; }
+    .pie-section { display: flex; gap: 8px; padding: 8px 16px; }
+    .pie-item { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+    .pie-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .asset-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+    .asset-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; }
+    .asset-info { flex: 1; }
+    .asset-name { font-size: 13px; font-weight: 500; }
+    .asset-label { font-size: 11px; color: #888; }
+    .asset-amount { text-align: right; }
+    .asset-usd { font-size: 13px; font-weight: 600; }
+    .asset-units { font-size: 11px; color: #888; }
+  </style>
+</head>
+<body>
+
+<!-- 1: Home -->
+<div class="screen s1">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="home-header">
+    <div class="home-greeting">Hello! 👋</div>
+    <div style="font-size:13px;color:#888">Your portfolio</div>
+  </div>
+  <div class="coin-row">
+    <div class="coin-chip"><div class="coin-icon" style="background:#8B5CF6">S</div>Solana</div>
+    <div class="coin-chip"><div class="coin-icon" style="background:#2775CA">$</div>USDC</div>
+  </div>
+  <div class="action-sheet">
+    <div class="icon">✈️</div>
+    <div class="label">Send</div>
+    <div class="desc">Send cryptocurrency to another wallet or contact</div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <div style="padding:8px 16px;background:#000;color:#fff;border-radius:8px;font-size:12px;font-weight:500">To bank account</div>
+      <div style="padding:8px 16px;background:#f0f0f0;border-radius:8px;font-size:12px;font-weight:500">To wallet</div>
+    </div>
+  </div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 2: Select coin -->
+<div class="screen s2">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="title">Select coin</div></div>
+  <div class="search-input">🔍 Search currencies</div>
+  <div class="coin-item"><div class="coin-lg" style="background:#8B5CF6">S</div><div class="coin-info"><div class="coin-name">Solana</div><div class="coin-symbol">SOL</div></div><div class="coin-bal"><div class="coin-usd">$5</div><div class="coin-units">0.03 SOL</div></div></div>
+  <div class="coin-item"><div class="coin-lg" style="background:#2775CA">$</div><div class="coin-info"><div class="coin-name">USDC</div><div class="coin-symbol">USDC</div></div><div class="coin-bal"><div class="coin-usd">$12</div><div class="coin-units">12.00 USDC</div></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 3: Choose recipient -->
+<div class="screen s3">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="back">‹</div><div class="title">Choose recipient</div></div>
+  <div class="toggle-row"><div class="toggle-btn active">Contacts</div><div class="toggle-btn">Address</div></div>
+  <div style="display:flex;align-items:center;padding:8px 16px;gap:8px">
+    <div style="flex:1;padding:10px;background:#f5f5f5;border-radius:8px;font-size:13px;color:#999">Search or add recipient</div>
+    <div class="paste-btn">Paste</div>
+  </div>
+  <div class="contact-item"><div class="contact-av" style="background:#4CAF50">AS</div><div><div class="contact-name">Alex Smith</div></div></div>
+  <div class="contact-item"><div class="contact-av" style="background:#2196F3">JK</div><div><div class="contact-name">Julie K</div></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 4: Enter amount (empty) -->
+<div class="screen s4">
+  <div class="status-bar" style="color:#fff"><span>9:41</span></div>
+  <div class="nav" style="color:#fff"><div class="back" style="color:#fff">‹</div><div class="title" style="color:#fff">Enter amount</div></div>
+  <div class="amount-header"><div class="amount-coin"><div class="coin-icon" style="background:#2775CA;width:20px;height:20px;font-size:10px">$</div>USDC</div></div>
+  <div class="amount-display"><div class="amount-big">0</div><div class="amount-usd">$0.00</div></div>
+  <div class="denom-row"><div class="denom-chip">USDC</div><div class="denom-chip">MAX</div></div>
+  <div class="dark-recipient"><div class="av"></div><div class="name">Alex Smith</div></div>
+  <div class="dark-keypad">
+    <div class="dk">1</div><div class="dk">2</div><div class="dk">3</div>
+    <div class="dk">4</div><div class="dk">5</div><div class="dk">6</div>
+    <div class="dk">7</div><div class="dk">8</div><div class="dk">9</div>
+    <div class="dk">.</div><div class="dk">0</div><div class="dk">⌫</div>
+  </div>
+  <div class="dark-btn disabled">Review</div>
+  <div class="home-indicator" style="background:rgba(255,255,255,0.2)"></div>
+</div>
+
+<!-- 5: Enter amount (filled) -->
+<div class="screen s5">
+  <div class="status-bar" style="color:#fff"><span>9:41</span></div>
+  <div class="nav" style="color:#fff"><div class="back" style="color:#fff">‹</div><div class="title" style="color:#fff">Enter amount</div></div>
+  <div class="amount-header"><div class="amount-coin" style="background:rgba(255,255,255,0.1)"><div class="coin-icon" style="background:#2775CA;width:20px;height:20px;font-size:10px">$</div>USDC</div><div style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.5)">MAX</div></div>
+  <div class="amount-display"><div class="amount-big">11.054371</div><div class="amount-usd">$11.05</div></div>
+  <div class="dark-recipient"><div class="av"></div><div class="name">Alex Smith</div></div>
+  <div class="dark-keypad">
+    <div class="dk">1</div><div class="dk">2</div><div class="dk">3</div>
+    <div class="dk">4</div><div class="dk">5</div><div class="dk">6</div>
+    <div class="dk">7</div><div class="dk">8</div><div class="dk">9</div>
+    <div class="dk">.</div><div class="dk">0</div><div class="dk">⌫</div>
+  </div>
+  <div class="dark-btn active">Review</div>
+  <div class="home-indicator" style="background:rgba(255,255,255,0.2)"></div>
+</div>
+
+<!-- 6: Review -->
+<div class="screen s6">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="back">‹</div><div class="title">Review</div></div>
+  <div class="review-amount">
+    <div class="review-coin-icon">$</div>
+    <div style="font-size:13px;color:#888;margin-bottom:2px">USDC</div>
+    <div class="review-value">11.054371</div>
+  </div>
+  <div class="review-row"><div class="review-label">To</div><div>Alex Smith</div></div>
+  <div class="review-divider"></div>
+  <div class="review-row"><div class="review-label">Network</div><div>Solana</div></div>
+  <div class="review-divider"></div>
+  <div class="note-option">📝 Write a NoteWithProxy?</div>
+  <div style="padding:8px 16px"><div style="height:44px;border-radius:22px;background:#6C5CE7;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">Send</div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 7: Wallet after -->
+<div class="screen wallet-screen">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="title">Wallet</div><div style="padding:4px 10px;background:#000;color:#fff;border-radius:12px;font-size:11px">Invite</div></div>
+  <div class="wallet-header">
+    <div class="wallet-label">Main Balance <span class="wallet-badge" style="background:#E8F5E9;color:#4CAF50">↑ Earn</span></div>
+    <div class="wallet-balance">$12<span style="font-size:20px;color:#888">.21</span></div>
+  </div>
+  <div class="pie-section">
+    <div class="pie-item"><div class="pie-dot" style="background:#8B5CF6"></div>SOL</div>
+    <div class="pie-item"><div class="pie-dot" style="background:#2775CA"></div>USDC</div>
+  </div>
+  <div style="padding:8px 16px;font-size:12px;color:#888">-0.00258 SOL</div>
+  <div class="asset-row"><div class="asset-icon" style="background:#2775CA">$</div><div class="asset-info"><div class="asset-name">USDC</div></div><div class="asset-amount"><div class="asset-usd">$11</div><div class="asset-units">11.05 USDC</div></div></div>
+  <div style="padding:12px 16px;font-size:12px;color:#888">Earn</div>
+  <div class="asset-row"><div class="asset-icon" style="background:#000">F</div><div class="asset-info"><div class="asset-name">Fuse Cash</div></div><div class="asset-amount"><div class="asset-usd">$1</div><div class="asset-units">1.16 USDC</div></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 8: Wallet empty state -->
+<div class="screen wallet-screen">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="title">Wallet</div><div style="padding:4px 10px;background:#4CAF50;color:#fff;border-radius:12px;font-size:11px">Done</div></div>
+  <div class="wallet-header">
+    <div class="wallet-label">Main Balance <span class="wallet-badge" style="background:#FFF3E0;color:#FF9800">APY 8.85%</span></div>
+    <div class="wallet-balance">$0<span style="font-size:20px;color:#888">.68</span></div>
+  </div>
+  <div class="pie-section">
+    <div class="pie-item"><div class="pie-dot" style="background:#8B5CF6"></div>SOL</div>
+    <div class="pie-item"><div class="pie-dot" style="background:#2775CA"></div>USDC</div>
+  </div>
+  <div style="padding:12px 16px;font-size:12px;color:#888">Earn</div>
+  <div class="asset-row"><div class="asset-icon" style="background:#000">F</div><div class="asset-info"><div class="asset-name">Fuse Cash</div></div><div class="asset-amount"><div class="asset-usd">$0</div><div class="asset-units">0.68 USDC</div></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

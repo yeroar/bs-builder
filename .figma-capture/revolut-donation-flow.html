@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revolut Donation Flow — 7 Screens</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    background: #333;
+    display: flex;
+    gap: 24px;
+    padding: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .label {
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+  }
+  .screen {
+    width: 393px;
+    height: 852px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px;
+    flex-shrink: 0;
+    background: #000;
+  }
+
+  /* ── Status Bar ── */
+  .sb {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 54px; padding: 14px 28px 0;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100; pointer-events: none;
+  }
+  .sb.w { color: #fff; }
+  .sb.b { color: #000; }
+  .sb-t { font-size: 15px; font-weight: 600; letter-spacing: 0.2px; }
+  .sb-i { display: flex; align-items: center; gap: 5px; }
+  .sb-i svg { display: block; }
+  .hi { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; z-index: 100; }
+  .hi.w { background: rgba(255,255,255,.6); }
+  .hi.b { background: #000; }
+
+  /* ── Shared ── */
+  :root {
+    --bg: #0A0A0A;
+    --card: #1A1A1A;
+    --border: rgba(255,255,255,0.1);
+    --t1: #fff;
+    --t2: rgba(255,255,255,0.6);
+    --t3: rgba(255,255,255,0.35);
+    --blue: #3B6EF6;
+    --blue-light: #5B8DF7;
+    --green: #22C55E;
+    --r: 16px;
+  }
+
+  /* ─── S1: Browse Charities ─── */
+  .s1 { background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .s1-nav { padding: 60px 20px 0; }
+  .s1-back { width: 28px; height: 28px; display: flex; align-items: center; }
+  .s1-title { padding: 12px 20px 0; font-size: 28px; font-weight: 700; color: var(--t1); }
+  .s1-tabs { display: flex; gap: 8px; padding: 16px 20px; }
+  .s1-tab {
+    padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .s1-tab.active { background: var(--t1); color: #000; }
+  .s1-tab.inactive { background: var(--card); color: var(--t2); }
+  .s1-featured {
+    margin: 0 20px; border-radius: var(--r); overflow: hidden; height: 280px;
+    position: relative;
+    background: linear-gradient(135deg, #E91E63 0%, #FF5722 25%, #FF9800 50%, #4CAF50 60%, #2196F3 75%, #3F51B5 100%);
+  }
+  .s1-logo {
+    position: absolute; top: 16px; left: 16px;
+    width: 48px; height: 48px; border-radius: 24px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700; color: #333; text-align: center; line-height: 1.1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .s1-card-text { position: absolute; bottom: 16px; left: 16px; right: 16px; }
+  .s1-org { font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+  .s1-headline { font-size: 24px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 8px; }
+  .s1-donors { font-size: 12px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 6px; }
+  .s1-donors svg { opacity: 0.7; }
+  .s1-section { padding: 20px; }
+  .s1-section-title { font-size: 16px; font-weight: 600; color: var(--t2); margin-bottom: 12px; }
+  .s1-charity-card {
+    border-radius: var(--r); overflow: hidden; height: 200px; position: relative;
+    background: linear-gradient(135deg, #2d5016, #1a3a0a, #3d2b10);
+  }
+  .s1-charity-logo {
+    position: absolute; bottom: 40px; left: 16px;
+    width: 36px; height: 36px; border-radius: 8px; background: #2d6b1a;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 6px; color: #fff; font-weight: 700;
+  }
+  .s1-charity-name { position: absolute; bottom: 16px; left: 16px; font-size: 15px; font-weight: 600; color: #fff; }
+
+  /* ─── S2: Onboarding Modal ─── */
+  .s2 { background: var(--blue); width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
+  .s2-peek {
+    position: absolute; top: 0; left: 0; right: 0; height: 50px;
+    background: linear-gradient(135deg, #E91E63 0%, #FF5722 40%, #4CAF50 70%, #2196F3 100%);
+    opacity: 0.4;
+  }
+  .s2-content { position: relative; z-index: 1; flex: 1; padding: 64px 24px 0; display: flex; flex-direction: column; }
+  .s2-close { width: 28px; height: 28px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
+  .s2-heading { font-size: 28px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 12px; }
+  .s2-sub { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 8px; }
+  .s2-link { font-size: 14px; color: #fff; text-decoration: underline; font-weight: 500; }
+  .s2-illustration {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .s2-heart {
+    width: 180px; height: 160px; position: relative;
+  }
+  .s2-heart-shape {
+    width: 140px; height: 130px;
+    background: linear-gradient(135deg, #FF4444, #CC0000);
+    border-radius: 70px 70px 10px 10px;
+    transform: rotate(-45deg);
+    position: absolute; top: 20px; left: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .s2-coin {
+    width: 40px; height: 40px; border-radius: 20px;
+    background: linear-gradient(135deg, #E0E0E0, #999);
+    position: absolute; top: 0; right: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transform: rotate(-15deg);
+  }
+  .s2-buttons { padding: 0 0 48px; display: flex; flex-direction: column; gap: 12px; }
+  .s2-btn {
+    width: 100%; height: 52px; border-radius: 26px; border: none;
+    font-size: 17px; font-weight: 600; font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s2-btn.primary { background: #fff; color: #000; }
+  .s2-btn.secondary { background: rgba(0,0,0,0.2); color: #fff; }
+
+  /* ─── S3: Charity Detail ─── */
+  .s3 { background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .s3-hero {
+    height: 340px; position: relative;
+    background: linear-gradient(135deg, #E91E63 0%, #FF5722 25%, #FF9800 50%, #4CAF50 60%, #2196F3 75%, #3F51B5 100%);
+  }
+  .s3-back2 { position: absolute; top: 56px; left: 20px; }
+  .s3-hero-bottom { position: absolute; bottom: 16px; left: 20px; }
+  .s3-hero-logo {
+    width: 48px; height: 48px; border-radius: 24px; background: #fff;
+    margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px; font-weight: 700; color: #333; text-align: center;
+  }
+  .s3-hero-name { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 2px; }
+  .s3-hero-amt { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+  .s3-donate-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 20px;
+    background: rgba(0,0,0,0.35); backdrop-filter: blur(8px);
+    font-size: 14px; font-weight: 600; color: #fff;
+  }
+  .s3-body { flex: 1; overflow-y: auto; }
+  .s3-section { padding: 20px; }
+  .s3-section-title { font-size: 18px; font-weight: 600; color: var(--t1); margin-bottom: 12px; }
+  .s3-option {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px; background: var(--card); border-radius: var(--r); margin-bottom: 10px;
+  }
+  .s3-option-icon {
+    width: 40px; height: 40px; border-radius: 20px; background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s3-option-text { flex: 1; }
+  .s3-option-label { font-size: 15px; font-weight: 600; color: var(--t1); }
+  .s3-option-sub { font-size: 13px; color: var(--t2); margin-top: 2px; }
+  .s3-option-arrow { color: var(--t3); font-size: 18px; }
+  .s3-about {
+    padding: 16px; background: var(--card); border-radius: var(--r);
+  }
+  .s3-about-text { font-size: 14px; color: var(--t2); line-height: 1.5; }
+  .s3-about-link { font-size: 14px; color: var(--blue-light); margin-top: 8px; font-weight: 500; }
+
+  /* ─── S4: Donate Now (amounts grid) ─── */
+  .s4 { background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .s4-nav { padding: 60px 20px 0; display: flex; align-items: center; justify-content: center; position: relative; }
+  .s4-nav-back { position: absolute; left: 20px; }
+  .s4-nav-title { font-size: 17px; font-weight: 600; color: var(--t1); }
+  .s4-hero {
+    margin: 16px 20px 0; border-radius: var(--r); overflow: hidden; height: 220px;
+    position: relative;
+    background: linear-gradient(135deg, #E91E63 0%, #FF5722 25%, #FF9800 50%, #4CAF50 60%, #2196F3 75%, #3F51B5 100%);
+  }
+  .s4-hero-logo {
+    position: absolute; top: 14px; left: 14px;
+    width: 40px; height: 40px; border-radius: 20px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px; font-weight: 700; color: #333; text-align: center;
+  }
+  .s4-hero-text { position: absolute; bottom: 14px; left: 14px; right: 14px; }
+  .s4-hero-org { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+  .s4-hero-headline { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+  .s4-hero-donors { font-size: 11px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; }
+  .s4-amounts { padding: 24px 20px 0; }
+  .s4-amounts-title { font-size: 16px; font-weight: 600; color: var(--t1); margin-bottom: 14px; }
+  .s4-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .s4-amt {
+    height: 52px; border-radius: 12px; border: 1.5px solid var(--border);
+    background: transparent; color: var(--t1); font-size: 17px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; font-family: inherit;
+  }
+  .s4-amt.sel { border-color: var(--blue-light); background: rgba(59,110,246,0.08); }
+  .s4-custom { text-align: center; padding: 20px; font-size: 15px; color: var(--t2); font-weight: 500; }
+  .s4-footer { margin-top: auto; padding: 16px 20px 48px; }
+  .s4-continue {
+    width: 100%; height: 52px; border-radius: 26px; border: none;
+    background: #fff; color: #000; font-size: 17px; font-weight: 600; font-family: inherit;
+  }
+
+  /* ─── S5: Enter Amount (empty) ─── */
+  .s5 { background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .s5-nav {
+    padding: 60px 20px 0; display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .s5-nav-back { position: absolute; left: 20px; }
+  .s5-nav-title { font-size: 17px; font-weight: 600; color: var(--t1); }
+  .s5-nav-avatar {
+    position: absolute; right: 20px;
+    width: 32px; height: 32px; border-radius: 16px; background: #ccc;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5px; color: #666; font-weight: 700;
+  }
+  .s5-amount-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+  .s5-amount { font-size: 56px; font-weight: 700; color: var(--t1); position: relative; }
+  .s5-amount .cursor { width: 2px; height: 44px; background: var(--t1); display: inline-block; margin-left: 2px; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .s5-nofees { font-size: 14px; color: var(--t3); }
+  .s5-currency {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 20px; background: var(--card);
+    font-size: 14px; font-weight: 600; color: var(--t1); margin-top: 8px;
+  }
+  .s5-flag { width: 20px; height: 20px; border-radius: 10px; background: linear-gradient(#EF4444 50%, #fff 50%); position: relative; overflow: hidden; }
+  .s5-flag::after { content: ""; position: absolute; top: 25%; left: 30%; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #EF4444; background: #fff; }
+  .s5-confirm-area { padding: 0 20px 8px; }
+  .s5-confirm {
+    width: 100%; height: 52px; border-radius: 26px; border: none;
+    font-size: 17px; font-weight: 600; font-family: inherit;
+  }
+  .s5-confirm.disabled { background: rgba(255,255,255,0.12); color: var(--t3); }
+  .s5-confirm.enabled { background: #fff; color: #000; }
+  .s5-keypad-area { background: #2A2A2A; border-radius: 16px 16px 0 0; padding: 8px 0 20px; }
+  .s5-presets { display: flex; justify-content: space-around; padding: 8px 12px 12px; }
+  .s5-preset { font-size: 14px; font-weight: 600; color: var(--t2); padding: 6px 12px; }
+  .s5-keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; padding: 0 8px; }
+  .s5-key {
+    height: 56px; display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 500; color: var(--t1);
+    background: #444; border-radius: 8px; margin: 3px;
+  }
+  .s5-key.sub { font-size: 11px; color: var(--t3); margin-top: 2px; }
+  .s5-key-inner { display: flex; flex-direction: column; align-items: center; }
+  .s5-key.empty { background: transparent; }
+
+  /* ─── S6: Enter Amount (filled / math) ─── */
+  .s6-mathrow { display: flex; justify-content: space-around; padding: 8px 12px 12px; }
+  .s6-math { font-size: 18px; font-weight: 500; color: var(--t2); padding: 6px 12px; }
+
+  /* ─── S7: Success ─── */
+  .s7 { background: var(--bg); width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; }
+  .s7-dimmed-nav {
+    padding: 60px 20px 0; display: flex; align-items: center; justify-content: center; position: relative;
+    opacity: 0.3;
+  }
+  .s7-dimmed-nav-back { position: absolute; left: 20px; }
+  .s7-dimmed-nav-title { font-size: 17px; font-weight: 600; color: var(--t1); }
+  .s7-dimmed-nav-avatar {
+    position: absolute; right: 20px;
+    width: 32px; height: 32px; border-radius: 16px; background: #ccc;
+  }
+  .s7-dimmed-amount { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; opacity: 0.25; }
+  .s7-dimmed-val { font-size: 56px; font-weight: 700; color: var(--t1); }
+  .s7-dimmed-sub { font-size: 14px; color: var(--t3); }
+  .s7-dimmed-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 20px; background: var(--card);
+    font-size: 14px; font-weight: 600; color: var(--t1); margin-top: 8px;
+  }
+  .s7-sheet {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #2A2A2A; border-radius: 20px 20px 0 0;
+    padding: 12px 24px 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    z-index: 60;
+  }
+  .s7-handle { width: 40px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.15); }
+  .s7-check {
+    width: 48px; height: 48px; border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 8px;
+  }
+  .s7-msg { font-size: 20px; font-weight: 700; color: var(--t1); text-align: center; line-height: 1.3; }
+  .s7-thanks { font-size: 14px; color: var(--t2); }
+</style>
+</head>
+<body>
+
+<!-- ═══ S1: Browse Charities ═══ -->
+<div class="col">
+  <div class="label">1 · Browse Charities</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s1">
+      <div class="s1-nav"><div class="s1-back"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div></div>
+      <div class="s1-title">Donations</div>
+      <div class="s1-tabs">
+        <div class="s1-tab active"><svg width="14" height="14" fill="#000"><path d="M7 13.3l-1-.9C2.4 9.2 0 7 0 4.4 0 2.2 1.7.5 3.9.5c1.2 0 2.4.6 3.1 1.5C7.7 1 8.9.5 10.1.5 12.3.5 14 2.2 14 4.4c0 2.6-2.4 4.8-6 8l-1 .9z"/></svg> Charities</div>
+        <div class="s1-tab inactive"><svg width="14" height="14" fill="currentColor"><path d="M7 0a3.5 3.5 0 110 7 3.5 3.5 0 010-7zM7 8.5c-3.9 0-7 1.6-7 3.5v1.5h14V12c0-1.9-3.1-3.5-7-3.5z"/></svg> Contribution</div>
+      </div>
+      <div class="s1-featured">
+        <div class="s1-logo">OOGA<br>CHAGA</div>
+        <div class="s1-card-text">
+          <div class="s1-org">Oogachaga</div>
+          <div class="s1-headline">Support Singapore's LGBTQ+ community</div>
+          <div class="s1-donors"><svg width="14" height="14" fill="rgba(255,255,255,0.7)"><path d="M7 0a3.5 3.5 0 110 7 3.5 3.5 0 010-7zM7 8.5c-3.9 0-7 1.6-7 3.5v1h14v-1c0-1.9-3.1-3.5-7-3.5z"/></svg> 5.8k people have donated to this charity</div>
+        </div>
+      </div>
+      <div class="s1-section">
+        <div class="s1-section-title">All charities</div>
+        <div class="s1-charity-card">
+          <div class="s1-charity-logo">🌿</div>
+          <div class="s1-charity-name">The Greenhouse</div>
+        </div>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<!-- ═══ S2: Onboarding Modal ═══ -->
+<div class="col">
+  <div class="label">2 · Onboarding</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s2">
+      <div class="s2-peek"></div>
+      <div class="s2-content">
+        <div class="s2-close"><svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M2 2l12 12M14 2L2 14"/></svg></div>
+        <div class="s2-heading">Charities get 100% of your donation</div>
+        <div class="s2-sub">Support a cause you care about, with no fees from us.</div>
+        <div class="s2-link">Terms & Conditions</div>
+        <div class="s2-illustration">
+          <div class="s2-heart">
+            <div class="s2-heart-shape"></div>
+            <div class="s2-coin"></div>
+          </div>
+        </div>
+        <div class="s2-buttons">
+          <button class="s2-btn primary">Confirm</button>
+          <button class="s2-btn secondary">Not now</button>
+        </div>
+      </div>
+    </div>
+    <div class="hi b"></div>
+  </div>
+</div>
+
+<!-- ═══ S3: Charity Detail ═══ -->
+<div class="col">
+  <div class="label">3 · Charity Detail</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s3">
+      <div class="s3-hero">
+        <div class="s3-back2"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div>
+        <div class="s3-hero-bottom">
+          <div class="s3-hero-logo">OOGA<br>CHAGA</div>
+          <div class="s3-hero-name">Oogachaga</div>
+          <div class="s3-hero-amt">$0</div>
+          <div class="s3-donate-btn"><svg width="14" height="14" fill="#fff"><path d="M7 13.3l-1-.9C2.4 9.2 0 7 0 4.4 0 2.2 1.7.5 3.9.5c1.2 0 2.4.6 3.1 1.5C7.7 1 8.9.5 10.1.5 12.3.5 14 2.2 14 4.4c0 2.6-2.4 4.8-6 8l-1 .9z"/></svg> Donate</div>
+        </div>
+      </div>
+      <div class="s3-body">
+        <div class="s3-section">
+          <div class="s3-section-title">More ways to donate</div>
+          <div class="s3-option">
+            <div class="s3-option-icon"><svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.5"><path d="M4 10h12M10 4v12"/><rect x="2" y="2" width="16" height="16" rx="4"/></svg></div>
+            <div class="s3-option-text">
+              <div class="s3-option-label">Recurring donation</div>
+              <div class="s3-option-sub">Donate automatically</div>
+            </div>
+            <span class="s3-option-arrow">›</span>
+          </div>
+          <div class="s3-option">
+            <div class="s3-option-icon"><svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="10" cy="10" r="8"/><path d="M6 10l3 3 5-5"/></svg></div>
+            <div class="s3-option-text">
+              <div class="s3-option-label">Spare change</div>
+              <div class="s3-option-sub">Round up everyday spend</div>
+            </div>
+            <span class="s3-option-arrow">›</span>
+          </div>
+        </div>
+        <div class="s3-section" style="padding-top:0">
+          <div class="s3-section-title">About charity</div>
+          <div class="s3-about">
+            <div class="s3-about-text">Oogachaga is Singapore's most established, community-based, non-profit, professional organisation working with lesbian, gay, bisexual, transgender, questioning and queer (LGBTQ+) individuals, couples and families in Singapore since 1999.</div>
+            <div class="s3-about-link">See more</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<!-- ═══ S4: Donate Now ═══ -->
+<div class="col">
+  <div class="label">4 · Select Amount</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s4">
+      <div class="s4-nav">
+        <div class="s4-nav-back"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div>
+        <div class="s4-nav-title">Oogachaga</div>
+      </div>
+      <div class="s4-hero">
+        <div class="s4-hero-logo">OOGA<br>CHAGA</div>
+        <div class="s4-hero-text">
+          <div class="s4-hero-org">Oogachaga</div>
+          <div class="s4-hero-headline">Support Singapore's LGBTQ+ community</div>
+          <div class="s4-hero-donors"><svg width="12" height="12" fill="rgba(255,255,255,0.7)"><path d="M6 0a3 3 0 110 6 3 3 0 010-6zM6 7c-3.3 0-6 1.4-6 3v1h12v-1c0-1.6-2.7-3-6-3z"/></svg> 5.8k people have donated to this charity</div>
+        </div>
+      </div>
+      <div class="s4-amounts">
+        <div class="s4-amounts-title">Donate now</div>
+        <div class="s4-grid">
+          <button class="s4-amt">$10</button>
+          <button class="s4-amt sel">$20</button>
+          <button class="s4-amt">$50</button>
+          <button class="s4-amt">$100</button>
+          <button class="s4-amt">$150</button>
+          <button class="s4-amt">$250</button>
+        </div>
+        <div class="s4-custom">Custom amount</div>
+      </div>
+      <div class="s4-footer">
+        <button class="s4-continue">Continue</button>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<!-- ═══ S5: Enter Amount (empty) ═══ -->
+<div class="col">
+  <div class="label">5 · Keypad ($0)</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s5">
+      <div class="s5-nav">
+        <div class="s5-nav-back"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div>
+        <div class="s5-nav-title">One-time donation</div>
+        <div class="s5-nav-avatar">OOGA</div>
+      </div>
+      <div class="s5-amount-area">
+        <div class="s5-amount">$0<span class="cursor"></span></div>
+        <div class="s5-nofees">No fees</div>
+        <div class="s5-currency"><div class="s5-flag"></div> SGD · $14.35 <svg width="10" height="6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></div>
+      </div>
+      <div class="s5-confirm-area"><button class="s5-confirm disabled">Confirm</button></div>
+      <div class="s5-keypad-area">
+        <div class="s5-presets">
+          <span class="s5-preset">$10</span>
+          <span class="s5-preset">$20</span>
+          <span class="s5-preset">$50</span>
+          <span class="s5-preset">$100</span>
+        </div>
+        <div class="s5-keypad">
+          <div class="s5-key"><div class="s5-key-inner">1</div></div>
+          <div class="s5-key"><div class="s5-key-inner">2<span class="sub">ABC</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">3<span class="sub">DEF</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">4<span class="sub">GHI</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">5<span class="sub">JKL</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">6<span class="sub">MNO</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">7<span class="sub">PQRS</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">8<span class="sub">TUV</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">9<span class="sub">WXYZ</span></div></div>
+          <div class="s5-key empty">.</div>
+          <div class="s5-key">0</div>
+          <div class="s5-key empty"><svg width="24" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 3H8L2 9l6 6h12a2 2 0 002-2V5a2 2 0 00-2-2zM16 7l-4 4M12 7l4 4"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<!-- ═══ S6: Enter Amount ($1, math row) ═══ -->
+<div class="col">
+  <div class="label">6 · Keypad ($1)</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s5">
+      <div class="s5-nav">
+        <div class="s5-nav-back"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div>
+        <div class="s5-nav-title">One-time donation</div>
+        <div class="s5-nav-avatar">OOGA</div>
+      </div>
+      <div class="s5-amount-area">
+        <div class="s5-amount">$1<span class="cursor"></span></div>
+        <div class="s5-nofees">No fees</div>
+        <div class="s5-currency"><div class="s5-flag"></div> SGD · $14.35 <svg width="10" height="6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></div>
+      </div>
+      <div class="s5-confirm-area"><button class="s5-confirm enabled">Confirm</button></div>
+      <div class="s5-keypad-area">
+        <div class="s6-mathrow">
+          <span class="s6-math">+</span>
+          <span class="s6-math">−</span>
+          <span class="s6-math">×</span>
+          <span class="s6-math">÷</span>
+          <span class="s6-math">=</span>
+        </div>
+        <div class="s5-keypad">
+          <div class="s5-key"><div class="s5-key-inner">1</div></div>
+          <div class="s5-key"><div class="s5-key-inner">2<span class="sub">ABC</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">3<span class="sub">DEF</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">4<span class="sub">GHI</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">5<span class="sub">JKL</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">6<span class="sub">MNO</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">7<span class="sub">PQRS</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">8<span class="sub">TUV</span></div></div>
+          <div class="s5-key"><div class="s5-key-inner">9<span class="sub">WXYZ</span></div></div>
+          <div class="s5-key empty">.</div>
+          <div class="s5-key">0</div>
+          <div class="s5-key empty"><svg width="24" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 3H8L2 9l6 6h12a2 2 0 002-2V5a2 2 0 00-2-2zM16 7l-4 4M12 7l4 4"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<!-- ═══ S7: Success ═══ -->
+<div class="col">
+  <div class="label">7 · Success</div>
+  <div class="screen">
+    <div class="sb w"><span class="sb-t">9:41</span><span class="sb-i"><svg width="17" height="12" fill="currentColor"><rect x="0" y="1" width="3.5" height="10" rx="1" opacity=".3"/><rect x="4.5" y="3" width="3.5" height="8" rx="1" opacity=".5"/><rect x="9" y="5" width="3.5" height="6" rx="1" opacity=".7"/><rect x="13.5" y="0" width="3.5" height="11" rx="1"/></svg><svg width="15" height="12" fill="currentColor"><path d="M7.5 2.5C5.5 2.5 3.7 3.2 2.3 4.4L.7 2.8C2.5 1.2 4.9.3 7.5.3s5 .9 6.8 2.5l-1.6 1.6C11.3 3.2 9.5 2.5 7.5 2.5zM7.5 6.5c-1.2 0-2.3.5-3.1 1.2L2.8 6.1c1.2-1.1 2.8-1.8 4.7-1.8s3.5.7 4.7 1.8l-1.6 1.6C9.8 7 8.7 6.5 7.5 6.5zM9.2 9.6L7.5 11.3 5.8 9.6c.9-.9 2.5-.9 3.4 0z"/></svg><svg width="25" height="12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity=".35"/><rect x="23.5" y="4" width="1.5" height="4.5" rx=".75" opacity=".4"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5"/></svg></span></div>
+    <div class="s7">
+      <div class="s7-dimmed-nav">
+        <div class="s7-dimmed-nav-back"><svg width="12" height="20" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M10 2L2 10l8 8"/></svg></div>
+        <div class="s7-dimmed-nav-title">One-time donation</div>
+        <div class="s7-dimmed-nav-avatar"></div>
+      </div>
+      <div class="s7-dimmed-amount">
+        <div class="s7-dimmed-val">$1</div>
+        <div class="s7-dimmed-sub">No fees</div>
+        <div class="s7-dimmed-chip">SGD · $14.35</div>
+      </div>
+      <div class="s7-sheet">
+        <div class="s7-handle"></div>
+        <div class="s7-check">
+          <svg width="32" height="32" fill="none"><circle cx="16" cy="16" r="16" fill="none"/><path d="M10 16l4 4 8-8" stroke="#5B8DF7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="s7-msg">Nice! You just donated $1 to Oogachaga</div>
+        <div class="s7-thanks">Thank you for your generosity</div>
+      </div>
+    </div>
+    <div class="hi w"></div>
+  </div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

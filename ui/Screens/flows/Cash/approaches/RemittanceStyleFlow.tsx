@@ -53,14 +53,14 @@ const RATES: Record<string, number> = {
 
 export default function RemittanceStyleFlow({ assetType = "cash", onComplete, onClose }: RemittanceStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(["country"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Country
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -90,12 +90,6 @@ export default function RemittanceStyleFlow({ assetType = "cash", onComplete, on
     setSelectedPaymentMethod(selection.variant);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(["country"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handleSend = () => {
@@ -310,7 +304,7 @@ export default function RemittanceStyleFlow({ assetType = "cash", onComplete, on
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

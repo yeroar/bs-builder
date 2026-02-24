@@ -38,15 +38,15 @@ export interface ProgressiveWithdrawFlowProps {
 
 export default function ProgressiveWithdrawFlow({ assetType = "cash", onComplete, onClose }: ProgressiveWithdrawFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(assetType === "cash" ? ["progressive"] : ["recipient"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [recipient, setRecipient] = useState("");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>("visa");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Amount input
   const {
@@ -90,12 +90,6 @@ export default function ProgressiveWithdrawFlow({ assetType = "cash", onComplete
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsPaymentModalVisible(false);
-    setFlowStack(assetType === "cash" ? ["progressive"] : ["recipient"]);
-  };
-
-  const handleClosePaymentModal = () => {
-    setIsPaymentModalVisible(false);
-    onClose();
   };
 
   const handleConfirmWithdraw = () => {
@@ -235,7 +229,7 @@ export default function ProgressiveWithdrawFlow({ assetType = "cash", onComplete
 
       <ChoosePaymentMethodModal
         visible={isPaymentModalVisible}
-        onClose={handleClosePaymentModal}
+        onClose={() => setIsPaymentModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

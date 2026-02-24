@@ -35,16 +35,16 @@ export interface CashAppStyleFlowProps {
 
 export default function CashAppStyleFlow({ assetType = "cash", onComplete, onClose }: CashAppStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(["amount"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [recipient, setRecipient] = useState("");
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>("visa");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Amount input
   const {
@@ -64,12 +64,6 @@ export default function CashAppStyleFlow({ assetType = "cash", onComplete, onClo
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(["amount"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handlePay = () => {
@@ -201,7 +195,7 @@ export default function CashAppStyleFlow({ assetType = "cash", onComplete, onClo
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

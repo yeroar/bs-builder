@@ -38,15 +38,15 @@ export interface StrikeStyleFlowProps {
 
 export default function StrikeStyleFlow({ assetType = "cash", onComplete, onClose }: StrikeStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(assetType === "cash" ? ["amount"] : ["address"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [invoiceAddress, setInvoiceAddress] = useState("");
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Amount
   const {
@@ -66,12 +66,6 @@ export default function StrikeStyleFlow({ assetType = "cash", onComplete, onClos
     setSelectedPaymentMethod(selection.variant);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(assetType === "cash" ? ["amount"] : ["address"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handleSend = () => {
@@ -262,7 +256,7 @@ export default function StrikeStyleFlow({ assetType = "cash", onComplete, onClos
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

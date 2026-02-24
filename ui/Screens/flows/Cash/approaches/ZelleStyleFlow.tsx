@@ -41,16 +41,16 @@ export interface ZelleStyleFlowProps {
 
 export default function ZelleStyleFlow({ assetType = "cash", onComplete, onClose }: ZelleStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(assetType !== "bitcoin");
-  const [flowStack, setFlowStack] = useState<string[]>(assetType === "bitcoin" ? ["amountMemo"] : []);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(["amountMemo"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [memo, setMemo] = useState("");
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>("visa");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   const isBtc = assetType === "bitcoin";
 
@@ -128,12 +128,6 @@ export default function ZelleStyleFlow({ assetType = "cash", onComplete, onClose
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(["amountMemo"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handleSend = () => {
@@ -368,7 +362,7 @@ export default function ZelleStyleFlow({ assetType = "cash", onComplete, onClose
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

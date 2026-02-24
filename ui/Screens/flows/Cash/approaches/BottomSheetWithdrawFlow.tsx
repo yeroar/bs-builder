@@ -36,17 +36,17 @@ export interface BottomSheetWithdrawFlowProps {
 
 export default function BottomSheetWithdrawFlow({ assetType = "cash", onComplete, onClose }: BottomSheetWithdrawFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(assetType === "cash" ? ["enterAmount"] : ["recipient"]);
   const [flowAmount, setFlowAmount] = useState("0");
   const [showConfirmSheet, setShowConfirmSheet] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [recipient, setRecipient] = useState("");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedBrand, setSelectedBrand] = useState<string | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>("visa");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   const numAmount = parseFloat(flowAmount) || 0;
   const feeAmount = numAmount * config.feeRate;
@@ -57,12 +57,6 @@ export default function BottomSheetWithdrawFlow({ assetType = "cash", onComplete
     setSelectedBrand(selection.brand);
     setSelectedLabel(selection.label);
     setIsPaymentModalVisible(false);
-    setFlowStack(assetType === "cash" ? ["enterAmount"] : ["recipient"]);
-  };
-
-  const handleClosePaymentModal = () => {
-    setIsPaymentModalVisible(false);
-    onClose();
   };
 
   const handleEnterAmountContinue = (amount: string) => {
@@ -166,7 +160,7 @@ export default function BottomSheetWithdrawFlow({ assetType = "cash", onComplete
       {/* Payment Method Selection */}
       <ChoosePaymentMethodModal
         visible={isPaymentModalVisible}
-        onClose={handleClosePaymentModal}
+        onClose={() => setIsPaymentModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

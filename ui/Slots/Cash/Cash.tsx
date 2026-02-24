@@ -8,6 +8,7 @@ import { IconContainer } from "../../../components/Primitives/IconContainer";
 import { FoldText } from "../../../components/Primitives/FoldText";
 import Divider from "../../../components/Primitives/Divider/Divider";
 import { GiftCardsTile } from "../../../components/DataDisplay/GiftCardsTile";
+import { FoldCardFront } from "../../../components/DataDisplay/FoldCardFront";
 import CategoryBoostsTile from "../../../components/DataDisplay/CategoryBoosts/CategoryBoostsTile";
 import Chip from "../../../components/Primitives/Chip/Chip";
 import { colorMaps, spacing } from "../../../components/tokens";
@@ -35,6 +36,8 @@ export interface RecurringDepositConfig {
 
 export interface CashProps {
   cashAmount?: string;
+  cardState?: "active" | "ordered";
+  onCardPress?: () => void;
   onAddCashPress?: () => void;
   onWithdrawPress?: () => void;
   onAuthorizedUsersPress?: () => void;
@@ -58,6 +61,8 @@ export interface CashProps {
 
 export default function Cash({
   cashAmount = "$4,900.00",
+  cardState = "active",
+  onCardPress,
   onAddCashPress,
   onWithdrawPress,
   onAuthorizedUsersPress,
@@ -102,6 +107,7 @@ export default function Cash({
       <ProductSurfaceSecondary
         label="Cash"
         amount={cashAmount}
+        card={<FoldCardFront state={cardState} onPress={onCardPress} />}
         actionBar={
           <ActionBar>
             <Button label="Add cash" hierarchy="primary" size="sm" onPress={onAddCashPress} />

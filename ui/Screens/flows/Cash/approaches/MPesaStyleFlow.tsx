@@ -37,16 +37,16 @@ const PIN_LENGTH = 4;
 
 export default function MPesaStyleFlow({ assetType = "cash", onComplete, onClose }: MPesaStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(assetType === "cash" ? ["amount"] : ["phone"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [phone, setPhone] = useState("");
   const [confirmedAmount, setConfirmedAmount] = useState("0");
   const [pin, setPin] = useState("");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Amount
   const {
@@ -65,12 +65,6 @@ export default function MPesaStyleFlow({ assetType = "cash", onComplete, onClose
     setSelectedPaymentMethod(selection.variant);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(assetType === "cash" ? ["amount"] : ["phone"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handlePinDigit = (digit: string) => {
@@ -274,7 +268,7 @@ export default function MPesaStyleFlow({ assetType = "cash", onComplete, onClose
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

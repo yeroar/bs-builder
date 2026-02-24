@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fintech Benchmark — 9 Screens</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    background: #444;
+    display: flex;
+    gap: 24px;
+    padding: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .screen {
+    width: 393px;
+    height: 852px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 40px;
+    flex-shrink: 0;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    padding: 14px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .status-bar.dark { color: #000; }
+  .status-bar.light { color: #fff; }
+  .status-time { font-size: 15px; font-weight: 600; letter-spacing: 0.2px; }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+  .status-icons svg { display: block; }
+
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 134px;
+    height: 5px;
+    border-radius: 3px;
+    z-index: 100;
+  }
+  .home-indicator.dark { background: #000; }
+  .home-indicator.light { background: rgba(255,255,255,.6); }
+
+  :root {
+    --cashapp-green: #00D632;
+    --wise-green: #9FE870;
+    --kakao-yellow: #FEE500;
+  }
+
+  /* ── Screen 1: Cash App Add Money ── */
+  .s1-bg { width:100%;height:100%;background:#f0f0f0;position:relative; }
+  .s1-home { padding:70px 20px 20px;opacity:.35; }
+  .s1-home-card { background:#fff;border-radius:16px;padding:20px;margin-bottom:12px; }
+  .s1-home-card h3 { font-size:14px;color:#666;font-weight:500; }
+  .s1-home-card .amt { font-size:32px;font-weight:700;margin-top:4px; }
+  .s1-overlay { position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:50; }
+  .s1-sheet { position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;padding:12px 0 0;z-index:60; }
+  .s1-handle { width:40px;height:5px;border-radius:3px;background:#d1d1d6;margin:0 auto 16px; }
+  .s1-sheet-title { padding:0 20px;font-size:22px;font-weight:700;color:#000; }
+  .s1-sheet-sub { padding:4px 20px 20px;font-size:14px;color:#666; }
+  .s1-chips { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 20px 20px; }
+  .s1-chip { height:48px;border-radius:24px;border:1.5px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#000; }
+  .s1-chip.more { font-size:20px;letter-spacing:2px;color:#999; }
+  .s1-add-btn { margin:0 20px 16px;height:52px;border-radius:26px;border:none;background:#d1d1d6;color:#fff;font-size:17px;font-weight:600;width:calc(100% - 40px);font-family:inherit; }
+  .s1-option { display:flex;align-items:center;padding:16px 20px;border-top:1px solid #f0f0f0;gap:14px; }
+  .s1-opt-icon { width:40px;height:40px;border-radius:20px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .s1-opt-text { flex:1; }
+  .s1-opt-text .title { font-size:15px;font-weight:600;color:#000; }
+  .s1-opt-text .desc { font-size:13px;color:#888;margin-top:1px; }
+  .s1-chevron { color:#c7c7cc;font-size:18px; }
+
+  /* ── Screen 2: Cash App Green Keypad ── */
+  .s2-bg { width:100%;height:100%;background:var(--cashapp-green);display:flex;flex-direction:column; }
+  .s2-top { display:flex;justify-content:space-between;align-items:center;padding:60px 20px 0; }
+  .s2-qr { width:36px;height:36px;border-radius:8px;border:2px solid rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center; }
+  .s2-avatar-wrap { position:relative; }
+  .s2-avatar { width:36px;height:36px;border-radius:18px;background:#1a8c2e;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff; }
+  .s2-badge { position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:8px;background:#000;color:var(--cashapp-green);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--cashapp-green); }
+  .s2-amount { flex:1;display:flex;align-items:center;justify-content:center;font-size:64px;font-weight:800;color:#000;letter-spacing:-2px; }
+  .s2-keypad { display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:0 24px; }
+  .s2-key { height:56px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:500;color:#000;background:transparent;border:none;font-family:inherit;border-radius:12px; }
+  .s2-actions { display:flex;gap:10px;padding:16px 20px 10px; }
+  .s2-action-btn { flex:1;height:48px;border-radius:24px;border:2px solid #000;background:transparent;color:#000;font-size:16px;font-weight:700;font-family:inherit; }
+  .s2-pay-btn { margin:0 20px 8px;height:52px;border-radius:26px;border:none;background:#000;color:#fff;font-size:18px;font-weight:700;width:calc(100% - 40px);font-family:inherit; }
+  .s2-tab-bar { display:flex;justify-content:space-around;align-items:center;padding:10px 0 28px; }
+  .s2-tab { display:flex;flex-direction:column;align-items:center;gap:2px;color:#000;opacity:.5;background:none;border:none;font-family:inherit; }
+  .s2-tab.active { opacity:1; }
+  .s2-tab svg { width:24px;height:24px; }
+
+  /* ── Screen 3: Cash App Recipient ── */
+  .s3-bg { width:100%;height:100%;background:#fff;display:flex;flex-direction:column; }
+  .s3-top { display:flex;align-items:center;justify-content:space-between;padding:60px 16px 12px;border-bottom:1px solid #f0f0f0; }
+  .s3-close { width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#000;background:none;border:none; }
+  .s3-amount-lbl { font-size:17px;font-weight:700;color:#000; }
+  .s3-pay-btn { padding:8px 20px;border-radius:20px;background:var(--cashapp-green);color:#fff;font-size:15px;font-weight:700;border:none;font-family:inherit; }
+  .s3-fields { padding:0 16px; }
+  .s3-field { display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #f0f0f0;gap:12px; }
+  .s3-field-label { font-size:15px;font-weight:600;color:#000;width:32px;flex-shrink:0; }
+  .s3-field-input { flex:1;font-size:15px;color:#999;background:none;border:none;outline:none;font-family:inherit; }
+  .s3-field-icon { color:#c7c7cc;font-size:18px;flex-shrink:0; }
+  .s3-mc-icon { width:28px;height:18px;display:flex;align-items:center;flex-shrink:0; }
+  .s3-mc-circle { width:14px;height:14px;border-radius:7px; }
+  .s3-mc-circle.red { background:#eb001b; }
+  .s3-mc-circle.orange { background:#f79e1b;margin-left:-5px; }
+  .s3-card-text { flex:1;font-size:14px;color:#000;font-weight:500; }
+  .s3-section-header { padding:24px 16px 12px;font-size:13px;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:0.5px; }
+  .s3-sync-card { margin:0 16px;background:#f8f8f8;border-radius:14px;padding:16px; }
+  .s3-sync-card .title { font-size:15px;font-weight:600;color:#000;margin-bottom:4px; }
+  .s3-sync-card .desc { font-size:13px;color:#888;line-height:1.4;margin-bottom:8px; }
+  .s3-sync-card .link { font-size:14px;color:#000;font-weight:600;text-decoration:underline; }
+  .s3-contact { display:flex;align-items:center;padding:12px 16px;gap:12px; }
+  .s3-contact-avatar { width:40px;height:40px;border-radius:20px;background:#4a90d9;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;flex-shrink:0; }
+  .s3-contact-info { flex:1; }
+  .s3-contact-info .name { font-size:15px;font-weight:600;color:#000; }
+  .s3-contact-info .phone { font-size:13px;color:#888; }
+  .s3-checkbox { width:24px;height:24px;border-radius:12px;border:2px solid #d1d1d6;flex-shrink:0; }
+
+  /* ── Screen 4: Cash App Success ── */
+  .s4-bg { width:100%;height:100%;background:#fff;display:flex;flex-direction:column; }
+  .s4-close { position:absolute;top:60px;left:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#000;background:none;border:none;z-index:10; }
+  .s4-content { flex:1;display:flex;flex-direction:column;align-items:center;padding-top:140px; }
+  .s4-check { width:64px;height:64px;border-radius:32px;background:var(--cashapp-green);display:flex;align-items:center;justify-content:center;margin-bottom:20px; }
+  .s4-title { font-size:24px;font-weight:700;color:#000;text-align:center;padding:0 40px;line-height:1.3; }
+  .s4-spacer { flex:1; }
+  .s4-upsell { margin:0 20px 16px;background:#f8f8f8;border-radius:16px;padding:20px;text-align:center; }
+  .s4-upsell-icon { font-size:32px;margin-bottom:8px;color:#666; }
+  .s4-upsell .title { font-size:16px;font-weight:700;color:#000;margin-bottom:6px; }
+  .s4-upsell .desc { font-size:13px;color:#888;line-height:1.4;margin-bottom:10px; }
+  .s4-upsell .link { font-size:14px;color:#000;font-weight:600;text-decoration:underline; }
+  .s4-done-btn { margin:0 20px 40px;height:52px;border-radius:26px;border:none;background:#000;color:#fff;font-size:17px;font-weight:700;width:calc(100% - 40px);font-family:inherit; }
+
+  /* ── Screen 5: Wise Dual Currency ── */
+  .s5-bg { width:100%;height:100%;background:#fff;display:flex;flex-direction:column; }
+  .s5-close { position:absolute;top:58px;left:16px;width:32px;height:32px;border-radius:16px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:16px;color:#666;border:none;z-index:10; }
+  .s5-currency-section { padding:0 20px; }
+  .s5-label { font-size:13px;color:#888;margin-bottom:10px; }
+  .s5-currency-row { display:flex;align-items:center;justify-content:space-between;padding-bottom:12px; }
+  .s5-flag-picker { display:flex;align-items:center;gap:8px;background:none;border:none;font-family:inherit; }
+  .s5-flag { width:32px;height:32px;border-radius:16px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:20px;background:#f0f0f0; }
+  .s5-currency-code { font-size:16px;font-weight:600;color:#000; }
+  .s5-dropdown-icon { color:#999;font-size:12px; }
+  .s5-amount-value { font-size:32px;font-weight:600; }
+  .s5-amount-value.active { color:#9FE870; }
+  .s5-amount-value.placeholder { color:#ccc; }
+  .s5-balance { font-size:13px;color:#00b2a9;padding:4px 20px 16px; }
+  .s5-divider { height:1px;background:#e8e8e8;margin:0 20px; }
+  .s5-gets-section { padding-top:16px; }
+  .s5-done-pill { position:absolute;bottom:290px;right:20px;padding:12px 28px;border-radius:24px;background:#9FE870;color:#000;font-size:16px;font-weight:600;border:none;font-family:inherit;z-index:10; }
+  .s5-keypad-area { position:absolute;bottom:0;left:0;right:0;background:#2c2c2e;padding:8px 4px 28px;border-radius:12px 12px 0 0; }
+  .s5-keypad { display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 4px; }
+  .s5-kkey { height:52px;border-radius:8px;background:#4a4a4c;display:flex;flex-direction:column;align-items:center;justify-content:center;border:none;font-family:inherit; }
+  .s5-kkey .num { font-size:22px;color:#fff;font-weight:400;line-height:1.1; }
+  .s5-kkey .letters { font-size:9px;color:#999;letter-spacing:1px;margin-top:1px; }
+  .s5-kkey.wide { background:#3a3a3c; }
+
+  /* ── Screen 6: Wise Password ── */
+  .s6-bg { width:100%;height:100%;background:#fff;display:flex;flex-direction:column; }
+  .s6-close { position:absolute;top:58px;left:16px;width:32px;height:32px;border-radius:16px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:16px;color:#666;border:none;z-index:10; }
+  .s6-content { padding:100px 20px 0;flex:1;display:flex;flex-direction:column; }
+  .s6-title { font-size:24px;font-weight:700;color:#000;line-height:1.3;margin-bottom:10px; }
+  .s6-subtitle { font-size:15px;color:#666;line-height:1.45;margin-bottom:32px; }
+  .s6-input-label { font-size:13px;color:#666;margin-bottom:8px;font-weight:500; }
+  .s6-input-wrap { display:flex;align-items:center;border:1.5px solid #d1d1d6;border-radius:12px;padding:0 14px;height:48px;margin-bottom:12px; }
+  .s6-input-wrap input { flex:1;border:none;outline:none;font-size:16px;font-family:inherit;color:#000;background:transparent; }
+  .s6-eye { color:#999;display:flex;align-items:center; }
+  .s6-forgot { font-size:14px;color:#00b2a9;font-weight:600;text-decoration:none;width:fit-content; }
+  .s6-spacer { flex:1; }
+  .s6-approve-btn { margin:0 0 40px;height:52px;border-radius:26px;border:none;background:#d1d1d6;color:#fff;font-size:17px;font-weight:600;width:100%;font-family:inherit; }
+
+  /* ── Screen 7: Fuse Earn Withdraw ── */
+  .s7-bg { width:100%;height:100%;background:rgba(0,0,0,.55);display:flex;flex-direction:column;justify-content:flex-end; }
+  .s7-sheet { background:#fff;border-radius:20px 20px 0 0;padding:12px 0 0;display:flex;flex-direction:column; }
+  .s7-handle { width:40px;height:5px;border-radius:3px;background:#d1d1d6;margin:0 auto 14px; }
+  .s7-sheet-title { text-align:center;font-size:18px;font-weight:700;color:#000;margin-bottom:4px; }
+  .s7-sub { text-align:center;font-size:13px;color:#999;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px; }
+  .s7-sub .coin-dot { width:16px;height:16px;border-radius:8px;background:linear-gradient(135deg,#f7931a,#ffb74d); }
+  .s7-usdc-row { display:flex;align-items:center;gap:8px;padding:0 20px 4px; }
+  .s7-usdc-icon { width:24px;height:24px;border-radius:12px;background:#2775ca;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800; }
+  .s7-usdc-label { font-size:14px;font-weight:600;color:#000; }
+  .s7-amount-row { display:flex;align-items:baseline;padding:8px 20px;justify-content:space-between; }
+  .s7-big-amount { font-size:48px;font-weight:700;color:#ccc; }
+  .s7-max-col { display:flex;flex-direction:column;align-items:flex-end; }
+  .s7-max { font-size:14px;font-weight:800;color:#000;background:none;border:none;font-family:inherit;padding:4px 0; }
+  .s7-bal { font-size:12px;color:#999;margin-top:2px; }
+  .s7-slider-area { padding:12px 20px 8px; }
+  .s7-slider-labels { display:flex;justify-content:space-between;margin-bottom:8px; }
+  .s7-slider-labels span { font-size:11px;color:#999;font-weight:500; }
+  .s7-slider-track { position:relative;height:32px;display:flex;align-items:center; }
+  .s7-track-line { width:100%;height:2px;background:#e0e0e0;border-radius:1px;position:relative; }
+  .s7-track-dots { position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center; }
+  .s7-track-dot { width:8px;height:8px;border-radius:4px;background:#e0e0e0; }
+  .s7-slider-thumb { position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.2);border:2px solid #e0e0e0; }
+  .s7-keypad { display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:4px 20px; }
+  .s7-key { height:48px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:400;color:#000;background:none;border:none;border-radius:8px;font-family:inherit; }
+  .s7-withdraw-btn { margin:8px 20px 32px;height:52px;border-radius:14px;border:none;background:#e5e5ea;color:#999;font-size:16px;font-weight:600;width:calc(100% - 40px);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px; }
+
+  /* ── Screen 8: KakaoBank Confirm ── */
+  .s8-bg { width:100%;height:100%;background:#f5f5f5;position:relative; }
+  .s8-home { padding:70px 20px 20px;opacity:.4; }
+  .s8-account-card { background:#fff;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .s8-acct-label { font-size:13px;color:#888;margin-bottom:4px; }
+  .s8-acct-balance { font-size:28px;font-weight:700;color:#000;margin-bottom:12px; }
+  .s8-transfer-bar { height:48px;border-radius:24px;background:var(--cashapp-green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:600; }
+  .s8-overlay { position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:50; }
+  .s8-modal { position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;padding:28px 24px 40px;z-index:60; }
+  .s8-logo { width:48px;height:48px;border-radius:24px;background:#000;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--kakao-yellow);font-size:11px;font-weight:800;letter-spacing:-0.5px; }
+  .s8-modal-title { text-align:center;font-size:20px;font-weight:700;color:#000;margin-bottom:4px; }
+  .s8-modal-q { text-align:center;font-size:16px;color:#666;margin-bottom:20px; }
+  .s8-details { background:#f8f8f8;border-radius:12px;padding:16px;margin-bottom:24px; }
+  .s8-detail-row { display:flex;justify-content:space-between;padding:6px 0;font-size:14px; }
+  .s8-detail-row .label { color:#888; }
+  .s8-detail-row .value { color:#000;font-weight:500; }
+  .s8-detail-row .value.green { color:var(--cashapp-green); }
+  .s8-buttons { display:flex;gap:10px; }
+  .s8-cancel-btn { flex:1;height:52px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;color:#000;font-size:16px;font-weight:600;font-family:inherit; }
+  .s8-confirm-btn { flex:1;height:52px;border-radius:12px;border:none;background:var(--kakao-yellow);color:#000;font-size:16px;font-weight:600;font-family:inherit; }
+
+  /* ── Screen 9: Fuse Select Coin ── */
+  .s9-bg { width:100%;height:100%;background:rgba(0,0,0,.55);display:flex;flex-direction:column;justify-content:flex-end; }
+  .s9-sheet { background:#fff;border-radius:20px 20px 0 0;padding:12px 0 0;min-height:520px;display:flex;flex-direction:column; }
+  .s9-handle { width:40px;height:5px;border-radius:3px;background:#d1d1d6;margin:0 auto 14px; }
+  .s9-sheet-title { text-align:center;font-size:18px;font-weight:700;color:#000;margin-bottom:16px; }
+  .s9-search { margin:0 16px 12px;display:flex;align-items:center;gap:10px;background:#f5f5f5;border-radius:12px;padding:0 14px;height:44px; }
+  .s9-search svg { flex-shrink:0;color:#999; }
+  .s9-search input { flex:1;border:none;outline:none;background:transparent;font-size:15px;font-family:inherit;color:#000; }
+  .s9-search input::placeholder { color:#999; }
+  .s9-coin-row { display:flex;align-items:center;padding:14px 16px;gap:12px; }
+  .s9-coin-icon { width:40px;height:40px;border-radius:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .s9-coin-icon.sol { background:linear-gradient(135deg,#9945ff,#14f195); }
+  .s9-coin-icon.usdc { background:#2775ca; }
+  .s9-coin-info { flex:1; }
+  .s9-coin-info .name { font-size:15px;font-weight:600;color:#000; }
+  .s9-coin-info .balance { font-size:13px;color:#888;margin-top:1px; }
+  .s9-coin-usd { font-size:15px;font-weight:600;color:#000;flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- Screen 1: Cash App — Add Money Bottom Sheet -->
+<div class="screen" style="background:#f0f0f0">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s1-bg">
+    <div class="s1-home">
+      <div class="s1-home-card"><h3>Cash Balance</h3><div class="amt">$42.50</div></div>
+      <div class="s1-home-card"><h3>Bitcoin</h3><div class="amt" style="font-size:24px">$1,230.89</div></div>
+    </div>
+    <div class="s1-overlay"></div>
+    <div class="s1-sheet">
+      <div class="s1-handle"></div>
+      <div class="s1-sheet-title">Add money</div>
+      <div class="s1-sheet-sub">Instantly transfer from a linked bank</div>
+      <div class="s1-chips">
+        <div class="s1-chip">$10</div><div class="s1-chip">$25</div><div class="s1-chip">$50</div>
+        <div class="s1-chip">$100</div><div class="s1-chip">$200</div><div class="s1-chip more">&middot;&middot;&middot;</div>
+      </div>
+      <button class="s1-add-btn">Add</button>
+      <div class="s1-option">
+        <div class="s1-opt-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="#666"><rect x="2" y="6" width="16" height="10" rx="2"/><rect x="4" y="3" width="12" height="4" rx="1" fill="#999"/></svg></div>
+        <div class="s1-opt-text"><div class="title">Deposit paper money</div><div class="desc">Find a nearby retailer</div></div>
+        <span class="s1-chevron">&rsaquo;</span>
+      </div>
+      <div class="s1-option">
+        <div class="s1-opt-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="#666"><rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="#666" stroke-width="1.5"/><path d="M6 8h8M6 12h5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="s1-opt-text"><div class="title">Deposit check</div><div class="desc">Scan with your phone</div></div>
+        <span class="s1-chevron">&rsaquo;</span>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 2: Cash App — Green Keypad -->
+<div class="screen" style="background:#00D632">
+  <div class="status-bar light">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s2-bg">
+    <div class="s2-top">
+      <div class="s2-qr"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#000" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="11" y="1" width="6" height="6" rx="1"/><rect x="1" y="11" width="6" height="6" rx="1"/><rect x="3" y="3" width="2" height="2" fill="#000"/><rect x="13" y="3" width="2" height="2" fill="#000"/><rect x="3" y="13" width="2" height="2" fill="#000"/></svg></div>
+      <div class="s2-avatar-wrap"><div class="s2-avatar">JS</div><div class="s2-badge">3</div></div>
+    </div>
+    <div class="s2-amount">$0</div>
+    <div class="s2-keypad">
+      <button class="s2-key">1</button><button class="s2-key">2</button><button class="s2-key">3</button>
+      <button class="s2-key">4</button><button class="s2-key">5</button><button class="s2-key">6</button>
+      <button class="s2-key">7</button><button class="s2-key">8</button><button class="s2-key">9</button>
+      <button class="s2-key">.</button><button class="s2-key">0</button>
+      <button class="s2-key"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M21 5H8l-5 7 5 7h13a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><line x1="17" y1="9" x2="13" y2="15"/><line x1="13" y1="9" x2="17" y2="15"/></svg></button>
+    </div>
+    <div class="s2-actions"><button class="s2-action-btn">Pool</button><button class="s2-action-btn">Request</button></div>
+    <button class="s2-pay-btn">Pay</button>
+    <div class="s2-tab-bar">
+      <button class="s2-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></button>
+      <button class="s2-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></button>
+      <button class="s2-tab active"><svg viewBox="0 0 24 24" fill="currentColor"><text x="6" y="18" font-size="16" font-weight="800">$</text></svg></button>
+      <button class="s2-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="s2-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></button>
+    </div>
+  </div>
+  <div class="home-indicator light"></div>
+</div>
+
+<!-- Screen 3: Cash App — Recipient -->
+<div class="screen" style="background:#fff">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s3-bg">
+    <div class="s3-top">
+      <button class="s3-close">&times;</button>
+      <span class="s3-amount-lbl">$10</span>
+      <button class="s3-pay-btn">Pay</button>
+    </div>
+    <div class="s3-fields">
+      <div class="s3-field"><span class="s3-field-label">To</span><input class="s3-field-input" placeholder="Name, $Cashtag, Phone, Email" readonly><span class="s3-field-icon">&#10024;</span></div>
+      <div class="s3-field"><span class="s3-field-label">For</span><input class="s3-field-input" placeholder="Note (required)" readonly><span class="s3-field-icon">&#10024;</span></div>
+      <div class="s3-field"><span class="s3-field-label">Use</span><div class="s3-mc-icon"><div class="s3-mc-circle red"></div><div class="s3-mc-circle orange"></div></div><span class="s3-card-text">Mastercard debit card &middot;&middot;&middot;&middot;</span><span class="s3-field-icon">&rsaquo;</span></div>
+    </div>
+    <div class="s3-section-header">Contacts</div>
+    <div class="s3-sync-card">
+      <div class="title">Sync all contacts to find more friends on Cash App</div>
+      <div class="desc">We'll check your contacts for people who use Cash App and show them here.</div>
+      <span class="link">Sync all</span>
+    </div>
+    <div style="height:12px"></div>
+    <div class="s3-contact"><div class="s3-contact-avatar">AK</div><div class="s3-contact-info"><div class="name">Alex Kim</div><div class="phone">+1 (555) 012-3456</div></div><div class="s3-checkbox"></div></div>
+    <div class="s3-contact"><div class="s3-contact-avatar" style="background:#6a5acd">MP</div><div class="s3-contact-info"><div class="name">Maria Park</div><div class="phone">+1 (555) 987-6543</div></div><div class="s3-checkbox"></div></div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 4: Cash App — Success -->
+<div class="screen" style="background:#fff">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s4-bg">
+    <button class="s4-close">&times;</button>
+    <div class="s4-content">
+      <div class="s4-check"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 20 22 8"/></svg></div>
+      <div class="s4-title">You added $1 to your balance</div>
+    </div>
+    <div class="s4-spacer"></div>
+    <div class="s4-upsell">
+      <div class="s4-upsell-icon"><svg width="40" height="24" viewBox="0 0 40 24" fill="none" stroke="#999" stroke-width="1.5"><path d="M5 12c3-8 8-8 10 0s7 8 10 0 7-8 10 0" stroke-linecap="round"/></svg></div>
+      <div class="title">Add money automatically</div>
+      <div class="desc">Reload your balance automatically when it falls below a set amount.</div>
+      <span class="link">Get started</span>
+    </div>
+    <button class="s4-done-btn">Done</button>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 5: Wise — Dual Currency -->
+<div class="screen" style="background:#fff">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s5-bg">
+    <button class="s5-close">&times;</button>
+    <div class="s5-currency-section" style="padding-top:100px">
+      <div class="s5-label">You send exactly</div>
+      <div class="s5-currency-row">
+        <button class="s5-flag-picker"><div class="s5-flag">&#127480;&#127468;</div><span class="s5-currency-code">SGD</span><span class="s5-dropdown-icon">&#9662;</span></button>
+        <span class="s5-amount-value active">1</span>
+      </div>
+    </div>
+    <div class="s5-balance">Balance available: 4.22 SGD</div>
+    <div class="s5-divider"></div>
+    <div class="s5-currency-section s5-gets-section">
+      <div class="s5-label">Recipient gets</div>
+      <div class="s5-currency-row">
+        <button class="s5-flag-picker"><div class="s5-flag">&#127464;&#127473;</div><span class="s5-currency-code">CL SGD</span><span class="s5-dropdown-icon">&#9662;</span></button>
+        <span class="s5-amount-value placeholder">0.00</span>
+      </div>
+    </div>
+    <button class="s5-done-pill">Done</button>
+    <div class="s5-keypad-area">
+      <div class="s5-keypad">
+        <button class="s5-kkey"><span class="num">1</span></button>
+        <button class="s5-kkey"><span class="num">2</span><span class="letters">ABC</span></button>
+        <button class="s5-kkey"><span class="num">3</span><span class="letters">DEF</span></button>
+        <button class="s5-kkey"><span class="num">4</span><span class="letters">GHI</span></button>
+        <button class="s5-kkey"><span class="num">5</span><span class="letters">JKL</span></button>
+        <button class="s5-kkey"><span class="num">6</span><span class="letters">MNO</span></button>
+        <button class="s5-kkey"><span class="num">7</span><span class="letters">PQRS</span></button>
+        <button class="s5-kkey"><span class="num">8</span><span class="letters">TUV</span></button>
+        <button class="s5-kkey"><span class="num">9</span><span class="letters">WXYZ</span></button>
+        <button class="s5-kkey wide"><span class="num">.</span></button>
+        <button class="s5-kkey"><span class="num">0</span></button>
+        <button class="s5-kkey wide"><svg width="22" height="18" viewBox="0 0 24 18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M21 3H8l-5 6 5 6h13a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/><line x1="17" y1="7" x2="13" y2="13"/><line x1="13" y1="7" x2="17" y2="13"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="home-indicator light"></div>
+</div>
+
+<!-- Screen 6: Wise — Password Auth -->
+<div class="screen" style="background:#fff">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s6-bg">
+    <button class="s6-close">&times;</button>
+    <div class="s6-content">
+      <div class="s6-title">Enter your password to approve this transfer</div>
+      <div class="s6-subtitle">This is a security check to keep your account safe.</div>
+      <div class="s6-input-label">Your password</div>
+      <div class="s6-input-wrap"><input type="password" placeholder="Enter password"><span class="s6-eye"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round"><path d="M1 10s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/><circle cx="10" cy="10" r="3"/></svg></span></div>
+      <a class="s6-forgot" href="#">Forgot password</a>
+      <div class="s6-spacer"></div>
+      <button class="s6-approve-btn">Approve</button>
+    </div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 7: Fuse Earn — Withdraw -->
+<div class="screen" style="background:#000">
+  <div class="status-bar light">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s7-bg">
+    <div class="s7-sheet">
+      <div class="s7-handle"></div>
+      <div class="s7-sheet-title">Withdraw</div>
+      <div class="s7-sub"><span class="coin-dot"></span>Lending Yield</div>
+      <div class="s7-usdc-row"><div class="s7-usdc-icon">$</div><span class="s7-usdc-label">USDC</span></div>
+      <div class="s7-amount-row"><span class="s7-big-amount">0</span><div class="s7-max-col"><button class="s7-max">MAX</button><span class="s7-bal">5.09</span></div></div>
+      <div class="s7-slider-area">
+        <div class="s7-slider-labels"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="s7-slider-track"><div class="s7-track-line"><div class="s7-track-dots"><div class="s7-track-dot"></div><div class="s7-track-dot"></div><div class="s7-track-dot"></div><div class="s7-track-dot"></div><div class="s7-track-dot"></div></div></div><div class="s7-slider-thumb"></div></div>
+      </div>
+      <div class="s7-keypad">
+        <button class="s7-key">1</button><button class="s7-key">2</button><button class="s7-key">3</button>
+        <button class="s7-key">4</button><button class="s7-key">5</button><button class="s7-key">6</button>
+        <button class="s7-key">7</button><button class="s7-key">8</button><button class="s7-key">9</button>
+        <button class="s7-key">.</button><button class="s7-key">0</button>
+        <button class="s7-key"><svg width="22" height="18" viewBox="0 0 24 18" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><path d="M21 3H8l-5 6 5 6h13a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/><line x1="17" y1="7" x2="13" y2="13"/><line x1="13" y1="7" x2="17" y2="13"/></svg></button>
+      </div>
+      <button class="s7-withdraw-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v10M4 8l4 4 4-4"/><line x1="2" y1="14" x2="14" y2="14"/></svg>Withdraw</button>
+    </div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 8: KakaoBank — Inline Confirm -->
+<div class="screen" style="background:#f5f5f5">
+  <div class="status-bar dark">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s8-bg">
+    <div class="s8-home">
+      <div class="s8-account-card"><div class="s8-acct-label">KakaoBank 입출금통장</div><div class="s8-acct-balance">170,000원</div><div class="s8-transfer-bar">이체</div></div>
+      <div class="s8-account-card" style="padding:16px"><div class="s8-acct-label">저금통</div><div style="font-size:20px;font-weight:700;color:#000">23,500원</div></div>
+    </div>
+    <div class="s8-overlay"></div>
+    <div class="s8-modal">
+      <div class="s8-logo">Kbank</div>
+      <div class="s8-modal-title">이&#9675;&#9675;님에게 4,000원</div>
+      <div class="s8-modal-q">이체하시겠습니까?</div>
+      <div class="s8-details">
+        <div class="s8-detail-row"><span class="label">출금계좌</span><span class="value">카카오뱅크 입출금 ****1234</span></div>
+        <div class="s8-detail-row"><span class="label">입금계좌</span><span class="value">카카오뱅크 ****5678</span></div>
+        <div class="s8-detail-row"><span class="label">수수료</span><span class="value green">면제</span></div>
+      </div>
+      <div class="s8-buttons"><button class="s8-cancel-btn">취소</button><button class="s8-confirm-btn">이체하기</button></div>
+    </div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<!-- Screen 9: Fuse — Select Coin -->
+<div class="screen" style="background:#000">
+  <div class="status-bar light">
+    <span class="status-time">9:41</span>
+    <span class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="3" width="3" height="9" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="22" y="4" width="2" height="4" rx="1"/><rect x="1.5" y="2.5" width="18" height="7" rx="1"/></svg>
+    </span>
+  </div>
+  <div class="s9-bg">
+    <div class="s9-sheet">
+      <div class="s9-handle"></div>
+      <div class="s9-sheet-title">Select coin</div>
+      <div class="s9-search"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#999" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><line x1="12" y1="12" x2="15.5" y2="15.5"/></svg><input placeholder="Search coins" readonly></div>
+      <div class="s9-coin-row"><div class="s9-coin-icon sol"><svg width="20" height="20" viewBox="0 0 20 20" fill="#fff"><path d="M4 13.5h10.5l1.5 2H4.5L3 14l1-0.5zm0-4h10.5l1.5-2H4.5L3 6l1 1.5zm12-5H5.5L4 2.5h11.5L17 4l-1 0.5z"/></svg></div><div class="s9-coin-info"><div class="name">Solana</div><div class="balance">0.0226 SOL</div></div><span class="s9-coin-usd">$5.22</span></div>
+      <div class="s9-coin-row"><div class="s9-coin-icon usdc"><span style="color:#fff;font-size:16px;font-weight:800">$</span></div><div class="s9-coin-info"><div class="name">USDC</div><div class="balance">3.3593 USDC</div></div><span class="s9-coin-usd">$3.36</span></div>
+      <div style="flex:1;min-height:260px"></div>
+    </div>
+  </div>
+  <div class="home-indicator dark"></div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

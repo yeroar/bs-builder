@@ -42,17 +42,17 @@ type Privacy = "public" | "friends" | "private";
 
 export default function VenmoStyleFlow({ assetType = "cash", onComplete, onClose }: VenmoStyleFlowProps) {
   const config = getAssetConfig(assetType);
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [flowStack, setFlowStack] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [flowStack, setFlowStack] = useState<string[]>(assetType === "cash" ? ["amountNote"] : ["recipient"]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [recipient, setRecipient] = useState("");
   const [note, setNote] = useState("");
   const [privacy, setPrivacy] = useState<Privacy>("friends");
   const [confirmedAmount, setConfirmedAmount] = useState("0");
 
-  // Payment method
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("null");
-  const [selectedLabel, setSelectedLabel] = useState<string | undefined>();
+  // Payment method (pre-populated default)
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PmSelectorVariant>("cardAccount");
+  const [selectedLabel, setSelectedLabel] = useState<string | undefined>("Visa •••• 4242");
 
   // Amount input
   const {
@@ -71,12 +71,6 @@ export default function VenmoStyleFlow({ assetType = "cash", onComplete, onClose
     setSelectedPaymentMethod(selection.variant);
     setSelectedLabel(selection.label);
     setIsModalVisible(false);
-    setFlowStack(assetType === "cash" ? ["amountNote"] : ["recipient"]);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    onClose();
   };
 
   const handlePay = () => {
@@ -239,7 +233,7 @@ export default function VenmoStyleFlow({ assetType = "cash", onComplete, onClose
 
       <ChoosePaymentMethodModal
         visible={isModalVisible}
-        onClose={handleCloseModal}
+        onClose={() => setIsModalVisible(false)}
         onSelect={handlePaymentMethodSelect}
         type="debitCard"
       />

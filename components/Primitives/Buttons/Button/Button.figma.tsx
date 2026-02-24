@@ -45,3 +45,29 @@ figma.connect(
     ),
   }
 );
+
+// Buttons / Loading — many-to-1: separate Figma component → same Button with loading state
+figma.connect(
+  Button,
+  "https://www.figma.com/design/NpygZcXGZbJqCAWqD2mNEE/MCP?node-id=273-18337",
+  {
+    props: {
+      hierarchy: figma.enum("hierarchy", {
+        primary: "primary",
+        secondary: "secondary",
+      }),
+      spinSpeed: figma.enum("speed", {
+        "800": 800,
+        "400": 400,
+      }),
+    },
+    example: ({ hierarchy, spinSpeed }) => (
+      <Button
+        hierarchy={hierarchy}
+        size="lg"
+        loading
+        spinSpeed={spinSpeed}
+      />
+    ),
+  }
+);

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuse - Earn Deposit/Withdraw</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'SF Pro Text', sans-serif; background: #444; display: flex; gap: 20px; padding: 32px; flex-wrap: wrap; justify-content: center; }
+    .screen { width: 320px; height: 694px; position: relative; overflow: hidden; border-radius: 32px; flex-shrink: 0; }
+    .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px 0; height: 44px; font-size: 13px; font-weight: 600; }
+    .home-indicator { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 110px; height: 4px; border-radius: 2px; }
+    .nav { display: flex; align-items: center; padding: 8px 16px; gap: 8px; }
+    .nav .back { font-size: 18px; }
+    .nav .title { font-size: 16px; font-weight: 600; flex: 1; text-align: center; }
+
+    /* Earn Home */
+    .earn-home { background: #fff; color: #000; }
+    .earn-header { padding: 12px 16px; }
+    .earn-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+    .earn-icon { width: 24px; height: 24px; border-radius: 50%; background: #FF6B6B; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; }
+    .earn-badge { padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 600; background: #FFF3E0; color: #FF9800; }
+    .earn-balance { font-size: 32px; font-weight: 700; margin: 6px 0; }
+    .earn-tabs { display: flex; gap: 12px; padding: 0 16px 8px; }
+    .earn-tab { padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 500; background: #f5f5f5; }
+    .earn-tab.active { background: #000; color: #fff; }
+    .earn-sub { font-size: 12px; color: #888; padding: 0 16px; display: flex; gap: 16px; }
+
+    .promo-card { margin: 12px 16px; padding: 14px; background: #FFFDE7; border-radius: 12px; position: relative; }
+    .promo-card .close { position: absolute; top: 8px; right: 8px; font-size: 14px; color: #999; }
+    .promo-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .promo-desc { font-size: 11px; color: #666; }
+
+    .product-section { padding: 12px 16px 4px; }
+    .product-label { font-size: 12px; color: #888; font-weight: 500; margin-bottom: 8px; }
+    .product-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+    .product-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; }
+    .product-info { flex: 1; }
+    .product-name { font-size: 14px; font-weight: 600; }
+    .product-apy { font-size: 11px; color: #888; }
+    .product-desc { font-size: 11px; color: #888; }
+    .product-coins { display: flex; gap: -4px; margin-left: auto; }
+    .product-val { font-size: 13px; font-weight: 600; text-align: right; }
+
+    .earn-actions { display: flex; gap: 8px; padding: 8px 16px; }
+    .earn-action-btn { flex: 1; padding: 10px; border: 1.5px solid #eee; border-radius: 10px; text-align: center; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+    /* Deposit bottom sheet */
+    .deposit-sheet { background: #fff; color: #000; }
+    .sheet-handle { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 8px auto; }
+    .sheet-title { font-size: 16px; font-weight: 700; padding: 8px 16px; text-align: center; }
+    .sheet-subtitle { font-size: 12px; color: #888; padding: 0 16px 12px; text-align: center; }
+    .deposit-option { display: flex; align-items: center; gap: 10px; padding: 12px 16px; margin: 4px 16px; border: 1.5px solid #eee; border-radius: 12px; }
+    .deposit-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; }
+    .deposit-name { font-size: 14px; font-weight: 500; }
+    .deposit-apy { font-size: 11px; color: #888; }
+
+    /* Withdraw/Deposit keypad */
+    .keypad-screen { color: #fff; }
+    .keypad-screen.dark { background: #000; }
+    .keypad-screen.light { background: #fff; color: #000; }
+    .kp-header { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px; }
+    .kp-product { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .kp-product.dark-text { color: #888; }
+    .kp-coin-row { display: flex; align-items: center; gap: 8px; padding: 8px 16px; }
+    .kp-coin { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 12px; font-size: 13px; }
+    .kp-coin.dark-bg { background: rgba(255,255,255,0.1); }
+    .kp-coin.light-bg { background: #f0f0f0; }
+    .kp-max { font-size: 13px; font-weight: 600; margin-left: auto; }
+    .kp-amount { text-align: center; padding: 16px 0 8px; }
+    .kp-amount .big { font-size: 48px; font-weight: 700; }
+    .kp-amount .usd { font-size: 13px; opacity: 0.5; margin-top: 2px; }
+
+    .slider-row { display: flex; align-items: center; gap: 0; padding: 12px 16px; }
+    .slider-mark { flex: 1; text-align: center; font-size: 11px; opacity: 0.5; }
+    .slider-track { height: 3px; margin: 0 16px; border-radius: 2px; position: relative; }
+    .slider-track.dark-track { background: rgba(255,255,255,0.15); }
+    .slider-track.light-track { background: #eee; }
+    .slider-fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; }
+    .slider-fill.dark-fill { background: #fff; }
+    .slider-fill.light-fill { background: #000; }
+    .slider-thumb { position: absolute; top: -5px; width: 12px; height: 12px; border-radius: 50%; }
+    .slider-thumb.dark-thumb { background: #fff; }
+    .slider-thumb.light-thumb { background: #000; }
+
+    .kp-grid { display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px 32px; }
+    .kp-key { height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 500; }
+    .kp-btn { margin: 8px 16px; height: 44px; border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+    .kp-btn.dark-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); }
+    .kp-btn.light-btn { background: #000; color: #fff; }
+    .kp-btn.active-btn { background: #fff; color: #000; }
+
+    /* State screens */
+    .state-screen { background: #fff; color: #000; }
+    .depositing-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+    .depositing-badge.yellow { background: #FFFDE7; color: #F9A825; }
+    .depositing-badge.green { background: #E8F5E9; color: #4CAF50; }
+  </style>
+</head>
+<body>
+
+<!-- 1: Earn Home -->
+<div class="screen earn-home">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="earn-header">
+    <div class="earn-label"><div class="earn-icon">E</div>Earn <span class="earn-badge">APY 8.85%</span></div>
+    <div class="earn-balance">$0<span style="font-size:20px;color:#888">.00</span></div>
+  </div>
+  <div class="earn-tabs"><div class="earn-tab active">Lifetime Earned</div><div class="earn-tab">Last 7D</div></div>
+  <div class="earn-sub"><span>$0.00</span><span>$0.00</span></div>
+  <div class="promo-card">
+    <div class="close">✕</div>
+    <div class="promo-title">🎁 Get Fuse Plus</div>
+    <div class="promo-desc">Deposit $100+ in Earn to activate Fuse Plus.</div>
+  </div>
+  <div class="product-section">
+    <div class="product-label">Available products</div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#FF6B6B">L</div>
+      <div class="product-info"><div class="product-name">Lending Yield</div><div class="product-apy">Kamino · 7.95% APY</div><div class="product-desc">Deposit your stablecoins with Kamino</div></div>
+    </div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#AB47BC">L</div>
+      <div class="product-info"><div class="product-name">Lending Yield</div><div class="product-apy">marginfi · 10.85% APY</div></div>
+    </div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#EF5350">R</div>
+      <div class="product-info"><div class="product-name">Rebalancing Yield</div><div class="product-apy">Drift · 8.85% APY</div></div>
+    </div>
+  </div>
+  <div class="earn-actions">
+    <div class="earn-action-btn">← Deposit</div>
+    <div class="earn-action-btn">Withdraw →</div>
+  </div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 2: Deposit sheet -->
+<div class="screen deposit-sheet">
+  <div class="status-bar"><span>9:41</span></div>
+  <div style="height:200px;background:#000;border-radius:0 0 16px 16px;opacity:0.6"></div>
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Deposit</div>
+  <div class="sheet-subtitle">Choose product</div>
+  <div class="deposit-option"><div class="deposit-dot" style="background:#FF6B6B">L</div><div><div class="deposit-name">Lending Yield</div><div class="deposit-apy">Kamino · 7.95% APY</div></div></div>
+  <div class="deposit-option"><div class="deposit-dot" style="background:#AB47BC">L</div><div><div class="deposit-name">Lending Yield</div><div class="deposit-apy">marginfi · 10.85% APY</div></div></div>
+  <div class="deposit-option"><div class="deposit-dot" style="background:#EF5350">R</div><div><div class="deposit-name">Rebalancing Yield</div><div class="deposit-apy">Drift · 8.85% APY</div></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 3: Withdraw keypad -->
+<div class="screen keypad-screen dark">
+  <div class="status-bar" style="color:#fff"><span>9:41</span></div>
+  <div class="nav" style="color:#fff"><div class="back" style="color:#fff">‹</div><div class="title" style="color:#fff">Withdraw</div></div>
+  <div class="kp-header"><div class="kp-product" style="color:rgba(255,255,255,0.5)">Lending Yield</div></div>
+  <div class="kp-coin-row">
+    <div class="kp-coin dark-bg" style="color:#fff"><div style="width:18px;height:18px;border-radius:50%;background:#2775CA;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">$</div>USDC</div>
+    <div class="kp-max" style="color:#fff">MAX</div>
+  </div>
+  <div class="kp-amount"><div class="big" style="color:#fff">0</div><div class="usd" style="color:rgba(255,255,255,0.4)">$0.00</div></div>
+  <div class="slider-row" style="color:rgba(255,255,255,0.5)"><div class="slider-mark">0%</div><div class="slider-mark">25%</div><div class="slider-mark">50%</div><div class="slider-mark">75%</div><div class="slider-mark">100%</div></div>
+  <div class="slider-track dark-track"><div class="slider-fill dark-fill" style="width:5%"></div><div class="slider-thumb dark-thumb" style="left:3%"></div></div>
+  <div class="kp-grid" style="color:#fff">
+    <div class="kp-key">1</div><div class="kp-key">2</div><div class="kp-key">3</div>
+    <div class="kp-key">4</div><div class="kp-key">5</div><div class="kp-key">6</div>
+    <div class="kp-key">7</div><div class="kp-key">8</div><div class="kp-key">9</div>
+    <div class="kp-key">.</div><div class="kp-key">0</div><div class="kp-key">⌫</div>
+  </div>
+  <div class="kp-btn dark-btn">Withdraw</div>
+  <div class="home-indicator" style="background:rgba(255,255,255,0.2)"></div>
+</div>
+
+<!-- 4: Deposit keypad with amount -->
+<div class="screen keypad-screen" style="background:#fff;color:#000">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="nav"><div class="back">‹</div><div class="title">Deposit</div></div>
+  <div class="kp-header"><div class="kp-product dark-text">Lending Yield</div></div>
+  <div class="kp-coin-row">
+    <div class="kp-coin light-bg"><div style="width:18px;height:18px;border-radius:50%;background:#2775CA;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff">$</div>USDC</div>
+    <div class="kp-max" style="color:#000">MAX</div>
+  </div>
+  <div class="kp-amount"><div class="big">5.24</div><div class="usd" style="color:#888">$5.24</div></div>
+  <div class="slider-row"><div class="slider-mark">0%</div><div class="slider-mark">25%</div><div class="slider-mark">50%</div><div class="slider-mark">75%</div><div class="slider-mark">100%</div></div>
+  <div class="slider-track light-track"><div class="slider-fill light-fill" style="width:50%"></div><div class="slider-thumb light-thumb" style="left:48%"></div></div>
+  <div class="kp-grid">
+    <div class="kp-key">1</div><div class="kp-key">2</div><div class="kp-key">3</div>
+    <div class="kp-key">4</div><div class="kp-key">5</div><div class="kp-key">6</div>
+    <div class="kp-key">7</div><div class="kp-key">8</div><div class="kp-key">9</div>
+    <div class="kp-key">.</div><div class="kp-key">0</div><div class="kp-key">⌫</div>
+  </div>
+  <div class="kp-btn light-btn">Deposit</div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 5: Earn depositing state -->
+<div class="screen state-screen">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="earn-header">
+    <div class="earn-label"><div class="earn-icon">E</div>Earn <span class="depositing-badge yellow">Depositing</span></div>
+    <div class="earn-balance">$0<span style="font-size:20px;color:#888">.00</span></div>
+  </div>
+  <div class="earn-tabs"><div class="earn-tab active">Lifetime Earned</div><div class="earn-tab">Last 7D</div></div>
+  <div class="earn-sub"><span>$0.00</span><span>$0.00</span></div>
+  <div class="promo-card"><div class="close">✕</div><div class="promo-title">🎁 Get Fuse Plus</div><div class="promo-desc">Deposit $100+ in Earn to activate Fuse Plus.</div></div>
+  <div class="product-section">
+    <div class="product-label">Available products</div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#FF6B6B">L</div>
+      <div class="product-info"><div class="product-name">Lending Yield</div><div class="product-apy">Kamino · 7.95% APY</div></div>
+    </div>
+  </div>
+  <div class="earn-actions">
+    <div class="earn-action-btn">← Deposit</div>
+    <div class="earn-action-btn">Withdraw →</div>
+  </div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- 6: Earn with balance -->
+<div class="screen state-screen">
+  <div class="status-bar"><span>9:41</span></div>
+  <div class="earn-header">
+    <div class="earn-label"><div class="earn-icon">E</div>Earn <span class="depositing-badge green">Done</span> <span class="earn-badge">APY 8.85%</span></div>
+    <div class="earn-balance">$11<span style="font-size:20px;color:#888">.05</span></div>
+  </div>
+  <div class="earn-tabs"><div class="earn-tab active">Lifetime Earned</div><div class="earn-tab">Last 7D</div></div>
+  <div class="earn-sub"><span>$0.01</span><span>$0.01</span></div>
+  <div class="promo-card"><div class="close">✕</div><div class="promo-title">🎁 Get Fuse Plus</div><div class="promo-desc">Deposit $100+ in Earn to activate Fuse Plus.</div></div>
+  <div class="product-section">
+    <div class="product-label">Current positions</div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#FF6B6B">L</div>
+      <div class="product-info"><div class="product-name">Lending Yield</div><div class="product-apy">Kamino · 7.95% APY</div></div>
+      <div class="product-val">$11.05</div>
+    </div>
+  </div>
+  <div class="product-section">
+    <div class="product-label">Available products</div>
+    <div class="product-item">
+      <div class="product-icon" style="background:#AB47BC">L</div>
+      <div class="product-info"><div class="product-name">Lending Yield</div><div class="product-apy">marginfi · 10.85% APY</div></div>
+    </div>
+  </div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

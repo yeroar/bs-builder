@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cash App - Send/Pay Flow</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, 'SF Pro Text', sans-serif; background: #444; display: flex; justify-content: center; gap: 24px; padding: 40px; flex-wrap: wrap; }
+    .screen { width: 393px; height: 852px; position: relative; overflow: hidden; border-radius: 40px; flex-shrink: 0; }
+    .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 0; height: 54px; }
+    .status-bar .time { font-size: 16px; font-weight: 600; }
+    .home-indicator { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; }
+
+    /* Screen 1: Green Amount */
+    .s1 { background: #00D632; color: #000; }
+    .s1 .top-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 20px; }
+    .s1 .qr-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .s1 .avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; position: relative; }
+    .s1 .badge { position: absolute; top: -3px; right: -3px; width: 16px; height: 16px; border-radius: 50%; background: #FF3B30; font-size: 9px; color: #fff; display: flex; align-items: center; justify-content: center; }
+
+    .amount-display { text-align: center; padding: 80px 0 40px; }
+    .amount-display .dollar { font-size: 96px; font-weight: 800; }
+
+    .keypad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0 40px; }
+    .key { height: 64px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 600; }
+
+    .action-pills { display: flex; gap: 12px; padding: 20px 20px; justify-content: center; }
+    .pill { height: 44px; padding: 0 28px; border-radius: 22px; border: 2px solid rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; background: transparent; }
+    .pay-btn { margin: 0 20px; height: 52px; border-radius: 26px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600; }
+
+    .bottom-tabs { position: absolute; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; padding: 12px 0 32px; }
+    .bottom-tab { font-size: 20px; color: rgba(0,0,0,0.4); }
+    .bottom-tab.active { color: #000; }
+
+    /* Screen 2: Recipient form */
+    .s2 { background: #fff; color: #000; }
+    .s2 .nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+    .s2 .nav-x { font-size: 22px; }
+    .s2 .nav-amount { font-size: 16px; font-weight: 600; }
+    .s2 .nav-pay { background: #00D632; color: #000; padding: 6px 16px; border-radius: 16px; font-size: 13px; font-weight: 700; }
+
+    .form-section { padding: 0 20px; }
+    .form-row { display: flex; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; gap: 12px; }
+    .form-label { font-size: 15px; font-weight: 600; color: #000; width: 36px; }
+    .form-input { font-size: 15px; color: #999; flex: 1; }
+    .form-input.filled { color: #000; }
+    .form-trailing { font-size: 18px; color: #ccc; }
+
+    .pm-row { display: flex; align-items: center; gap: 8px; }
+    .pm-icon { width: 24px; height: 24px; border-radius: 4px; background: #FF5F00; }
+    .pm-text { font-size: 14px; }
+    .pm-chevron { font-size: 16px; color: #ccc; margin-left: auto; }
+
+    .contacts-section { padding: 20px; text-align: center; }
+    .contacts-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .contacts-desc { font-size: 14px; color: #666; line-height: 1.4; margin-bottom: 12px; }
+    .contacts-link { font-size: 14px; font-weight: 600; color: #000; text-decoration: underline; margin-bottom: 20px; display: block; }
+
+    .contact-row { display: flex; align-items: center; gap: 12px; padding: 10px 20px; }
+    .contact-avatar { width: 40px; height: 40px; border-radius: 50%; background: #4A90D9; }
+    .contact-name { font-size: 15px; flex: 1; }
+    .contact-name.blurred { filter: blur(4px); }
+    .contact-check { width: 24px; height: 24px; border-radius: 6px; border: 2px solid #ddd; }
+    .contact-check.checked { background: #00D632; border-color: #00D632; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; }
+
+    /* Screen 4: Success */
+    .s4 { background: #fff; color: #000; }
+    .s4-content { display: flex; flex-direction: column; align-items: center; padding: 100px 40px 0; text-align: center; }
+    .s4 .check { width: 48px; height: 48px; border-radius: 50%; background: #00D632; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; margin-bottom: 16px; }
+    .s4 .success-msg { font-size: 22px; font-weight: 700; line-height: 1.3; }
+    .s4 .done-btn { position: absolute; bottom: 60px; left: 20px; right: 20px; height: 52px; border-radius: 26px; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- Screen 1: Green Amount Entry -->
+<div class="screen s1">
+  <div class="status-bar"><span class="time">9:41</span><span class="icons"></span></div>
+  <div class="top-row">
+    <div class="qr-icon">⊞</div>
+    <div class="avatar">😊<div class="badge">4</div></div>
+  </div>
+  <div class="amount-display"><div class="dollar">$0</div></div>
+  <div class="keypad-grid">
+    <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+    <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+    <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+    <div class="key">.</div><div class="key">0</div><div class="key">‹</div>
+  </div>
+  <div class="action-pills">
+    <div class="pill">Find</div>
+    <div class="pill">Request</div>
+  </div>
+  <div class="pay-btn">Pay</div>
+  <div class="bottom-tabs">
+    <div class="bottom-tab">🏠</div>
+    <div class="bottom-tab">💬</div>
+    <div class="bottom-tab active">$</div>
+    <div class="bottom-tab">🔍</div>
+    <div class="bottom-tab">😊</div>
+  </div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- Screen 2: Recipient + Note -->
+<div class="screen s2">
+  <div class="status-bar"><span class="time" style="color:#000">9:41</span></div>
+  <div class="nav">
+    <div class="nav-x">✕</div>
+    <div class="nav-amount">$10</div>
+    <div class="nav-pay">Pay</div>
+  </div>
+  <div class="form-section">
+    <div class="form-row">
+      <div class="form-label">To</div>
+      <div class="form-input">Name, $Cashtag, Phone, Email</div>
+      <div class="form-trailing">✦</div>
+    </div>
+    <div class="form-row">
+      <div class="form-label">For</div>
+      <div class="form-input">Note (required)</div>
+      <div class="form-trailing">✦</div>
+    </div>
+    <div class="form-row">
+      <div class="form-label">Use</div>
+      <div class="pm-row">
+        <div class="pm-icon"></div>
+        <div class="pm-text">Mastercard debit card</div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#eee;margin-left:4px"></div>
+        <div class="pm-chevron">⌄</div>
+      </div>
+    </div>
+  </div>
+  <div class="contacts-section">
+    <div class="contacts-title">Contacts</div>
+    <div style="background:#f8f8f8;border-radius:12px;padding:20px;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">Sync all contacts to find more friends on Cash App</div>
+      <div style="font-size:13px;color:#666;margin-bottom:8px">We'll use your contacts to help you find friends, verify your identity, and prevent fraud.</div>
+      <div class="contacts-link">Sync all</div>
+    </div>
+  </div>
+  <div class="contact-row"><div class="contact-avatar"></div><div class="contact-name blurred">Contact Name</div><div class="contact-check"></div></div>
+  <div class="contact-row"><div class="contact-avatar" style="background:#6B5CE7"></div><div class="contact-name blurred">Contact Name</div><div class="contact-check"></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- Screen 3: Filled form -->
+<div class="screen s2">
+  <div class="status-bar"><span class="time" style="color:#000">9:41</span></div>
+  <div class="nav">
+    <div class="nav-x">✕</div>
+    <div class="nav-amount">$1</div>
+    <div class="nav-pay">Pay</div>
+  </div>
+  <div class="form-section">
+    <div class="form-row">
+      <div class="form-label">To</div>
+      <div class="form-input filled" style="filter:blur(4px)">John Smith</div>
+    </div>
+    <div class="form-row">
+      <div class="form-label">For</div>
+      <div class="form-input filled">for Mobbin!</div>
+      <div class="form-trailing">✦</div>
+    </div>
+    <div class="form-row">
+      <div class="form-label">Use</div>
+      <div class="pm-row">
+        <div class="pm-icon"></div>
+        <div class="pm-text">Mastercard debit card</div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#eee;margin-left:4px"></div>
+        <div class="pm-chevron">⌄</div>
+      </div>
+    </div>
+  </div>
+  <div class="contacts-section">
+    <div style="background:#f8f8f8;border-radius:12px;padding:20px;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">Sync all contacts to find more friends on Cash App</div>
+      <div style="font-size:13px;color:#666;margin-bottom:8px">We'll use your contacts to help you find friends, verify your identity, and prevent fraud.</div>
+      <div class="contacts-link">Sync all</div>
+    </div>
+  </div>
+  <div class="contact-row"><div class="contact-avatar"></div><div class="contact-name blurred">Contact Name</div><div class="contact-check checked">✓</div></div>
+  <div class="contact-row"><div class="contact-avatar" style="background:#6B5CE7"></div><div class="contact-name blurred">Contact Name</div><div class="contact-check"></div></div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<!-- Screen 4: Success -->
+<div class="screen s4">
+  <div class="status-bar"><span class="time" style="color:#000">9:41</span></div>
+  <div class="s4-content">
+    <div class="check">✓</div>
+    <div class="success-msg">Sent! $1 will be deposited once <span style="filter:blur(4px)">recipient</span> accepts this payment.</div>
+  </div>
+  <div class="done-btn">Done</div>
+  <div class="home-indicator" style="background:#000"></div>
+</div>
+
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bunq - Add Money</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: #B829CC;
+      color: #FFFFFF;
+      width: 393px;
+      height: 852px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 24px 0;
+      height: 54px;
+    }
+    .status-bar .time {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+    .status-bar .icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    /* Nav bar */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      height: 44px;
+    }
+    .back-btn {
+      font-size: 18px;
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 400;
+    }
+    .back-chevron {
+      font-size: 22px;
+    }
+
+    /* Amount picker area */
+    .amount-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 120px;
+    }
+
+    .amount-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .amount-selected {
+      font-size: 72px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -2px;
+    }
+
+    .edit-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+    }
+    .edit-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .amount-option {
+      font-size: 52px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+      margin: 4px 0;
+      letter-spacing: -1px;
+    }
+
+    .amount-faded {
+      font-size: 42px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.18);
+      text-decoration: line-through;
+      text-decoration-color: rgba(255,255,255,0.15);
+      letter-spacing: -1px;
+    }
+
+    /* Bottom section */
+    .bottom-section {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .info-row {
+      text-align: center;
+      padding: 24px 24px 16px;
+    }
+    .info-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 2px;
+    }
+    .info-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 16px 16px 0 0;
+    }
+    .account-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+    }
+    .account-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+    }
+    .account-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .account-amount {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+    }
+    .account-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF9500, #FFCC00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pay-button-area {
+      background: #000;
+      padding: 16px 24px 40px;
+    }
+    .apple-pay-btn {
+      width: 100%;
+      height: 52px;
+      background: #FFF;
+      border: none;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 20px;
+      font-weight: 500;
+      color: #000;
+      cursor: pointer;
+    }
+    .apple-logo {
+      font-size: 24px;
+    }
+
+    /* Home indicator */
+    .home-indicator {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 134px;
+      height: 5px;
+      background: #333;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <span class="icons">
+      <svg width="17" height="12" viewBox="0 0 17 12"><rect x="0" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#fff"/><rect x="9" y="1" width="3" height="11" rx="1" fill="#fff"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 2.4C5.6 2.4 3.4 3.4 1.8 5L0 3.2C2.2 1.2 5 0 8 0s5.8 1.2 8 3.2L14.2 5C12.6 3.4 10.4 2.4 8 2.4z" fill="#fff"/><path d="M8 6.8c-1.6 0-3 .6-4.2 1.6L2 6.6C3.6 5.2 5.7 4.4 8 4.4s4.4.8 6 2.2l-1.8 1.8C11 7.4 9.6 6.8 8 6.8z" fill="#fff"/><circle cx="8" cy="11" r="1.5" fill="#fff"/></svg>
+      <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0" y="1" width="22" height="11" rx="3.5" stroke="#fff" stroke-width="1" fill="none"/><rect x="1.5" y="2.5" width="19" height="8" rx="2" fill="#fff"/><path d="M23.5 5v3a2 2 0 000-3z" fill="#fff"/></svg>
+    </span>
+  </div>
+
+  <div class="nav-bar">
+    <a href="#" class="back-btn">
+      <span class="back-chevron">‹</span> Back
+    </a>
+  </div>
+
+  <div class="amount-area">
+    <div class="amount-row">
+      <div class="amount-selected">€10</div>
+      <button class="edit-btn">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="amount-option">€15</div>
+    <div class="amount-faded">€20</div>
+  </div>
+
+  <div class="bottom-section">
+    <div class="info-row">
+      <div class="info-title">
+        Add money now at no extra cost
+        <span class="info-icon">?</span>
+      </div>
+      <div class="info-subtitle">Up to €500.00 every month</div>
+    </div>
+
+    <div class="account-row">
+      <div>
+        <span class="account-label">To: </span>
+        <span class="account-name">Main</span>
+      </div>
+      <div class="account-right">
+        <span class="account-amount">€0.00</span>
+        <div class="account-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="#fff" stroke-width="1.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="pay-button-area">
+      <button class="apple-pay-btn">
+        <span class="apple-logo"></span> Pay
+      </button>
+    </div>
+  </div>
+
+  <div class="home-indicator"></div>
+
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>
