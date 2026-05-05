@@ -8,6 +8,7 @@ import { useChartData } from './useChartData';
 import { ChartSvg, ChartSvgHandle } from './ChartSvg';
 import { ChartSkeleton } from './ChartSkeleton';
 import { ChartLabel } from './ChartLabel';
+import { formatPrice, formatPercent } from '../BtcPrice';
 
 import { useExchange } from '../ExchangeContext';
 
@@ -270,6 +271,30 @@ const PriceChartContainerComponent = (props: PriceChartContainerProps) => {
     previousChartGeometryRef.current = chartGeometry;
   }, [chartGeometry]);
 
+  // 60fps value overlay — interpolate price at float index, push to display refs
+  const handleFloatIndexChange = useCallback((floatIndex: number) => {
+    const d = dataRef.current;
+    if (d.length < 2) return;
+
+    const clamped = Math.max(0, Math.min(d.length - 1, floatIndex));
+    const iLow = Math.floor(clamped);
+    const iHigh = Math.min(iLow + 1, d.length - 1);
+    const weight = clamped - iLow;
+
+    const price = d[iLow].price + (d[iHigh].price - d[iLow].price) * weight;
+    const startPrice = d[0].price;
+    const pct = startPrice !== 0 ? ((price - startPrice) / startPrice) * 100 : 0;
+
+    const priceEl = context.priceDisplayRef.current;
+    if (priceEl) {
+      priceEl.setNativeProps({ text: formatPrice(price) });
+    }
+    const pctEl = context.percentDisplayRef.current;
+    if (pctEl) {
+      pctEl.setNativeProps({ text: formatPercent(pct) });
+    }
+  }, []);
+
   const selectedData = selectedIndex !== null ? data[selectedIndex] : null;
 
   return (
@@ -310,6 +335,7 @@ const PriceChartContainerComponent = (props: PriceChartContainerProps) => {
             previousChartGeometry={previousChartGeometryRef.current}
             pulseAnim={pulseAnim}
             isInteracting={isInteracting}
+            onFloatIndexChange={handleFloatIndexChange}
           />
         )}
       </View>

@@ -33,6 +33,7 @@ interface ChartSvgProps {
   };
   pulseAnim: Animated.Value;
   isInteracting?: boolean;
+  onFloatIndexChange?: (floatIndex: number) => void;
 }
 
 export interface ChartSvgHandle {
@@ -54,7 +55,11 @@ const ChartSvgComponent = forwardRef<ChartSvgHandle, ChartSvgProps>((props, ref)
     previousChartGeometry,
     pulseAnim,
     isInteracting: propIsInteracting,
+    onFloatIndexChange,
   } = props;
+
+  const onFloatIndexChangeRef = useRef(onFloatIndexChange);
+  onFloatIndexChangeRef.current = onFloatIndexChange;
 
   const { points, resampledSmoothPts } = chartGeometry;
   const prevPoints = previousChartGeometry.points;
@@ -193,14 +198,21 @@ const ChartSvgComponent = forwardRef<ChartSvgHandle, ChartSvgProps>((props, ref)
     if (mainCircleRef.current) mainCircleRef.current.setNativeProps({ cx: x, cy: y });
     if (vLineRef.current) vLineRef.current.setNativeProps({ x1: x, x2: x, opacity: selectedIndexRef.current !== null ? 1 : 0 });
     if (hLineRef.current) hLineRef.current.setNativeProps({ y1: y, y2: y, opacity: selectedIndexRef.current !== null ? 1 : 0 });
+
+    // Report float index every frame for smooth value overlay
+    if (onFloatIndexChangeRef.current) {
+      onFloatIndexChangeRef.current(vIdx);
+    }
   };
+
+  // Track whether the pointer is animating back to rest
+  const isReturningRef = useRef(false);
 
   // Expose methods for re-render free interaction
   useImperativeHandle(ref, () => ({
     setNativeInteraction: (index: number | null, interacting: boolean) => {
       const changedInteracting = interacting !== isInteractingRef.current;
       isInteractingRef.current = interacting;
-      selectedIndexRef.current = index;
 
       // Handle interaction spring start
       if (changedInteracting) {
@@ -213,6 +225,9 @@ const ChartSvgComponent = forwardRef<ChartSvgHandle, ChartSvgProps>((props, ref)
         }).start();
 
         if (interacting && index !== null) {
+          // Starting a new interaction — cancel any return animation
+          isReturningRef.current = false;
+          selectedIndexRef.current = index;
           Animated.spring(visualIndexAnim, {
             toValue: index,
             tension: 7,
@@ -224,9 +239,24 @@ const ChartSvgComponent = forwardRef<ChartSvgHandle, ChartSvgProps>((props, ref)
 
       // High-speed scrubbing update
       if (interacting && index !== null && !changedInteracting) {
+        selectedIndexRef.current = index;
         visualIndexAnim.setValue(index);
       } else if (!interacting) {
-        visualIndexAnim.setValue(points.length - 1);
+        // Don't clear selectedIndexRef yet — keep it so crosshair lines
+        // stay visible during the spring-back animation
+        isReturningRef.current = true;
+        Animated.spring(visualIndexAnim, {
+          toValue: points.length - 1,
+          tension: 40,
+          friction: 12,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          if (finished && isReturningRef.current) {
+            isReturningRef.current = false;
+            selectedIndexRef.current = null;
+            updatePaths();
+          }
+        });
       }
 
       updatePaths();

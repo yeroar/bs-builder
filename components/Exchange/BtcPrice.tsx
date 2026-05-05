@@ -1,10 +1,24 @@
-import React from "react";
-import { View, StyleSheet, ViewStyle } from "react-native";
+import React, { useEffect, useCallback } from "react";
+import { View, StyleSheet, ViewStyle, TextInput } from "react-native";
 import { FoldText } from "../Primitives/FoldText";
 import { colorPrimitives } from "../tokens/colorPrimitives";
 import { colorMaps, spacing } from "../tokens";
-import PriceChange from "./PriceChange";
+import { ArrowNarrowUpIcon } from "../Icons/ArrowNarrowUpIcon";
 import { useExchange } from "./ExchangeContext";
+
+export const formatPrice = (price: number | string | undefined): string => {
+  if (price === undefined) return "$0.00";
+  if (typeof price === "string") return price;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(price);
+};
+
+export const formatPercent = (pct: number | undefined): string => {
+  const abs = Math.abs(pct || 0);
+  return abs >= 1000 ? `${Math.floor(abs / 1000)}K%` : `${abs.toFixed(2)}%`;
+};
 
 export interface BtcPriceProps {
   price?: number | string;
@@ -38,26 +52,28 @@ const BtcPriceComponent: React.FC<BtcPriceProps> = ({
   };
 
   const timePeriod = propTimePeriod || periodLabels[context.selectedPeriod] || "All time";
-  const formattedPrice =
-    typeof price === "string"
-      ? price
-      : new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(price);
+  const formattedPrice = formatPrice(price);
+  const isPositive = (percentage || 0) >= 0;
 
-  const renderPriceChange = () => {
-    if (priceChange) return priceChange;
+  // Sync context refs with initial/rest values
+  const syncDisplayRefs = useCallback(() => {
+    const priceEl = context.priceDisplayRef.current;
+    if (priceEl) {
+      priceEl.setNativeProps({ text: formattedPrice });
+    }
+    const pctEl = context.percentDisplayRef.current;
+    if (pctEl) {
+      pctEl.setNativeProps({ text: formatPercent(percentage) });
+    }
+  }, [formattedPrice, percentage]);
 
-    const isPositive = (percentage || 0) >= 0;
-    const absPercentage = Math.abs(percentage || 0);
-    const percentageText =
-      absPercentage >= 1000
-        ? `${Math.floor(absPercentage / 1000)}K%`
-        : `${absPercentage.toFixed(2)}%`;
+  useEffect(() => {
+    syncDisplayRefs();
+  }, [syncDisplayRefs]);
 
-    return <PriceChange label={percentageText} isPositive={isPositive} />;
-  };
+  const arrowColor = isPositive
+    ? colorMaps.face.positiveBold
+    : colorMaps.face.negativeBold;
 
   return (
     <View style={[styles.container, style]} testID={testID}>
@@ -71,10 +87,31 @@ const BtcPriceComponent: React.FC<BtcPriceProps> = ({
           </FoldText>
         </View>
         <View style={styles.bottomRow}>
-          <FoldText type="header-md" style={styles.text}>
-            {formattedPrice}
-          </FoldText>
-          {renderPriceChange()}
+          {/* Price — direct mutation via ref, zero re-renders during scrub */}
+          <TextInput
+            ref={context.priceDisplayRef}
+            editable={false}
+            defaultValue={formattedPrice}
+            style={[styles.nativeText, styles.text]}
+            pointerEvents="none"
+          />
+          {priceChange || (
+            <View style={styles.percentRow}>
+              <ArrowNarrowUpIcon
+                width={24}
+                height={24}
+                color={arrowColor}
+                style={{ transform: [{ rotate: isPositive ? "0deg" : "180deg" }] }}
+              />
+              <TextInput
+                ref={context.percentDisplayRef}
+                editable={false}
+                defaultValue={formatPercent(percentage)}
+                style={[styles.nativeText, styles.text]}
+                pointerEvents="none"
+              />
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -104,10 +141,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  performance: {
+  percentRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing["50"],
+  },
+  nativeText: {
+    fontFamily: "Geist",
+    fontWeight: "400",
+    fontSize: 24,
+    lineHeight: 28,
+    padding: 0,
+    margin: 0,
   },
   text: {
     color: colorMaps.face.primary,

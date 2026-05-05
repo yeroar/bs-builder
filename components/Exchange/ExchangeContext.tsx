@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useRef, ReactNode } from "react";
+import { TextInput } from "react-native";
 
 export type TimeRange = "24H" | "1W" | "1M" | "1Y" | "ALL";
 
@@ -10,6 +11,9 @@ interface ExchangeContextType {
   currentPercentage: number | undefined;
   setCurrentPercentage: (percentage: number | undefined) => void;
   onHistoryPress?: () => void;
+  // Direct-mutation refs for 60fps value overlay (zero re-renders)
+  priceDisplayRef: React.MutableRefObject<TextInput | null>;
+  percentDisplayRef: React.MutableRefObject<TextInput | null>;
 }
 
 const ExchangeContext = createContext<ExchangeContextType | undefined>(undefined);
@@ -31,6 +35,8 @@ export function ExchangeProvider({ children, onAction }: ExchangeProviderProps) 
   const [selectedPeriod, setSelectedPeriod] = useState("all");
   const [currentPrice, setCurrentPrice] = useState<number | string | undefined>(undefined);
   const [currentPercentage, setCurrentPercentage] = useState<number | undefined>(undefined);
+  const priceDisplayRef = useRef<TextInput | null>(null);
+  const percentDisplayRef = useRef<TextInput | null>(null);
 
   return (
     <ExchangeContext.Provider
@@ -42,6 +48,8 @@ export function ExchangeProvider({ children, onAction }: ExchangeProviderProps) 
         currentPercentage,
         setCurrentPercentage,
         onHistoryPress: onAction,
+        priceDisplayRef,
+        percentDisplayRef,
       }}
     >
       {children}
